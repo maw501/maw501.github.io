@@ -19,7 +19,8 @@ html {
 
 body {
 	background: $white;
-  font: 16px/1.4 $helvetica;
+  font: 13px/1.4 $helvetica;
+  line-height: 200%;
   color: $darkGray;
 }
 
@@ -287,4 +288,3 @@ footer {
 // ... Otherwise it really bloats up the top of the CSS file and makes it difficult to find the start
 @import "highlights";
 @import "svg-icons";
-

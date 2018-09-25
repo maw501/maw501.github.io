@@ -4,7 +4,7 @@
     <title>{% if page.title %}{{ page.title }} – {% endif %}{{ site.name }} – {{ site.description }}</title>
 
     {% include meta.html %}
-    
+
     {% if page.use_math %}
     {% include _mathjax_support.html %}
     {% endif %}
@@ -33,6 +33,7 @@
           <nav>
             <a href="{{ site.baseurl }}/">Blog</a>
             <a href="{{ site.baseurl }}/about">About</a>
+	          <a href="{{ site.baseurl }}/course">Courses</a>
           </nav>
         </header>
       </div>
@@ -53,4 +54,3 @@
     {% include analytics.html %}
   </body>
 </html>
-
