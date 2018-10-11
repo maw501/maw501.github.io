@@ -4,16 +4,15 @@ title: About
 permalink: /about/
 ---
 
-Site under construction
-
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
-
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
+Mark Worrall: site under construction (as is my understanding)
 
 
-[jekyll-organization]: https://github.com/jekyll
+ ¯\\\_(ツ)_/¯
+
+
+
+You can find me on Kaggle at:
+[Kaggle](https://www.kaggle.com/maw501)
+
+You can contact me via email at: maw501 at gmail dot com
 
