@@ -119,7 +119,7 @@ Here are some of the mathematical details from the week:
   * This was one of those things just stated, and is basically an unimportant detail as far as conceptual understanding goes. It simply means we can update a matrix multiplication (or even inverse) with new data without having to recalculate the whole thing again. This is similar to what we were doing above with the active learning.
     * You can read more [here](https://dahtah.wordpress.com/2011/11/29/rank-one-updates-for-faster-matrix-inversion/)
 * **The least norm solution to the undetermined problem ($d \gg n$)**
-  * When we are in the situation with $d \gg n$ we have infinitely many possible solutions. It can be shown by an inequality argument that $w_{ln} = X^T(XX^T)^{-1}$ has the smallest $l_2$ 'norm' (i.e. length) of all possible solutions.
+  * When we are in the situation with $d \gg n$ we have infinitely many possible solutions. It can be shown by an inequality argument that $w_{ln} = X^T(XX^T)^{-1}y$ has the smallest $l_2$ 'norm' (i.e. length) of all possible solutions.
     * Note: to verify $w_{ln}$ actually solves $Xw = y$ just plug $w_{ln}$ in for $w$ and notice we get $y=y$.
 * **Lagrange multipliers**
   * I was actually rusty on this but I can say nothing more to explain them that the legend that is Grant Sanderson can, see the beautiful videos [here](https://www.khanacademy.org/math/multivariable-calculus/applications-of-multivariable-derivatives/lagrange-multipliers-and-constrained-optimization/v/constrained-optimization-introduction).
