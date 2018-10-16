@@ -47,15 +47,15 @@ This problem is the inescapable reality of machine learning although it's usuall
   * In particular it is shown that when $y \sim N(Xw, \sigma^2 I)$ i.e. $\mu = Xw$ then $w_{ML} = w_{LS}.$ This we are in a sense making an independent Gaussian noise assumption about the error $e_i = y_i - x_i^Tw$
   * Note: $w_{ML} = w_{LS} = (X^TX)^{-1}X^Ty$
 * **Calculating $E[w_{ML}]$ and $Var[w_{ML}]$**
-  * The proof that $E[w_{ML}] = w$ is closely linked to the Gauss-Markov thereom, which isn't mentioned in the lecture but covers the assumptions for the errors $e_i$ which make our parameters unbiased. More [here](https://en.wikipedia.org/wiki/Gauss%E2%80%93Markov_theorem#Statement).
-  * The proof that $Var[w_{ML}] = \sigma^2(X^TX)^{-1}$ is pretty dense and almost certaintly not worth focusing on except to note the key thing which is that if $(X^TX)^{-1}$ is large then the variance of our model parameters will be large.
+  * The proof that $E[w_{ML}] = w$ is closely linked to the Gauss-Markov theorem, which isn't mentioned in the lecture but covers the assumptions for the errors $e_i$ which make our parameters unbiased. More [here](https://en.wikipedia.org/wiki/Gauss%E2%80%93Markov_theorem#Statement).
+  * The proof that $Var[w_{ML}] = \sigma^2(X^TX)^{-1}$ is pretty dense and almost certainly not worth focusing on except to note the key thing which is that if $(X^TX)^{-1}$ is large then the variance of our model parameters will be large.
     * When is this the case? Typically when the columns of $X$ are highly correlated.
 * **Solving for $w_{RR}$ by differentiating the Ridge Regression objective function similar to what we did for LS**
   * $w_{RR} = (\lambda I + X^TX)^{-1}X^Ty$
   * It is noted that when the regularization parameter $\lambda = 0$ we have $w_{ML} = w_{RR}$
 * **Using the SVD to analyse the solutions to LS and RR**
   * This is quite an ugly calculation which really masks the understanding of the result which has nice links back to linear algebra (eigenvalues, PCA etc...). The upshot is that the term $\lambda$ acts as a sort of protection to stop us dividing by really small values when calculating $w_{RR}.$    
-    * This is loosely analagous to what we sometimes do to avoid division by 0 errors or blow-ups: i.e. add a term $\lambda$: $1/(\lambda + t)$.
+    * This is loosely analogous to what we sometimes do to avoid division by 0 errors or blow-ups: i.e. add a term $\lambda$: $1/(\lambda + t)$.
   * In particular it is shown that $w_{RR} = VS_{\lambda}^{-1}U^Ty$ where we are using the SVD to decompose $X$ into 3 separate matrices $X = USV^T$. $S$ is the matrix holding the singular values (i.e. the square roots of the eigenvalues) of $X$. $S_{\lambda}^{-1}$ refers to a diagonal matrix (when it all comes out of the wash by plugging $X = USV^T$ into the definition of $w_{RR}$) with each term of the form: $\dfrac{S_{ii}}{\lambda + S_{ii}}$. $S$ is a $d$ by $d$ matrix.
     * So we finally see (!) how $\lambda$ for $w_{RR}$ stops us getting weights that are huge when we have small singular values in $X$.
 * **Calculating the bias-variance trade-off for a general function**
@@ -80,15 +80,15 @@ Here are some of the mathematical details from the week:
 * Note for any real matrix $X^TX$ is symmetric
 * How to take the derivative of $L = (y-Xw)^T(y-Xw) + \lambda w^T w$ with respect to $w$, i.e. compute $\nabla_w L$.
 * SVD knowledge: writing any $n$ by $d$ matrix $X$ as $X = USV^T$.
-  * $U$ is $n$ by $d$ with orthornormal columns
+  * $U$ is $n$ by $d$ with orthonormal columns
   * $S$ is $d$ by $d$ with non-negative diagonal entries.
-  * $V$ is $d$ by $d$ with orthornormal columns
+  * $V$ is $d$ by $d$ with orthonormal columns
 * It was stated in the lecture that our squared prediction error for a new data point $(x_0, y_0)$ is: $$E[(y_0 - x_0^T\hat{w})^2 \mid X, x_0] = \int_{\mathbb{R}}^{} \int_{\mathbb{R^n}}^{} (y_0 - x_0^T\hat{w})^2 \, p(y \mid X, w) \, p(y_0\mid x_0, w) \, dy \, dy_0$$
   * First observation: WTF
-  * Second observaton: WTF I hate big integrals
+  * Second observation: WTF I hate big integrals
   * Third observation: I'll come back to this
   * Fourth observation: Oh hang on, this just looks like a use of the fact that $E[X \mid A] = \int_{x} x \, p_{X \mid A}(x) \, dx$
-  * The key with this forumula is to remember a few that when you see $E[X \mid A]$ the bit to the left of $\mid$ you can literally just stick into the integral. In this case this is: $(y_0 - x_0^T\hat{w})^2$.
+  * The key with this formula is to remember a few that when you see $E[X \mid A]$ the bit to the left of $\mid$ you can literally just stick into the integral. In this case this is: $(y_0 - x_0^T\hat{w})^2$.
   * The probability distribution bit then is the densities of the random parts of the equation remembering to condition on anything we need to. In this case the probability distribution  bit has been broken down into (I think):
     * $p(y_0 \mid X, x_0, w) = p(y \mid X, w) \, p(y_0\mid x_0, w)$
   * We then integrate (sum) over all our predictions noting that $y_0$ is a single observation and $y$ is $n$ observations.

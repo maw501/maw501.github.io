@@ -14,7 +14,7 @@ This is my first attempt at publishing course notes and I have no intention to m
 Week 3 brought the topic of linear regression to an end and whilst there were some interesting ideas in the lectures there was also a few trickier aspects which I hope to be able to largely clarify below (for my own understanding as much as anything). First, the main ideas:
 
 * Bayesian Linear Regression
-  * Here we really just extend MAP (a point estimate) to obtain a full probabilty distribution of our parameters, $w$.
+  * Here we really just extend MAP (a point estimate) to obtain a full probability distribution of our parameters, $w$.
 * Predicting new data with Bayes
   * We are now able to calculate the probability of a new target observation, $y_0$ given our original training set $(y, X)$ and a new test example $x_0$.
 * Active learning
@@ -22,7 +22,7 @@ Week 3 brought the topic of linear regression to an end and whilst there were so
 * Entropy minimization
   * Given freedom over which new test target $y_i$ to measure we devise a strategy which is shown to be minimizing the uncertainty in our posterior.
 * Lasso Linear Regression
-  * Often when $d \gg n$ we wish to perform feature selection with our data. The Lasso is analagous to Ridge Regression except we change the penalty on our weights to be the sum of the absolute values of the individual weights.
+  * Often when $d \gg n$ we wish to perform feature selection with our data. The Lasso is analogous to Ridge Regression except we change the penalty on our weights to be the sum of the absolute values of the individual weights.
 
 
 
@@ -35,7 +35,7 @@ Week 3 brings the way we look at linear regression into a fully Bayesian framewo
 We can now ask questions such as whether a given parameter $w_i$ is different from 0 (i.e. whether it is significant or not). This is a departure from the non-Bayesian setting where we had no way to answer such questions. This is a very practical and useful application of Bayesian regression and occurs commonly in many fields. For example, if our variables are factors in a medical trial and we wish to determine whether the factor under scrutiny is actually having an impact (before we spend anymore money on it) it helps to know if the distribution of this parameter has a big variance vs. say, being tightly distributed and centered away from 0.
 
 #### Predicting new data
-I found this one of those things that you look at the slides and follow the steps and nod in agreement from one line to another without really grokking the insight into what's going on. **We can actually get a probabilty distibution for new data $y_0$ without seeing that data!** As follows:
+I found this one of those things that you look at the slides and follow the steps and nod in agreement from one line to another without really grokking the insight into what's going on. **We can actually get a probability distribution for new data $y_0$ without seeing that data!** As follows:
 
 * We can obtain an expression for $p(y_0 \mid x_0, y, X)$ which is called the **predictive distribution**. We can calculate this exactly.
 * This is split into two components: a likelihood and a prior (which is our current posterior!). Note that the likelihood we obtain is the likelihood of $y_0$, not $y$ and we can find expressions for both the likelihood and prior/posterior.
@@ -54,7 +54,7 @@ Or more formally:
 
 $p(w \mid y_0, x_0, y, X) \propto p(y_0 \mid w, x_0) \, p(w \mid y, X)$
 
-The week's project was actually about the situtation whereby we have some new data $D = \\{x_1, x_2, ..., x_n\\}$ and a choice about which $y_i$ to measure in order to update our original posterior. For example it might be expensive to measure $y_i$...e.g. digging a hole or conducting an experiment and so the question is whether there is a good way to do this?
+The week's project was actually about the situation whereby we have some new data $D = \\{x_1, x_2, ..., x_n\\}$ and a choice about which $y_i$ to measure in order to update our original posterior. For example it might be expensive to measure $y_i$...e.g. digging a hole or conducting an experiment and so the question is whether there is a good way to do this?
 
 The answer to this is shown to be equivalent to choosing the new data $x_0$ that minimizes the entropy of the posterior distribution, or loosely speaking, the data point with the maximum variance as predicted by our predictive distribution.
 
@@ -73,7 +73,7 @@ Using an $L_1$ (i.e. sum of absolute values) penalty in our objective function p
     * NB: here I am calling the parameters $\theta$ for simplicity of this discussion.
   * But what is $p(data)$? Recall we have assumed a probabilistic model for our data which is in our numerator as the likelihood multiplied by our prior belief of the parameters. In the numerator we evaluate this likelihood for a given set of parameters e.g. calculate $p(data \mid \theta)$. For the denominator we need to calculate the probability of our data independent of any parameters(!) - this ensures the shape of our posterior from $\theta$ is solely due to the numerator and not the denominator (which is really just a normalising constant).
   * So how do we calculate $p(data)$? Well we can take our numerator and 'integrate out' (i.e. sum/average over all possible values of) any parameters. i.e. $p(data) = \int_{all \, \theta} p(data \mid \theta) \, p(\theta) \, d\theta$
-    * I say sum/average because we are multipying by $p(\theta)$ and so we are weighting each term by a probability so we are really calculating a weighted probability which I guess you can think of as a kind of weighted average but we are also summing over all $\theta$ so it also could be thought of as a sum.
+    * I say sum/average because we are multiplying by $p(\theta)$ and so we are weighting each term by a probability so we are really calculating a weighted probability which I guess you can think of as a kind of weighted average but we are also summing over all $\theta$ so it also could be thought of as a sum.
     * **Note 1:**: for multiple parameter systems we use a multiple integral instead of the single I've shown above.
     * **Note 2:** $p(data)$ is usually not calculable (i.e. we cannot compute the integral) though we will see below for the assumptions made in the lecture it has an analytic solution.
   * The lecture's definition of the posterior was: $p(w \mid y, X) = \dfrac{p(y \mid w, X) \, p(w)}{\int_{\mathbb{R}^d} p(y \mid w, X) \, p(w) \, dw}$
@@ -86,7 +86,7 @@ Using an $L_1$ (i.e. sum of absolute values) penalty in our objective function p
   * The Lasso uses $l_1$ norm penalty introduces sparsity in our solution.
   * The Lasso uses $l_1$ norm penalty which basically means taking the sum of the absolute values of the weight parameter vector $w$. Ridge took the sum of the squares of the elements of $w$ and is referred to as $l_2$ norm. This idea can be extended to take any power, $p$ of as detailed [here](https://en.wikipedia.org/wiki/Norm_(mathematics)#p-norm).
   * Depending on how we set $p$ changes how much feature selection we get with the main note that for $p < 1$ we no longer have a convex optimization problem and so need to solve approximately using iterative algorithms.
-  * **Note:** For $l_2$ norm as in Ridge the reduction in the cost function we get for reducing any parameter $w_j$ is quadratic whereas for $l_1$ (Lasso) it's linear. And so Ridge penalizes big weights more and will tend to favour all weights of similiar magnitude.
+  * **Note:** For $l_2$ norm as in Ridge the reduction in the cost function we get for reducing any parameter $w_j$ is quadratic whereas for $l_1$ (Lasso) it's linear. And so Ridge penalizes big weights more and will tend to favour all weights of similar magnitude.
 
 
 ## Some mathematical details
@@ -98,7 +98,7 @@ Here are some of the mathematical details from the week:
     * Here we are simply using the fact that we can integrate a joint distribution of two parameters to obtain the marginal for one of them. The fact we are conditioning on other variables doesn't matter.
   * 'Bring something to the right of the $\mid$ sign', e.g. for $w$:
     * $\int_{\mathbb{R}^d} p(y_0, w \mid x_0, y, X) \, dw = \int_{\mathbb{R}^d} p(y_0 \mid w, x_0, y, X) \, p(w \mid x_0, y, X) \, dw$
-    * When we do this we are 'conditioning' on a new variable $w$ and so we must remember to multiply by the probabilty that this 'event' happens (which may itself be conditioned on other things) e.g. here: $p(w \mid x_0, y, X)$ where we are now conditioning on $w$ which itself depends on $x_0, y, X$.
+    * When we do this we are 'conditioning' on a new variable $w$ and so we must remember to multiply by the probability that this 'event' happens (which may itself be conditioned on other things) e.g. here: $p(w \mid x_0, y, X)$ where we are now conditioning on $w$ which itself depends on $x_0, y, X$.
       * In other words $y_0$ depends on $w, x_0, y, X$ and $w$ depends on $x_0, y, X$.
 
 * **Being able to write matrix multiplication in an additive manner**
