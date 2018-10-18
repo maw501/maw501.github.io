@@ -7,19 +7,8 @@ github: http://www.github.com/maw501
 email: maw501[at]gmail.com
 location: London
 
-##Make sure to edit the above fields, especially for disqus.
-
-permalink: /:title/
-
-# Jekyll 3 now only supports Kramdown for Markdown
-kramdown:
-  # Use GitHub flavored markdown, including triple backtick fenced code blocks
-  input: GFM
-  # Jekyll 3 and GitHub Pages now only support rouge for syntax highlighting
-  syntax_highlighter: rouge
-  syntax_highlighter_opts:
-    # Use existing pygments syntax highlighting css
-    css_class: 'highlight'
+highlighter: rouge
+markdown: kramdown
 
 defaults:
   - scope:
@@ -31,12 +20,7 @@ defaults:
       path: ""
       type: "posts"
     values:
-      layout: "post"
-
-# Use the following plug-ins
-plugins:
-  - jekyll-sitemap # Create a sitemap using the official Jekyll sitemap gem
-  - jekyll-feed # Create an Atom feed using the official Jekyll feed gem
+layout: "post"
 
 # Exclude these files from your production _site
 exclude:
