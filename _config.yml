@@ -1,7 +1,7 @@
 name: Confusion Reigned
 title: Confusion Reigned
 author: Mark Worrall
-baseurl: /confusionreigns
+baseurl: ""
 description: (and they all got wet)
 github: http://www.github.com/maw501
 email: maw501[at]gmail.com
@@ -19,7 +19,7 @@ defaults:
   -
     scope:
       path: "" # an empty string here means all files in the project
-      type: "posts"	
+      type: "posts"
     values:
       layout: "post"
 
