@@ -10,10 +10,10 @@ location: London
 ##Make sure to edit the above fields, especially for disqus.
 
 
-highlighter: pygments
+##highlighter: pygments
 markdown: kramdown
-redcarpet:
-  extensions: ["tables"]
+##redcarpet:
+##  extensions: ["tables"]
 
 defaults:
   - scope:
