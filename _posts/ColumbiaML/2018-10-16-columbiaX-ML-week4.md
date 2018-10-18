@@ -83,7 +83,7 @@ Here are some of the mathematical details from the week:
 * **Notions of distance**:
   * The typical Euclidean distance in $\mathbb{R}^d$ is $\|\|u-v\|\|\_2$ but we can extend this notion to the $l_p$ distance for $p \in [1, \infty]$ as follows: $l_p = \|\|u-v\|\|\_p = \big(\sum_{i=1}^{d}\|u_i - v_i\|^p\big)^{\frac{1}{p}}$
     * Here the single $\|$ means take the absolute value of the resulting number when we subtract $v_i$ from $u_i$.
-* Probability details
+* **Probability details**
   * There were two of these introduced in the lecture and whilst I don't usually find some aspects of probability theory highly intuitive I do think the latter of the two results mentioned in class actually has a simpler explanation. It was presented as follows:
     * $ C = E[A \mid B] $ with $A$ and $B$ both random, so $C$ is random.
     * $E[C] = E[E[A \mid B]] = E[A]$ is the 'tower property' of expectation
