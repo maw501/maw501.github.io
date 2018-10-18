@@ -20,7 +20,7 @@ defaults:
       path: ""
       type: "posts"
     values:
-layout: "post"
+      layout: "post"
 
 # Exclude these files from your production _site
 exclude:
