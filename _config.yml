@@ -9,11 +9,17 @@ location: London
 
 ##Make sure to edit the above fields, especially for disqus.
 
+permalink: /:title/
 
-##highlighter: pygments
-markdown: kramdown
-##redcarpet:
-##  extensions: ["tables"]
+# Jekyll 3 now only supports Kramdown for Markdown
+kramdown:
+  # Use GitHub flavored markdown, including triple backtick fenced code blocks
+  input: GFM
+  # Jekyll 3 and GitHub Pages now only support rouge for syntax highlighting
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    # Use existing pygments syntax highlighting css
+    css_class: 'highlight'
 
 defaults:
   - scope:
@@ -27,3 +33,15 @@ defaults:
     values:
       layout: "post"
 
+# Use the following plug-ins
+plugins:
+  - jekyll-sitemap # Create a sitemap using the official Jekyll sitemap gem
+  - jekyll-feed # Create an Atom feed using the official Jekyll feed gem
+
+# Exclude these files from your production _site
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - LICENSE
+  - README.md
+  - CNAME
