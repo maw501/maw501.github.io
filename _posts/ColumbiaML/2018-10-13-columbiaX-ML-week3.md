@@ -23,8 +23,7 @@ Week 3 brought the topic of linear regression to an end and whilst there were so
   * Given freedom over which new test target $y_i$ to measure we devise a strategy which is shown to be minimizing the uncertainty in our posterior.
 * Lasso Linear Regression
   * Often when $d \gg n$ we wish to perform feature selection with our data. The Lasso is analogous to Ridge Regression except we change the penalty on our weights to be the sum of the absolute values of the individual weights.
-
-
+  * Fun fact: whereas Ridge Regression was shown to be the same as imposing a Gaussian prior on our weights, the Lasso is the same as imposing a Laplace (double exponential) distribution on the weights.
 
 ## Week 3 (lectures 5 and 6): the big picture
 

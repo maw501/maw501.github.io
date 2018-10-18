@@ -58,7 +58,8 @@ There were quite a few of these hiding behind the scenes (and some in plain sigh
 
 ## Things I'm unclear on (or outstanding questions)
 
-The main thing appears to be the gap between the quiz difficulty which is so far quite straightforward vs. the technical details covered in lectures. This will be the topic of another post giving my initial course thoughts.
+* The main thing appears to be the gap between the quiz difficulty which is so far quite straightforward vs. the technical details covered in lectures. This will be the topic of another post giving my initial course thoughts.
+* There are also a few little points around the technical details of deriving the MLE solution and the LS solution.
 
 ## What did the textbooks say?
 

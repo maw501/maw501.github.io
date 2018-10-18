@@ -96,8 +96,10 @@ Here are some of the mathematical details from the week:
 
 ## Things I'm unclear on (or outstanding questions)
 
-* Does: $p(y_0 \mid X, x_0, w) = p(y \mid X, w) \, p(y_0\mid x_0, w)$ ?
-* TBC
+* Why does: $p(y_0 \mid X, x_0, w) = p(y \mid X, w) \, p(y_0\mid x_0, w)$ ?
+  * Here $(y, X)$ represents original data and $(y_0, x_0)$ new data we receive.
+* Why under the model $y \sim N(Xw, \sigma^2 I)$ when we calculate $E[w_{ML}]$ do we have: $E[w_{ML}] = \int [(X^TX)^{-1}X^Ty]\,p(y \mid X, w)\, dy$ ?
+  * Recall: $w_{ML} = (X^TX)^{-1}X^Ty$
 
 ## What did the textbooks say?
 
