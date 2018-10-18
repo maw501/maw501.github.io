@@ -11,16 +11,18 @@ highlighter: rouge
 markdown: kramdown
 
 defaults:
-  - scope:
-      path: ""
-      type: "pages"
+  -
+    scope:
+      path: "" # an empty string here means all files in the project
     values:
       layout: "default"
-  - scope:
-      path: ""
-      type: "posts"
+  -
+    scope:
+      path: "" # an empty string here means all files in the project
+      type: "posts"	
     values:
       layout: "post"
+
 
 # Exclude these files from your production _site
 exclude:
