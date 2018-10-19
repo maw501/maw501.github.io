@@ -90,9 +90,9 @@ p
 
 #sidebar-wrapper
 {
-  margin-left:-250px;
+  margin-left:-225px;
   left:250px;
-  width:350px;
+  width:275px;
   background:#f8f8f8;
   position:fixed;
   height:100%;
@@ -120,20 +120,20 @@ p
   text-indent:20px;
   font-family:"Helvetica Neue", helvetica, "Open Sans", sans-serif;
   font-weight:200;
-  color:#9c9c9c;
+  color:#0f2578;
   text-shadow:1px 1px #fff
 }
 
 .sidebar-nav li a
 {
-  color:#999;
+  color:#0f2578;
   display:block;
   text-decoration:none
 }
 
 .sidebar-nav li a:hover
 {
-  color:#000;
+  color:#0f2578;
   background:#fff;
   text-decoration:none;
   transition:all .2s ease 0
@@ -153,12 +153,12 @@ p
 {
   font-size:15px;
   font-weight:100;
-  color:#5d5f67
+  color:#0f2578
 }
 
 .nav-toggle {
     display: none;
-    color: #180e47;
+    color: #0f2578;
     padding-left: 10px;
     padding-top: 10px;
   }
@@ -166,7 +166,7 @@ p
 .brand
 {
   font-weight:800;
-  color:#6c7077;
+  color:#0f2578;
   font-family:"Helvetica Neue", helvetica, "Open Sans",sans-serif;
   font-size:1.4em;
   text-shadow:1px 1px #fff
@@ -174,7 +174,7 @@ p
 
 .brand:hover
 {
-  color:#180e47;
+  color:#0f2578;
   -o-transition:.5s;
   -ms-transition:.5s;
   -moz-transition:.5s;
@@ -184,12 +184,12 @@ p
 
 .sidebar-nav > .sidebar-brand a
 {
-  color:#999
+  color:#0f2578
 }
 
 .sidebar-nav > .sidebar-brand a:hover
 {
-  color:#fff;
+  color:#0f2578;
   background:none
 }
 
@@ -253,7 +253,7 @@ pre
 
 .showcase-wrapper
 {
-  width:100%;
+  width:90%;
   height:80vh;
   min-height:500px;
   margin-top:-50px;
@@ -576,22 +576,22 @@ time
   text-shadow:1px 1px #fff
 }
 
-.fashion
+.mathematics
 {
   border-left:solid 2px #bc0005
 }
 
-.fashion-button
+.mathematics-button
 {
-  background-color:#bc0005
+  background-color:#bb0d12
 }
 
-.fashion:hover
+.mathematics:hover
 {
   border-left:solid 2px #f40006
 }
 
-.fashion-button:hover
+.mathematics-button:hover
 {
   background-color:#f40006
 }
@@ -603,7 +603,7 @@ time
 
 .programming-button
 {
-  background-color:#7dbcb2
+  background-color:#137e1b
 }
 
 .programming:hover
@@ -616,64 +616,44 @@ time
   background-color:#bbe9e2
 }
 
-.tech
+.machinelearning
 {
   border-left:solid 2px #644539
 }
 
-.tech-button
+.machinelearning-button
 {
-  background-color:#644539
+  background-color:#0a2297
 }
 
-.tech:hover
+.machinelearning:hover
 {
   border-left:solid 2px #F4A273
 }
 
-.tech-button:hover
+.machinelearning-button:hover
 {
   background-color:#F4A273
 }
 
-.misc
+.learning
 {
   border-left:solid 2px #9e9599
 }
 
-.misc-button
+.learning-button
 {
-  background-color:#9e9599
+  background-color:#08a6a6
 }
 
-.misc:hover
+.learning:hover
 {
   border-left:solid 2px #cfe0ea
 }
 
-.misc-button:hover
+.learning-button:hover
 {
   background-color:#cfe0ea
-}
-
-.podcasts
-{
-  border-left:solid 2px #387b94
-}
-
-.podcasts-button
-{
-  background-color:#387b94
-}
-
-.podcasts:hover
-{
-  border-left:solid 2px #2FD0EF
-}
-
-.podcasts-button:hover
-{
-  background-color:#2FD0EF
 }
 
 #menu-toggle,.project-post div
