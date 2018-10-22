@@ -58,55 +58,60 @@ Feature or basis expansions are usually introduced in quite a mathematically hea
 
 I have actually just written a separate post on the kernel trick [here](../19/The-kernel-trick).
 
-#### Gaussian Processes
+#### Gaussian Processes (GPs)
 
-In a loose sense Gaussian Processes can be thought of as a probabilistic non-parametric form of non-linear regression. Or at least that is how they are usually introduced. However this way of introducing them can cause confusion which I hope to clear up below. First though, let's take a look at the non-linear regression perspective. 
+In a loose sense Gaussian Processes can be thought of as a probabilistic non-parametric form of non-linear regression. Or at least that is how they are usually introduced. I hope to post a separate article on GPs with code examples that can better explain things.
 
-* For any subset of
-Similar to KNN, the Gaussian Process is a lazy algorithm: we keep the training data, and fit a model for a specific input. Also like KNN, the shape of the model will come from the data. And as with KNN, the key part is the relationship between examples, which we haven't defined yet.
-The kernel function takes in any two points, and outputs the covariance between them. That determines how strongly linked (correlated) these two points are.
+Something I don't usually do (but in line with the fact I'm not wanting to explain everything from scratch but just give my take on things): preliminary reading [here](http://katbailey.github.io/post/gaussian-processes-for-dummies/), [here](http://platypusinnovation.blogspot.com/2016/05/a-simple-intro-to-gaussian-processes.html) and [here](http://keyonvafa.com/gp-tutorial/). There are also good lectures [here](https://www.youtube.com/watch?v=4vGiHC35j9s&list=PLE6Wd9FR--EdyJ5lbFl8UuGjecvVw66F6&t=0s&index=9) from none other than Nando de Freitas that cover Gaussian Processes a lot more thoroughly than we did in lectures.
 
+##### Attempt at an explanation 1
 
+We specify some prior on our data by defining a kernel function which tells us how similar two vectors in our input space are (i.e. how similar are two rows of our design matrix $X$ which are usually in $\mathbb{R}^d)$.
+  * Point of confusion 1: all of the beginner tutorials for Gaussian Processes usually use a 1d example and non-linear regression and so it's easy to see when two points are near each other in $x$ space. But the $x$-axis could equally represent how close together our points are after they've come out of the kernel function. i.e. the $x$-axis now tells us how similar these points are in their $d$-dimensional space. We can have $n$ of these points (rows in our dataset).
 
+So our kernel (which we haven't yet defined) computes the similarity between each of our $n$ data points and thus returns a $n$ by $n$ matrix. We then define an $n$ dimensional Gaussian $f \sim N(\mu_X, K_{XX})$ which is the prior probabilistic model of how our data is generated. $\mu_X$ is the mean function of each data point and is often assumed to be 0 for reasons not discussed here.
 
+**We can now simulate new data from this function $f$**
 
+At this point you probably hear phrases like "Gaussian Processes are simply an infinite-dimensional distribution over functions" which do nothing to aid understanding. "Ah yes" you say, "a distribution over functions, why I do that all the time".
 
+The reason this phrase crops up is because theoretically we could have an infinite about of data points (we don't, we have a finite subset $n$) and we can sample from this prior $f \sim N(\mu_X, K_{XX})$ which turns out to be defining a distribution over the possible functions which define our data.
 
+##### What is the kernel?
 
+The kernel is actually the crucial thing that determines what sort of functions we end up with. It basically controls the smoothness and type of functions we can get from our prior. How do I choose the kernel? Read [this](http://www.cs.toronto.edu/~duvenaud/cookbook/index.html).
+
+##### Right, so I think I get the kernel/distribution over function thing, now what?
+
+Well the point is that after we have specified our prior and then have seen some data we can sample from our posterior and see what our functions values look like probabilistically. Furthermore, when we see new data we can define a probability distribution over the set of possible values we think the output will take. This is like forming a predictive distribution which we have seen before.
+
+**Gaussian Processes section TBC**
+
+##### Further reading
+More links [here](http://people.ee.duke.edu/~lcarin/David1.27.06.pdf), [here](https://www.linkedin.com/pulse/machine-learning-intuition-gaussian-processing-chen-yang) and [here](https://www.eurandom.tue.nl/events/workshops/2010/YESIV/Prog-Abstr_files/Ghahramani-lecture2.pdf).
 
 ## Main mathematical ideas from the lectures
 
-* **Gaussian class conditional densities**
-   * Defining $p(x \mid Y=y) = N(x \mid \mu_y, \Sigma_y)$ then we can calculate the MLE estimates of $(\mu_y, \Sigma_y)$ which are just the empirical mean and covariances of the corresponding class $y$.
-* **Using log odds to make a binary classification decision**
-  * For a given class we are approximating $p(Y=y \mid X=x)$ with $p(x \mid Y=y)\,p(Y=y)$. For two classes taking the natural log of the ratio of the probabilities is called the log odds:
-    * E.g. Evaluate if: $\ln \dfrac{p(x \mid y=1)\,p(y=1)}{p(x \mid y=0)\,p(y=0)} > 0$
-    * **Example for LDA:** i.e. $p(x \mid Y=y) = N(x \mid \mu_y, \Sigma)$ this evaluates to something a little ugly but the main point to note is that there is a term not involving $x$ which we call $w_0$ and a term involving $x^T$ multiplied by a vector not involving $x$, we call this $w$. Both $w$ and $w_0$ involve $\Sigma, \mu_1, \mu_0$ as well as $\pi_0, \pi_1$ which are the baseline priors e.g. $p(y=0), p(y=1)$.
-    * So evaluating which class a point belongs to is equivalent to determining the sign of $x^Tx + w_0$ where in this case we have explicit formula for $w$ and $w_0$.
-    * This produces a linear decision boundary.
-    * Extend to QDA (still solvable analytically) by using different covariances for each class.
-* **Hyperplanes**
-  * The main idea is that $x^Tw + w_0$ gives a sense of distance from the hyperplane with the sign telling us which side we are on. The lecture notes have some nice illustrations of this that are much easier to follow than words so please refer to those.
+* **Logistic Regression algorithm**
+  * **Input:** training data $(x_1, y_1), ..., (x_n, y_n)$ and step size $\eta >0$.
+  * Step 1: Set our weights at step 1 equal to the zero vector: $w^{(1)} = \vec{0}$
+  * Step 2: For step $t = 1, 2, ...$ do
+    * Update $w^{(t+1)} = w^{(t)} + \eta \sum_{i=1}^{n} (1-\sigma_i(y_i \cdot w)) y_i x_i$
+  * In words this means we grab the probability asssiss
+
 
 ## Some mathematical details
 
 Here are some of the mathematical details from the week:
 
-* **Notions of distance**:
-  * The typical Euclidean distance in $\mathbb{R}^d$ is $\|\|u-v\|\|\_2$ but we can extend this notion to the $l_p$ distance for $p \in [1, \infty]$ as follows: $l_p = \|\|u-v\|\|\_p = \big(\sum_{i=1}^{d}\|u_i - v_i\|^p\big)^{\frac{1}{p}}$
-    * Here the single $\|$ means take the absolute value of the resulting number when we subtract $v_i$ from $u_i$.
-* **Probability details**
-  * There were two of these introduced in the lecture and whilst I don't usually find some aspects of probability theory highly intuitive I do think the latter of the two results mentioned in class actually has a simpler explanation. It was presented as follows:
-    * $ C = E[A \mid B] $ with $A$ and $B$ both random, so $C$ is random.
-    * $E[C] = E[E[A \mid B]] = E[A]$ is the 'tower property' of expectation
-    * **What does this mean intuitively?**
-    * **Example**: let's say there is a factory that makes fancy new GPUs and depending on the result of a fair coin flip some burn out after an average of 10,000 hours (flip H) and some burn out after an average of 20,000 hours (flip T).
-      * Let's call flipping H event $B$ and random variable $A$ how many hours before the GPU burns out.
-        * Note: $B^c$ is thus the event of flipping T.
-      * In this case $ C = E[A \mid B] $ is still a random variable as given we have a GPU there is still some randomness as $A$ is itself random. However we can think about what the **average** value of $C$ might be, that is, the average numbers of hours a GPU from this factory will last: $E[C] = E[A \mid B]P[B] + E[A \mid B^c]P[B^c] = 10,000\cdot0.5 + 20,000\cdot0.5 = 15,000$ hours. This is no longer random.
-      * It is just the probability weighted average and is a completely natural thing to do!
-* **Cosine similarity and hyperplanes**
-  * Note: this was incorrectly stated as the cosine rule in lecture which means something else. Cosine similarity is a measure of how 'similar' two vectors are my calculating the angle between them - vectors that point in the similar directions have a higher cosine similarity.
+* **Logistic Regression notation**:
+  * For two classes $y=+1$ or $y=-1$.
+  * Define $\sigma_i(w) = \sigma(x_i^T;w) = \dfrac{e^{x_i^Tw}}{1+e^{x_i^Tw}}$
+  * Call this $\sigma(x_i^T;w) = p(y_i \mid x_i, w)$
+  * So the joint likelihood of our data is: $\, \prod_{i = 1}^{n} p(y_i \mid x_i, w)$
+  * This is just the product of the probability of each point dependent on its $x_i$.
+  * It turns out (for unimportant reasons) we can write this as $\, \prod_{i = 1}^{n} \sigma(y_i \cdot w)$ where we have $\sigma(y_i \cdot w) = \dfrac{e^{y_ix_i^Tw}}{1+e^{y_ix_i^Tw}}$.
+    * Basically if our $y_i = +1$ we get the probability of the +1 class which we call $\sigma_i(w)$ and if $y=-1$ we get the probability of the negative class defined as $1-\sigma_i(w)$.
 
 ## Things I'm unclear on (or outstanding questions)
 
