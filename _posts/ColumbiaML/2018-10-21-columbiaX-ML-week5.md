@@ -56,7 +56,7 @@ Feature or basis expansions are usually introduced in quite a mathematically hea
 
 #### Kernels are a way of assessing the similarity of our data points to each other (i.e. the rows of our $X$ matrix) - they also have the fearsome idea of the *kernel trick*
 
-I have actually just written a separate post on the kernel trick [here](../19/The-kernel-trick).
+
 
 #### Gaussian Processes
 
