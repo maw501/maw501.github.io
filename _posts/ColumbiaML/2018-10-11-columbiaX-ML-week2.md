@@ -1,6 +1,6 @@
 ---
 layout: post
-title: ColumbiaX - Machine Learning - week 2
+title: ColumbiaX - ML - week 2
 date: 2018-10-11
 use_math: true
 ---
