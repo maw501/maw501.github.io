@@ -56,11 +56,12 @@ Feature or basis expansions are usually introduced in quite a mathematically hea
 
 #### Kernels are a way of assessing the similarity of our data points to each other (i.e. the rows of our $X$ matrix) - they also have the fearsome idea of the *kernel trick*
 
-
+I have actually just written a separate post on the kernel trick [here](../19/The-kernel-trick).
 
 #### Gaussian Processes
 
-* Have a notion of how similar two points are in $x$ space (which can be $d$-dimensional).
+In a loose sense Gaussian Processes can be thought of as a probabilistic non-parametric form of non-linear regression. Or at least that is how they are usually introduced. However this way of introducing them can cause confusion which I hope to clear up below. First though, let's take a look at the non-linear regression perspective. 
+
 * For any subset of
 Similar to KNN, the Gaussian Process is a lazy algorithm: we keep the training data, and fit a model for a specific input. Also like KNN, the shape of the model will come from the data. And as with KNN, the key part is the relationship between examples, which we haven't defined yet.
 The kernel function takes in any two points, and outputs the covariance between them. That determines how strongly linked (correlated) these two points are.

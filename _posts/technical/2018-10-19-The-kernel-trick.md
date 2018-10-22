@@ -5,7 +5,7 @@ date: 2018-10-19
 use_math: true
 ---
 
-**Work in progress**
+**Note: a work in progress**
 
 Kernels get a bad rep as they are often poorly explained - usually in the context of SVMs. I am now going to do my best to explain them as simply as possible including the kernel trick. I am going to do this an example first and then we will discuss the theory.
 
@@ -62,15 +62,13 @@ So if we want to fit a second-order polynomial mapping for our data we have two 
 
 Both are the same as 'mapping' our data to a 'higher dimensional space' (in this case that of 2nd order polynomials) and doing a calculation there. The **kernel trick** is that we are able to actually just use our original data and compute $\textbf{k}(\textbf{a},\textbf{b}) = (1 + \textbf{a}^T\textbf{b})^2$ without having to faff about with 'transforming' it to this higher dimensional space by creating new columns and we save all the computational overhead it would bring.
 
-**The special functions for which it turns out allow us to stay in our original lower dimensional space but are equivalent to operating in a higher dimensional space are called kernel functions**
+**The special functions for which it turns out allow us to stay in our original lower dimensional space but are equivalent to operating in a higher dimensional space are called kernel functions.**
 
-For this to work we must be able to write the calculation in the new higher dimensional feature space as inner products e.g. 
+For this to work we must be able to write the calculation in the new higher dimensional feature space as dot/inner products e.g. $\phi(\textbf{a})^T\phi(\textbf{b})$
 
-##### We are now ready to understand the kernel trick
+So it turns out we can stick with our original data, use a kernel function and know that it corresponds to taking the dot product of the transformed vectors in a higher dimensional space - **without even visiting it or knowing what $\phi$ is!!!**  This allows us to find complex non linear boundaries that are able to better separate the classes in our dataset.
 
-* Explanation 1: kernels are tho
-
-Basically a kernel function is a function where it happens to turn out that computing the kernel functions in lower dimensions is the same as computing the inner product in the higher dimensional feature space. The feature space is implicit, and often infinite dimensional.
+Thus a kernel function is a function where it happens to turn out that computing the kernel functions in lower dimensions is the same as computing the inner product in the higher dimensional feature space. The feature space is implicit, and often infinite dimensional.
 
 ##### Further reading
 
