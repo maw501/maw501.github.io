@@ -28,15 +28,23 @@ Week 5 introduced the topic of logistic regression in several guises before gett
 
 ## Week 5 (lectures 9 and 10): more detailed overview
 
-Week 5 has some theoretically heavy topics in (most notably Gaussian Processes) which I will do my best to elaborate on in a little more detail, and hopefully with less dense presentation.
+Week 5 has some theoretically heavy topics in (most notably kernels and Gaussian Processes) which I will do my best to elaborate on in a little more detail, and hopefully with less dense presentation.
 
 #### Logistic Regression is a discriminative model analogous to linear regression but for classification.
 
 It learns a model of the form $\sigma(x^Tw + w_0)$ with no explicit assumptions on $w$ and $w_0$.
 
-Recall previously in the context of binary classification that we chose to model $p(y\mid x)$ using Bayes rule as $\dfrac{p(x \mid y) \, p(y)}{p(x)}$ with a prior on $p(y)$ of a Bernoulli and $p(x \mid y)$ as we pleased e.g. a Gaussian. We then took the log of the ratio of each of these class probabilities and showed it could be expressed in the form $x^Tw + w_0$ where we had a closed expression for both $w$ and $w_0$ in terms of our prior and the data $x$. This led to either LDA or QDA depending on whether we assumed each class had the same variance or not. This is a **generative** model as we are modelling $x$. Logistic regression is a **discriminative** version of this where we relax the assumptions on the data $x$ and simply try to find a model directly from the of the form $p(y \mid x) = \sigma(x^Tw + w_0)$ where $\sigma$ is the sigmoid function $\sigma(t) = \dfrac{e^t}{1+e^t}$ and we call $t=x^Tw+w_0$ the *link function*.
-  * Note if we absorb the term $w_0$ into our data then we can think just about $x^Tw$ and note that if $x^Tw > 0$ then $\sigma(x^Tw) > 0.5$ and we can predict the class of $y$ accordingly.
-  * There is no analytic solution to solving the maximum likelihood solution and so we use an iterative algorithm. See the mathematical details section.
+Recall previously in the context of binary classification that we chose to model $p(y\mid x)$ using Bayes rule as:
+
+$$\dfrac{p(x \mid y) \, p(y)}{p(x)}$$
+
+with a prior on $p(y)$ of a Bernoulli and $p(x \mid y)$ as we pleased e.g. a Gaussian. We then took the log of the ratio of each of these class probabilities and showed it could be expressed in the form $x^Tw + w_0$ where we had a closed expression for both $w$ and $w_0$ in terms of our prior and the data $x$. This led to either LDA or QDA depending on whether we assumed each class had the same variance or not. This is a **generative** model as we are modelling $x$. Logistic regression is a **discriminative** version of this where we relax the assumptions on the data $x$ and simply try to find a model directly from the of the form $p(y \mid x) = \sigma(x^Tw + w_0)$ where $\sigma$ is the sigmoid function
+
+$$\sigma(t) = \dfrac{e^t}{1+e^t}$$
+
+and we call $t=x^Tw+w_0$ the *link function*.
+* Note if we absorb the term $w_0$ into our data then we can think just about $x^Tw$ and note that if $x^Tw > 0$ then $\sigma(x^Tw) > 0.5$ and we can predict the class of $y$ accordingly.
+* There is no analytic solution to solving the maximum likelihood solution and so we use an iterative algorithm. See the mathematical details section.
 
 #### Bayesian Logistic Regression: just like we put a prior on our $w$ parameters for linear regression we can regularize logistic regression in the same way
 
@@ -56,49 +64,56 @@ Feature or basis expansions are usually introduced in quite a mathematically hea
 
 #### Kernels are a way of assessing the similarity of our data points to each other (i.e. the rows of our $X$ matrix) - they also have the fearsome idea of the *kernel trick*
 
-I have actually just written a separate post on the kernel trick [here](../19/The-kernel-trick).
+I have written a separate post on the kernel trick [here](../19/The-kernel-trick) and kernels more generally [here](../22/Why-Kernels-Matter).
 
 #### Gaussian Processes (GPs)
 
-In a loose sense Gaussian Processes can be thought of as a probabilistic non-parametric form of non-linear regression. Or at least that is how they are usually introduced. I hope to post a separate article on GPs with code examples that can better explain things.
-
-Something I don't usually do (but in line with the fact I'm not wanting to explain everything from scratch but just give my take on things): preliminary reading [here](http://katbailey.github.io/post/gaussian-processes-for-dummies/), [here](http://platypusinnovation.blogspot.com/2016/05/a-simple-intro-to-gaussian-processes.html) and [here](http://keyonvafa.com/gp-tutorial/). There are also good lectures [here](https://www.youtube.com/watch?v=4vGiHC35j9s&list=PLE6Wd9FR--EdyJ5lbFl8UuGjecvVw66F6&t=0s&index=9) from none other than Nando de Freitas that cover Gaussian Processes a lot more thoroughly than we did in lectures.
-
-##### Attempt at an explanation 1
-
-We specify some prior on our data by defining a kernel function which tells us how similar two vectors in our input space are (i.e. how similar are two rows of our design matrix $X$ which are usually in $\mathbb{R}^d)$.
-  * Point of confusion 1: all of the beginner tutorials for Gaussian Processes usually use a 1d example and non-linear regression and so it's easy to see when two points are near each other in $x$ space. But the $x$-axis could equally represent how close together our points are after they've come out of the kernel function. i.e. the $x$-axis now tells us how similar these points are in their $d$-dimensional space. We can have $n$ of these points (rows in our dataset).
-
-So our kernel (which we haven't yet defined) computes the similarity between each of our $n$ data points and thus returns a $n$ by $n$ matrix. We then define an $n$ dimensional Gaussian $f \sim N(\mu_X, K_{XX})$ which is the prior probabilistic model of how our data is generated. $\mu_X$ is the mean function of each data point and is often assumed to be 0 for reasons not discussed here.
-
-**We can now simulate new data from this function $f$**
-
-At this point you probably hear phrases like "Gaussian Processes are simply an infinite-dimensional distribution over functions" which do nothing to aid understanding. "Ah yes" you say, "a distribution over functions, why I do that all the time".
-
-The reason this phrase crops up is because theoretically we could have an infinite about of data points (we don't, we have a finite subset $n$) and we can sample from this prior $f \sim N(\mu_X, K_{XX})$ which turns out to be defining a distribution over the possible functions which define our data.
-
-##### What is the kernel?
-
-The kernel is actually the crucial thing that determines what sort of functions we end up with. It basically controls the smoothness and type of functions we can get from our prior. How do I choose the kernel? Read [this](http://www.cs.toronto.edu/~duvenaud/cookbook/index.html).
-
-##### Right, so I think I get the kernel/distribution over function thing, now what?
-
-Well the point is that after we have specified our prior and then have seen some data we can sample from our posterior and see what our functions values look like probabilistically. Furthermore, when we see new data we can define a probability distribution over the set of possible values we think the output will take. This is like forming a predictive distribution which we have seen before.
-
-**Gaussian Processes section TBC**
-
-##### Further reading
-More links [here](http://people.ee.duke.edu/~lcarin/David1.27.06.pdf), [here](https://www.linkedin.com/pulse/machine-learning-intuition-gaussian-processing-chen-yang) and [here](https://www.eurandom.tue.nl/events/workshops/2010/YESIV/Prog-Abstr_files/Ghahramani-lecture2.pdf).
+These are getting their own blog post [here](../22/Gaussian-Processes).
 
 ## Main mathematical ideas from the lectures
 
-* **Logistic Regression algorithm**
-  * **Input:** training data $(x_1, y_1), ..., (x_n, y_n)$ and step size $\eta >0$.
-  * Step 1: Set our weights at step 1 equal to the zero vector: $w^{(1)} = \vec{0}$
-  * Step 2: For step $t = 1, 2, ...$ do
-    * Update $w^{(t+1)} = w^{(t)} + \eta \sum_{i=1}^{n} (1-\sigma_i(y_i \cdot w)) y_i x_i$
-  * In words this means we grab the probability asssiss
+##### Logistic Regression algorithm
+* **Input:** training data $(x_1, y_1), ..., (x_n, y_n)$ and step size $\eta >0$.
+* Step 1: Set our weights at step 1 equal to the zero vector: $w^{(1)} = \vec{0}$
+* Step 2: For step $t = 1, 2, ...$ do
+  * Update $w^{(t+1)} = w^{(t)} + \eta \sum_{i=1}^{n} (1-\sigma_i(y_i \cdot w)) y_i x_i$
+* In words this means we grab the probability of an observed point with $\sigma_i(y_i \cdot w)$ so $1 - \sigma_i(y_i \cdot w)$ is the probability we assigned the wrong label
+* We sum the probabilities of being wrong over all of our data points and use this to weight our update to $w^{(t+1)}$.
+* So the logistic regression update step is the same as for the perceptron except we are weighting by the probability we are wrong.
 
+* **Recap:** recall the perceptron update is:  $w^{(t+1)} = w^{(t)} +\eta y_ix_i$ where we are only updating the examples $i$ that are misclassified. So those are the ones that 'move' the boundary around. More info on why this moves the boundary correctly is given [here](https://towardsdatascience.com/perceptron-learning-algorithm-d5db0deab975) and  [here](https://www.lucidarme.me/simplest-perceptron-update-rules-demonstration/).
+
+##### Laplace Approximation
+
+* This is a simple idea but gets a little ugly and I'm not going to overtly dwell on this as it's not really a machine learning technique but rather a more general method used to approximate integrals. It arises in the context of Bayesian logistic regression where we are trying to find the posterior $p(w \mid x, y)$ with $w \sim N(0, \lambda^{-1}I)$. Recall for logistic regression we have a joint likelihood of our data (see below) equal to: $\, \prod_{i = 1}^{n} \sigma(y_i \cdot w)$. The posterior thus becomes:
+
+$$p(w \mid x, y) = \dfrac{\prod_{i = 1}^{n} \sigma(y_i \cdot w) \, p(w)}{\int \prod_{i = 1}^{n} \sigma(y_i \cdot w) \, p(w) dw} $$
+
+* **Side point**: note from Bayes we have written the denominator as the numerator integrated over all parameter values. We have done this as from Bayes we have:
+
+  $$ p(w \mid x, y) = \dfrac{p(y \mid x, w) p(w)}{p(y \mid x)}$$
+
+  * We are calling $p(y \mid x, w) = \sigma(x_i;w) = \sigma(y_i \cdot w)$ in this notation, see below.
+  * **Q: what is $p(y \mid x)$ equal to - why is it an integral???**
+  * **Answer:** It's the actual probability of our data (not assuming any parameters from our model) - we don't know what this is!!! But given we have assumed a probabilistic model for our data depending on some parameters $w$ we can try to get $p(y \mid x)$ by integrating out the dependence on $w$. Unfortunately this is easier said than done.
+* We then (details omitted) can take a second order expansion of $f(w) = \ln p(y, w \mid x)$ around a point of $w$ which we set to be $w_{MAP}$. This allows us to get an expression for $p(w \mid x, y) \sim N(\mu, \Sigma)$ after some work.
+
+##### Kernels
+
+Kernels in general are going to be dealt with more thoroughly in [this](../22/Why-Kernels-Matter) post.
+
+Kernels are symmetric functions taking in two vectors in $\mathbb{R}^d$ and computing the similarity between them according to some specified way such that the result is positive. Thus $K$ is a $n$ by $n$ matrix with the similarity of each data point to every other. In this sense $K$ satisfies the properties of a covariance matrix. A few points on kernels:
+  * We can reformulate many existing linear models into an expression involving a kernel, for example ridge regression. This means that instead of predicting $y(\textbf{x}) = w^T \phi(\textbf{x})$ for a new point/row $\textbf{x}$ (after it may have been transformed by $\phi$) we can instead predict using:
+
+    $$y(\textbf{x}) = \textbf{k}(\textbf{x})^T(K + \lambda I)^{-1}\textbf{y}$$
+
+    * **Notice that there is no weight vector $w$ but the methods are identical**
+    * $\textbf{k}(\textbf{x})$ is vector of length $n$ holding the result of our new points similarity given by the kernel function to each of the orginal $n$ points in our data set.
+    * $K$ is the $n$ by $n$ matrix with the similarity of each data point from our training set to every other.
+    * $\textbf{y}$ is the target from our training data of length $n$.
+  * **Q: why would we do this?**
+    * **Answer:** This type of kernel regression moves focus away from features and their parameters to the actual data points and their weights. In many machine learning methods there is a duality between feature weights and example weights. This duality allows us to use the kernel trick to expand the representational power of a model without (much) computational expense. All the information about features went into defining $K$, the kernel matrix. Further reading [here](https://alliance.seas.upenn.edu/~cis520/dynamic/2017/wiki/index.php?n=Lectures.Kernels) or Bishop Chapter 6.
+  * We can compute new kernels by adding, multiplying or exponentiating existing kernels.
 
 ## Some mathematical details
 
@@ -112,6 +127,8 @@ Here are some of the mathematical details from the week:
   * This is just the product of the probability of each point dependent on its $x_i$.
   * It turns out (for unimportant reasons) we can write this as $\, \prod_{i = 1}^{n} \sigma(y_i \cdot w)$ where we have $\sigma(y_i \cdot w) = \dfrac{e^{y_ix_i^Tw}}{1+e^{y_ix_i^Tw}}$.
     * Basically if our $y_i = +1$ we get the probability of the +1 class which we call $\sigma_i(w)$ and if $y=-1$ we get the probability of the negative class defined as $1-\sigma_i(w)$.
+* **Mercer's theorem**
+  * This theorem justifies our use of a kernel as a proxy for transforming two data points/rows $(x_i, x_j)$ into a higher dimensional space according to some transformation $\phi$ and then computing $\phi(x_i)^T \phi(x_j)$ (the dot product in the higher dimensional space). Mercer's theorem basically assures us that computing $\textbf{k}(x_i, x_i)$ with our original data $x_i, x_j$ is the same as performing $\phi(x_i)^T \phi(x_j)$ in some higher dimensional space $\mathbb{R}^D$ where $D>d$.
 
 ## Things I'm unclear on (or outstanding questions)
 
