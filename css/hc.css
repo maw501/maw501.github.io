@@ -72,9 +72,9 @@ p
 
 .container
 {
-  width:80%;
+  width:75%;
   padding-right:0;
-  padding-top:30px
+  padding-top:5px
 }
 
 .container a
@@ -106,7 +106,7 @@ p
   left:225px;
   width:225px;
   background:#d3e8ee ;
-  background-image:url("/images/math.jpg");
+  background-image:url("/images/ai.jpg");
   position:fixed;
   height:100%;
   overflow-y:auto;
@@ -267,13 +267,13 @@ pre
 .showcase-wrapper
 {
   width:75%;
-/*  height:10vh; */
+/*  height:10vh;
   min-height:500px;
   min-width:400px;
   max-height:250px;
   max-width:1000px;
-  margin-top:-75px;
-  margin-left: 65px;
+  margin-top:-50px;
+  margin-left: 65px;*/
   /*box-shadow:inset 0 -5px 5px -2px rgba(119,119,119,0.35);
   -moz-box-shadow:inset 0 -10px 5px -2px rgba(119,119,119,0.35);
   -webkit-box-shadow:inset 0 -10px 5px -2px rgba(119,119,119,0.35);
@@ -289,10 +289,10 @@ pre
   font-family: 'Droid Sans Mono', monospace;
   font-weight:bolder;
   color:#fff;
-  text-align:center;
-  padding-top:20%
+  /*text-align:center; */
+  padding-top:5%
 }
-
+/*
 .wide
 {
   width:100%;
@@ -300,12 +300,12 @@ pre
   margin:0;
   padding:0 10% 30px
 }
-
+*/
 #welcome-greeting
 {
   width:75%;
   padding-top:5px;
-  margin-left:75px;
+  margin-left:15%;
   margin-top:5px;
 }
 
@@ -475,8 +475,8 @@ time
   /*margin:10px 10%; */
   margin-top: 15px;
   padding:10px 4px;
-  margin-left: 75px;
-  width: 750px
+  margin-left: 15%;
+  width: 75%
 }
 
 .recent-posts h1
@@ -485,22 +485,23 @@ time
   font-size:1.6em
 }
 
+/* Sets box at top of projects page */
 .project-container
 {
-  width:100%;
+  width:75%;
   height:170px;
-  box-shadow:inset 0 -10px 5px -2px rgba(119,119,119,0.35);
+  /*box-shadow:inset 0 -10px 5px -2px rgba(119,119,119,0.35);
   -moz-box-shadow:inset 0 -10px 5px -2px rgba(119,119,119,0.35);
-  -webkit-box-shadow:inset 0 -10px 5px -2px rgba(119,119,119,0.35);
+  -webkit-box-shadow:inset 0 -10px 5px -2px rgba(119,119,119,0.35); */
   border-bottom:solid 1px #fff;
   background-image:url("/images/ai.jpg");
   background-size: 50%;
   z-index:-4;
-  margin-top:-55px;
+  margin-top:15px;
   margin-bottom:30px;
   color:#b21c01
 }
-
+/* Sets header font for box at top of projects page */
 .project-container h1
 {
   font-size:3em;
@@ -508,9 +509,9 @@ time
   font-weight:bolder;
   color: #b21c01;
   text-align:center;
-  padding-top:20px
+  padding-top:25px
 }
-
+/* Sets normal font for box at top of projects page */
 .project-container p
 {
   font-weight:300;
@@ -518,14 +519,16 @@ time
   font-family: 'Droid Sans Mono', monospace;
   color: #b21c01 ;
   text-align:center;
-  left-padding:20%
+  /*left-padding:20% */
 }
 
 .project-box
 {
   background-color:#f9f9f9;
   box-shadow:1px 1px 0 1px #e8e8e8;
-  min-height:200px
+  min-height:200px;
+  margin-top:25px;
+  width: 75%
 }
 
 .project-box:hover
@@ -555,7 +558,8 @@ time
 
 .project-post
 {
-  cursor:pointer
+  cursor:pointer;
+  /*margin-left: 75px */
 }
 
 .project-post h4
