@@ -13,7 +13,8 @@ body
 
 h1,h2,h3,h4,h5,h6
 {
-  font-family:"Helvetica Neue", helvetica, "Open Sans", sans-serif;
+  /*font-family:"Helvetica Neue", helvetica, "Open Sans", sans-serif; */
+  font-family: 'Droid Sans Mono', monospace;
   color:#3373ff;
   line-height: 200%
 }
@@ -105,6 +106,7 @@ p
   left:225px;
   width:225px;
   background:#d3e8ee ;
+  background-image:url("/images/math.jpg");
   position:fixed;
   height:100%;
   overflow-y:auto;
@@ -112,7 +114,7 @@ p
   margin-top:-8px;
   border-top:solid #180e47;
   transition:all .4s ease 0;
-  border-width:4px
+  border-width:2px
 }
 
 .sidebar-nav
@@ -128,23 +130,23 @@ p
 .sidebar-nav li
 {
   line-height:30px;
-  text-indent:20px;
-  font-family:"Helvetica Neue", helvetica, "Open Sans", sans-serif;
+  text-indent:10px;
+  font-family: 'Droid Sans Mono', monospace;
   font-weight:200;
-  color:#0f2578;
+  color:#c41705  ;
   text-shadow:1px 1px #fff
 }
 
 .sidebar-nav li a
 {
-  color:#0f2578;
+  color:#c41705;
   display:block;
   text-decoration:none
 }
 
 .sidebar-nav li a:hover
 {
-  color:#0f2578;
+  color:#c41705;
   background:#fff;
   text-decoration:none;
   transition:all .2s ease 0
@@ -157,14 +159,14 @@ p
 
 .sidebar-nav > .sidebar-brand
 {
-  font-size:15px
+  font-size:12px
 }
 
 .sidebar-nav > .sidebar-brand > h3
 {
   font-size:15px;
   font-weight:100;
-  color:#0f2578
+  color:#c41705
 }
 
 .nav-toggle {
@@ -177,8 +179,8 @@ p
 .brand
 {
   font-weight:800;
-  color:#0f2578;
-  font-family:"Helvetica Neue", helvetica, "Open Sans",sans-serif;
+  color:#c41705 ;
+  font-family: 'Droid Sans Mono', monospace;
   font-size:1.4em;
   text-shadow:1px 1px #fff
 }
@@ -264,15 +266,19 @@ pre
 
 .showcase-wrapper
 {
-  width:90%;
-  height:80vh;
+  width:75%;
+/*  height:10vh; */
   min-height:500px;
-  margin-top:-50px;
-  margin-left: 85px;
-  box-shadow:inset 0 -10px 5px -2px rgba(119,119,119,0.35);
+  min-width:400px;
+  max-height:250px;
+  max-width:1000px;
+  margin-top:-75px;
+  margin-left: 65px;
+  /*box-shadow:inset 0 -5px 5px -2px rgba(119,119,119,0.35);
   -moz-box-shadow:inset 0 -10px 5px -2px rgba(119,119,119,0.35);
   -webkit-box-shadow:inset 0 -10px 5px -2px rgba(119,119,119,0.35);
-  border-bottom:solid 1px #fff;
+  border-bottom:solid 1px #fff; */
+  background-repeat:no-repeat;
   background-size: cover;
   z-index:-4
 }
@@ -280,7 +286,7 @@ pre
 .showcase-text
 {
   font-size:3em;
-  font-family:"Helvetica Neue", helvetica, "Open Sans", sans-serif;
+  font-family: 'Droid Sans Mono', monospace;
   font-weight:bolder;
   color:#fff;
   text-align:center;
@@ -297,8 +303,10 @@ pre
 
 #welcome-greeting
 {
-  width:100%;
-  padding-top:5px
+  width:75%;
+  padding-top:5px;
+  margin-left:75px;
+  margin-top:5px;
 }
 
 #welcome-greeting > h1
@@ -306,7 +314,7 @@ pre
   font-size:3em;
   font-weight:700;
   color:#180e47;
-  line-height:130%
+  line-height:100%
 }
 
 #welcome-greeting h1:hover
@@ -323,7 +331,7 @@ pre
   font-weight:100;
   color:#2e2e2e;
   padding-top:0;
-  line-height:140%
+  line-height:100%
 }
 
 #welcome-greeting h2 a
@@ -340,6 +348,7 @@ pre
   text-shadow:1px 1px #fff;
   padding-left:20px;
   margin-bottom:0;
+  margin-left: 75px;
   padding-bottom:5px;
   padding-top:5px;
   margin-top:40px;
@@ -368,7 +377,7 @@ pre
   border:1px solid rgba(255,255,255,.4);
   color:rgba(255,255,255,.8);
   font-weight:200;
-  font-family:"Helvetica Neue", helvetica, "Open Sans", sans-serif;
+  font-family: 'Droid Sans Mono', monospace;
 }
 
 .showcase-button:hover
@@ -433,7 +442,7 @@ img
 time
 {
   color:#c9c9c9;
-  font-family:"Helvetica Neue", helvetica, "Open Sans", sans-serif;
+  font-family: 'Droid Sans Mono', monospace;
   font-weight:100;
   text-shadow:1px 1px #fff
 }
@@ -463,8 +472,11 @@ time
   background-color:#fff;
   color:#4d4d4d;
   box-shadow:1px 1px 0 1px #e8e8e8;
-  margin:10px 10%;
-  padding:10px 40px
+  /*margin:10px 10%; */
+  margin-top: 15px;
+  padding:10px 4px;
+  margin-left: 75px;
+  width: 750px
 }
 
 .recent-posts h1
@@ -481,29 +493,30 @@ time
   -moz-box-shadow:inset 0 -10px 5px -2px rgba(119,119,119,0.35);
   -webkit-box-shadow:inset 0 -10px 5px -2px rgba(119,119,119,0.35);
   border-bottom:solid 1px #fff;
-  /* background-image:url("/images/ai.jpg"); */
-  background-size: cover;
+  background-image:url("/images/ai.jpg");
+  background-size: 50%;
   z-index:-4;
   margin-top:-55px;
   margin-bottom:30px;
-  color:#fff
+  color:#b21c01
 }
 
 .project-container h1
 {
   font-size:3em;
-  font-family:"Helvetica Neue", helvetica, "Open Sans", sans-serif;
+  font-family: 'Droid Sans Mono', monospace;
   font-weight:bolder;
-  color: #211150;
+  color: #b21c01;
   text-align:center;
   padding-top:20px
 }
 
 .project-container p
 {
-  font-weight:200;
-  font-family:"Helvetica Neue", helvetica, "Open Sans",sans-serif;
-  color: #211150 ;
+  font-weight:300;
+  font-size:1.5em;
+  font-family: 'Droid Sans Mono', monospace;
+  color: #b21c01 ;
   text-align:center;
   left-padding:20%
 }
@@ -561,7 +574,7 @@ time
 
 .user-card h1
 {
-  font-family:"Helvetica Neue", helvetica, "Open Sans",sans-serif;
+  font-family: 'Droid Sans Mono', monospace;
   font-weight:bolder;
   font-size:2.5em;
   line-height:55px;
@@ -734,9 +747,6 @@ time
   #article {
       padding: 0 10px 0 10px;
   }
-
-
-
 
 .showcase-wrapper {
   width: 100%;
