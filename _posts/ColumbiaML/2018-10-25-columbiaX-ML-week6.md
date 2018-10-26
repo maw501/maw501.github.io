@@ -5,14 +5,17 @@ date: 2018-10-25
 use_math: true
 image: "svm.jpg"
 ---
+Week 6 in some ways introduced the old guard before handing over to the (relatively) new kids on the block. SVMs were all the rage over a decade ago whilst more modern data mining techniques (on non-huge datasets) now tend to lean heavily on decision trees.
+
+<!--more-->
 
 This page is a summary of my notes for the above course, link [here](https://www.edx.org/course/machine-learning-columbiax-csmm-102x-4).
 
 This is my first attempt at publishing course notes and I have no intention to make it comprehensive but rather to highlight the bits I feel are important and maybe explain some of the things I found a little trickier (or weren't explained to my taste). Understanding is deeply personal though if you spot any errors or have any questions please feel free to drop me an email.
-<!--more-->
+
 ## Week 6 (lectures 11 and 12): overview
 
-Week 6 in some ways introduced the old guard before handing over to the (relatively) new kids on the block. SVMs were all the rage over a decade ago whilst more modern data mining techniques (on non-huge datasets) now tend to lean heavily on decision trees. Whilst I think one is reasonably unlikely to encounter SVMs too much in the wild (they are outperformed by other methods and don't scale well) I guess that are taught as they have a strong theoretical background and allow a course to add lots of maths in order to look serious. They are also some nice links to logistic regression and once understood, the idea of kernels is actually quite powerful. I will not be dwelling on decision trees, bagging or boosting this week as this is something I have reasonable knowledge of and the meat of the week lies with SVMs. Onwards...
+Whilst I think one is reasonably unlikely to encounter SVMs too much in the wild (they are outperformed by other methods and don't scale well) I guess that are taught as they have a strong theoretical background and allow a course to add lots of maths in order to look serious. They are also some nice links to logistic regression and once understood, the idea of kernels is actually quite powerful. I will not be dwelling on decision trees, bagging or boosting this week as this is something I have reasonable knowledge of and the meat of the week lies with SVMs. Onwards.
 
 * **Support Vector Machines (SVMs)**
   * SVMs extend our notions of fitting a hyperplane to linearly separable by addressing some key issues: we fit the biggest 'wedge' between the classes we can, we allow some violations in order to not over-fit and we use kernels to achieve non-linear decision boundaries.
