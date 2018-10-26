@@ -42,14 +42,14 @@ body {
     font-size: 4em;
     font-family: "Coda", cursive;
     line-height: 1em;
-    color: ghostwhite;
+    color: #891408;
 }
 
 .topmost .subtitle {
     padding-bottom: 20px;
     font-size: 1.2em;
     font-family: "Space", monospace;
-    color: ghostwhite;
+    color: #891408;
 }
 
 
