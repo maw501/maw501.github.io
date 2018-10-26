@@ -3,12 +3,13 @@ layout: default
 title: Confusion Reigned
 ---
 <!--{% include showcase.html %} -->
+
 {% include greeting.html %}
 
 {% if site.posts != empty %}
 <div class="recent-posts">
   <h1>Recent Posts</h1>
-  {% for post in site.posts limit: 3 %}
+  {% for post in site.posts limit: 5 %}
     {% if forloop.first %}
       {% assign add_class = 'most-recent' %}
       {% capture fresh_tag %}
@@ -38,3 +39,35 @@ title: Confusion Reigned
   </ul>
 </div>
 {% endif %}
+
+<!--
+<div class="container">
+{% for post in site.posts limit: 3%}
+{% if post.foreign_url == null %}
+<div class="card post post-link" href="{{ post.url }}">
+{% else %}
+<div class="card post post-link" href="{{ post.foreign_url }}" foreign=true>
+{% endif %}
+    <div class="card-block">
+        <div class="row">
+            <div class="col-3">
+                <img class="img-fluid" width=250 src="assets/img/{{ post.image }}">
+            </div>
+            <div class="col-9">
+                <h4 class="header">{{ post.title }}</h4>
+                <hr/>
+                <article class="text main">
+                    {{ post.excerpt }}
+                </article>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer text-muted">
+        <div class="timestamp">
+            Publication Date: {{ post.date | date_to_long_string }}
+        </div>
+    </div>
+</div>
+{% endfor %}
+</div>
+-->
