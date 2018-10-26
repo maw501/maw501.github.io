@@ -1,0 +1,293 @@
+html {
+    height: 100%;
+    box-sizing: border-box;
+    font-size: 18px;
+    font-family: "Helvetica Neue", sans-serif;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+body {
+    position: relative;
+    min-height: 100%;
+    padding-bottom: 6rem;
+    background: whitesmoke;
+}
+
+
+/* ---------- */
+/* Top Header */
+/* ---------- */
+
+.topmost {
+    height: 150px;
+    text-align: center;
+    background: white;
+    background-image: url('/assets/img/blueprint.png');
+    position: relative;
+}
+
+.topmost .text, .topmost .image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.topmost .title {
+    padding-top: 20px;
+    font-size: 4em;
+    font-family: "Coda", cursive;
+    line-height: 1em;
+    color: ghostwhite;
+}
+
+.topmost .subtitle {
+    padding-bottom: 20px;
+    font-size: 1.2em;
+    font-family: "Space", monospace;
+    color: ghostwhite;
+}
+
+
+/* ---------- */
+/* Navigation */
+/* ---------- */
+
+.nav ul {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    list-style: none;
+    background: #3c3c3c;
+    display: block;
+    width: 100%;
+}
+
+.nav li {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    width: 120px;
+    line-height: 50px;
+    font-size: 1.4em;
+    font-family: "Share", cursive;
+    margin-right: -4px;
+}
+
+.nav a {
+    display: block;
+    color: whitesmoke;
+}
+
+.nav a:hover,
+.nav a.active {
+    background: darkorange;
+    color: ghostwhite;
+}
+
+
+/*.nav li:hover,
+.nav li.active {
+    background: darkorange;
+    color: ghostwhite;
+}*/
+
+.nav a, .nav a:hover {
+    text-decoration: none;
+}
+
+
+/* ------ */
+/* Footer */
+/* ------ */
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    padding: 1rem;
+    background-color: #3c3c3c;
+    color: whitesmoke;
+}
+
+
+/* --------------- */
+/* Posts and Cards */
+/* --------------- */
+
+.post {
+    margin-bottom: 2em;
+}
+
+.post:last-child {
+    margin-bottom: 0;
+}
+
+.card.post {
+    cursor: pointer;
+}
+
+.post .header {
+    font-family: "Share", cursive;
+}
+
+.post h4.header:hover {
+    color: royalblue;
+}
+
+.post .timestamp {
+    font-size: 0.9em;
+    font-family: "Space Mono", monospace;
+    text-align: right;
+}
+
+.post .text {
+    font-family: "Roboto", monospace;
+    text-align: justify;
+}
+
+.post .text.digest {
+    color: dimgray;
+}
+
+.post .header.centered,
+.post .tags.centered {
+    text-align: center;
+}
+
+.list-of-contents h4 {
+    font-family: "Roboto", monospace;
+}
+
+hr {
+    margin-top: 0;
+}
+
+hr.with-margin {
+    margin-top: 2em;
+}
+
+.post .tags {
+    text-align: right;
+    font-family: "Space Mono", monospace;
+    font-size: 0.9em;
+    margin-bottom: 1em;
+}
+
+.post .tags span {
+    color: royalblue;
+    font-weight: bold;
+}
+
+/* --------- */
+/* Container */
+/* --------- */
+
+.container {
+    margin-top: 2em;
+}
+
+
+/* --------------- */
+/* Contact buttons */
+/* --------------- */
+
+.link-container {
+    text-align: center;
+}
+
+.link-container ul {
+    list-style: none;
+}
+
+.link-container li img {
+    height: 90px;
+    padding-bottom: 1em;
+}
+
+img.button-image {
+    height: 50px;
+}
+
+
+/* ----------------- */
+/* Banners and notes */
+/* ----------------- */
+
+blockquote {
+  border-width: 1px 1px 1px 10px;
+  border-style: solid;
+  padding: 0.5em 0.5em;
+}
+
+blockquote:before {
+  color: #ccc;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+
+blockquote p {
+  display: inline;
+}
+
+blockquote.warning {
+    background: antiquewhite;
+    border-color: darkorange;
+}
+
+blockquote.tip {
+    background: ghostwhite;
+    border-color: dodgerblue;
+}
+
+blockquote.algo {
+  background: white;
+  padding-top: 1em;
+  padding-bottom: 0;
+  padding-right: 2em;
+}
+
+blockquote.algo li:not(:last-child) {
+  padding-bottom: 0.5em;
+}
+
+/* ------ */
+/* Images */
+/* ------ */
+
+.center-image {
+    margin: 0 auto;
+    display: block;
+}
+
+/* ----- */
+/* Other */
+/* ----- */
+
+p.huge {
+  font-family: "Share";
+  font-weight: normal;
+  font-size: 1.5em;
+}
+
+em.figure {
+  padding-top: 1em;
+  display: block;
+  text-align: center;
+}
+
+ul.list-unstyled.with-padding li {
+  padding-left: 2em;
+}
+
+.top-offset {
+  padding-top: 1em;
+}

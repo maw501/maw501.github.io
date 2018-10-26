@@ -1,0 +1,29 @@
+---
+layout: page
+permalink: /about/
+links:
+    - picture: 'links/kaggle.png'
+      url: 'https://www.kaggle.com/maw501'
+    - picture: 'links/github.png'
+      url: 'https://github.com/maw501'
+---
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 d-table">
+            <div class="d-table-cell align-middle">
+                <p class="text-center huge">Mark Worrall</p>
+                <p class="text-center huge">Site under construction (as is my understanding)</p>
+                <ul class="list-inline text-center">
+                    {% for link in page.links %}
+                    <li class="list-inline-item">
+                        <a href="{{ link.url }}" class="d-flex justify-content-center">
+                            <img src="{{ site.baseurl }}/assets/img/{{ link.picture }}" class="button-image">
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

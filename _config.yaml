@@ -1,0 +1,4 @@
+baseurl: ""
+# baseurl: ''
+include: ['_pages']
+excerpt_separator: <!--more-->
