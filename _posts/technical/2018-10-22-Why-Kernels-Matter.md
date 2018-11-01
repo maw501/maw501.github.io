@@ -6,7 +6,7 @@ use_math: true
 image: "kernel.png"
 ---
 
-**Note: a work in progress**
+**Note: still a work in progress**
 
 A (loose but) simple way to think of a kernel is some function that takes in two vectors of equal length and outputs a similarity score between them which is always positive.
 

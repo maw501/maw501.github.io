@@ -6,7 +6,7 @@ use_math: true
 image: "kernel.png"
 ---
 
-**Note: a work in progress**
+**Note: still a work in progress**
 
 This post only covers the concept of the 'kernel trick' and not kernels in general which often get a bad rep as they are usually poorly explained - usually in the context of SVMs. We will start by considering an example.
 <!--more-->

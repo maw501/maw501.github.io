@@ -6,7 +6,7 @@ use_math: true
 image: "gp.png"
 ---
 
-**Note: a work in progress**
+**Note: still a work in progress**
 
 In a loose sense Gaussian Processes can be thought of as a probabilistic non-parametric form of non-linear regression.
 
