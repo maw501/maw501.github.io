@@ -142,7 +142,7 @@ On the non-convexity [here](https://pafnuty.wordpress.com/2013/08/14/non-convex-
 <hr class="with-margin">
 <h4 class="header" id="sec2">A comment on the mathematics for the week</h4>
 
-##### Training error theorem
+##### Training Error Theorem
 
 The main heavy bit of maths this week came in the form of proving something called the 'Training Error Theorem' for boosting (and AdaBoost in particular). This is a theoretical guarantee that says that under AdaBoost the training error will eventually go to 0 as we fit more rounds (in fact it decays exponentially fast). Of course, we care about the validation error not the training error so this feels to me a little like we've got our reasoning backwards.
 
