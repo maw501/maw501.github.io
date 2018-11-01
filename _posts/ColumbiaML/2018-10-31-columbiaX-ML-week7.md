@@ -163,7 +163,7 @@ This is what we used to optimize K-means and [this](http://kldavenport.com/the-c
 <hr class="with-margin">
 <h4 class="header" id="sec3">Things I'm unclear on (or outstanding questions)</h4>
 
-* TBC
+TBC
 
 <hr class="with-margin">
 <h4 class="header" id="sec4">What did the textbooks say?</h4>

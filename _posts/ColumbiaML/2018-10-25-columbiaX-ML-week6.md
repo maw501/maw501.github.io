@@ -3,17 +3,24 @@ layout: post
 title: ColumbiaX - ML - week 6
 date: 2018-10-25
 use_math: true
+tags: ['SVMs', 'decision_trees']
 image: "svm.jpg"
 ---
 Week 6 in some ways introduced the old guard before handing over to the (relatively) new kids on the block. SVMs were all the rage over a decade ago whilst more modern data mining techniques (on non-huge datasets) now tend to lean heavily on decision trees.
 
 <!--more-->
-
+<hr class="with-margin">
 This page is a summary of my notes for the above course, link [here](https://www.edx.org/course/machine-learning-columbiax-csmm-102x-4).
 
 This is my first attempt at publishing course notes and I have no intention to make it comprehensive but rather to highlight the bits I feel are important and maybe explain some of the things I found a little trickier (or weren't explained to my taste). Understanding is deeply personal though if you spot any errors or have any questions please feel free to drop me an email.
 
-## Week 6 (lectures 11 and 12): overview
+<div class="list-of-contents">
+  <h4>Contents</h4>
+  <ul></ul>
+</div>
+
+<hr class="with-margin">
+<h4 class="header" id="intro">Week 6 (lectures 11 and 12): overview</h4>
 
 Whilst I think one is reasonably unlikely to encounter SVMs too much in the wild (they are outperformed by other methods and don't scale well) I guess that are taught as they have a strong theoretical background and allow a course to add lots of maths in order to look serious. They are also some nice links to logistic regression and once understood, the idea of kernels is actually quite powerful. I will not be dwelling on decision trees, bagging or boosting this week as this is something I have reasonable knowledge of and the meat of the week lies with SVMs. Onwards.
 
@@ -24,11 +31,10 @@ Whilst I think one is reasonably unlikely to encounter SVMs too much in the wild
 * **Boosting and bagging**
   * Statistical techniques to increase the performance and robustness of our decision trees. Bagging ultimately leads us from a decision tree to Random Forest (with the addition of some randomness).
 
-## Week 6 (lectures 11 and 12): overview with more details
+<hr class="with-margin">
+<h4 class="header" id="sec1">Understanding SVMs</h4>
 
-We are going to focus solely on SVMs this week.
-
-#### SVMs take advantage of several powerful ideas
+##### SVMs take advantage of several powerful ideas
 
 Thus it can be confusing to see the big picture. In the context of two linearly separable classes:
 
@@ -134,7 +140,8 @@ These are the two big extensions that really make the SVM the powerful technique
 * [This](https://www.svm-tutorial.com/) is a nice site with a free e-book.
 * A more technical treatment from Stanford CS229 by Andrew Ng [here](http://cs229.stanford.edu/notes/cs229-notes3.pdf)
 
-## Comments on some of the mathematics used
+<hr class="with-margin">
+<h4 class="header" id="math">Comments on some of the mathematics used</h4>
 
 * **Lagrange multipliers**
   * These have been used in another week and I refer you [here](https://www.khanacademy.org/math/multivariable-calculus/applications-of-multivariable-derivatives/constrained-optimization/a/lagrange-multipliers-single-constraint) to refresh.
@@ -146,10 +153,12 @@ These are the two big extensions that really make the SVM the powerful technique
   * This cropped up again when differentiating the Lagrangian, a solid reference is [here](https://en.wikipedia.org/wiki/Matrix_calculus).
     * Mental hack: when you are trying to follow a differentiation of something involving matrices and vectors I find it useful to just pretend initially that everything is just a normal variable and see where that gets me. Often the matrix calculus bit is just adjusting for a transpose/slight reordering and the notational details aren't so crucial first time around - you can (and should) always check dimensions to help you out at the end.
 
-## Things I'm unclear on (or outstanding questions)
+<hr class="with-margin">
+<h4 class="header" id="sec3">Things I'm unclear on (or outstanding questions)</h4>
 
-* TBC
+TBC
 
-## What did the textbooks say?
+<hr class="with-margin">
+<h4 class="header" id="sec4">What did the textbooks say?</h4>
 
 To be updated.

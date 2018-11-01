@@ -9,12 +9,19 @@ image: "logreg.png"
 Week 5 introduced the topic of logistic regression in several guises before getting into more technical topics such as Laplace approximation, kernels and ultimately Gaussian Processes. Gaussian Processes in particular are quite tricky to understand initially and I've spent more than a couple of hours trying to become fully happy with various aspects of them.
 
 <!--more-->
+<hr class="with-margin">
 
 This page is a summary of my notes for the above course, link [here](https://www.edx.org/course/machine-learning-columbiax-csmm-102x-4).
 
 This is my first attempt at publishing course notes and I have no intention to make it comprehensive but rather to highlight the bits I feel are important and maybe explain some of the things I found a little trickier (or weren't explained to my taste). Understanding is deeply personal though if you spot any errors or have any questions please feel free to drop me an email.
 
-## Week 5 (lectures 9 and 10): overview
+<div class="list-of-contents">
+  <h4>Contents</h4>
+  <ul></ul>
+</div>
+
+<hr class="with-margin">
+<h4 class="header" id="intro">Week 5 (lectures 9 and 10): overview</h4>
 
 Hopefully I can help clarify some of insights for others. First though, the summary:
 
@@ -31,11 +38,12 @@ Hopefully I can help clarify some of insights for others. First though, the summ
 * **Gaussian Processes**
   * Gaussian Processes are a flexible technique whereby we impose minimal assumptions on our data but are still based on probability theory and so allow confidence estimates for new predictions.
 
-## Week 5 (lectures 9 and 10): more detailed overview
+<hr class="with-margin">
+<h4 class="header" id="more_details">A more detailed overview of the week</h4>
 
 Week 5 has some theoretically heavy topics in (most notably kernels and Gaussian Processes) which I will do my best to elaborate on in a little more detail, and hopefully with less dense presentation.
 
-#### Logistic Regression is a discriminative model analogous to linear regression but for classification.
+##### Logistic Regression is a discriminative model analogous to linear regression but for classification.
 
 It learns a model of the form $\sigma(x^Tw + w_0)$ with no explicit assumptions on $w$ and $w_0$.
 
@@ -51,31 +59,32 @@ and we call $t=x^Tw+w_0$ the *link function*.
 * Note if we absorb the term $w_0$ into our data then we can think just about $x^Tw$ and note that if $x^Tw > 0$ then $\sigma(x^Tw) > 0.5$ and we can predict the class of $y$ accordingly.
 * There is no analytic solution to solving the maximum likelihood solution and so we use an iterative algorithm. See the mathematical details section.
 
-#### Bayesian Logistic Regression: just like we put a prior on our $w$ parameters for linear regression we can regularize logistic regression in the same way
+##### Bayesian Logistic Regression: just like we put a prior on our $w$ parameters for linear regression we can regularize logistic regression in the same way
 
 * When we choose to add a regularizing term to our logistic regression we know from previous work that if the term is an $L_2$ penalty this corresponds to a Gaussian prior distribution on $w$. What can we say about the posterior $p(w \mid x,y)$?
 * It turns out in this case we can't calculate the posterior analytically as we can't calculate the denominator and so we approximate $p(w \mid x,y)$ with a Gaussian distribution using a technique called Laplace Approximation...
 
-#### Laplace Approximation is a way of approximating the posterior distribution $p(w \mid x,y)$ analytically
+##### Laplace Approximation is a way of approximating the posterior distribution $p(w \mid x,y)$ analytically
 The Laplace approximation framework aims to find a Gaussian approximation to a continuous distribution which in this case is our posterior $p(w \mid x,y)$. The method aims specifically at problems in which the distribution is uni-modal.
 
 * In short this method expands the joint distribution $f(w) = \ln p(y, w \mid x)$ around a point $z = w_{MAP}$ using a second order Taylor series expansion.
 * This allows us to approximate $p(w \mid x, y) \sim N(w_{MAP}, \Sigma)$ i.e. as a Gaussian. More details will be given below.
 
-#### Feature expansions are simply adding new features to our dataset that are transformations of our original features/covariates.
+##### Feature expansions are simply adding new features to our dataset that are transformations of our original features/covariates.
 Feature or basis expansions are usually introduced in quite a mathematically heavy way but for anyone who has done a little machine learning in the real world (or a kaggle competition) they are an entirely natural concept. We simply take various transformations of the columns of our data (e.g. append new columns to our design matrix $X$) and then fit a linear model to this expanded dataset. For both regression and classification this can greatly enhance the modelling capability of the linear model and find non-linear boundaries in the original feature space. We could in a loose sense think of these feature expansions as feature engineering which raises a natural question: **which expansion should we do?**
 * Often the answer to this question requires specialist knowledge about the dataset in question and so one approach is to take many transformations and use an $L_1$ penalty in order to find a sparse subset of the higher dimensional space.
 * We call $\phi(x)$ the mapping of the features to a higher dimensional space $\mathbb{R}^D$ where $D >d$ and $d$ is the number of columns we originally started out with.
 
-#### Kernels are a way of assessing the similarity of our data points to each other (i.e. the rows of our $X$ matrix) - they also have the fearsome idea of the *kernel trick*
+##### Kernels are a way of assessing the similarity of our data points to each other (i.e. the rows of our $X$ matrix) - they also have the fearsome idea of the *kernel trick*
 
 I have written a separate post on the kernel trick [here](../19/The-kernel-trick) and kernels more generally [here](../22/Why-Kernels-Matter).
 
-#### Gaussian Processes (GPs)
+##### Gaussian Processes (GPs)
 
 These are getting their own blog post [here](../22/Gaussian-Processes).
 
-## Main mathematical ideas from the lectures
+<hr class="with-margin">
+<h4 class="header" id="math">Main mathematical ideas from the lectures</h4>
 
 ##### Logistic Regression algorithm
 * **Input:** training data $(x_1, y_1), ..., (x_n, y_n)$ and step size $\eta >0$.
@@ -120,7 +129,8 @@ Kernels are symmetric functions taking in two vectors in $\mathbb{R}^d$ and comp
     * **Answer:** This type of kernel regression moves focus away from features and their parameters to the actual data points and their weights. In many machine learning methods there is a duality between feature weights and example weights. This duality allows us to use the kernel trick to expand the representational power of a model without (much) computational expense. All the information about features went into defining $K$, the kernel matrix. Further reading [here](https://alliance.seas.upenn.edu/~cis520/dynamic/2017/wiki/index.php?n=Lectures.Kernels) or Bishop Chapter 6.
   * We can compute new kernels by adding, multiplying or exponentiating existing kernels.
 
-## Some mathematical details
+<hr class="with-margin">
+<h4 class="header" id="detail">Some mathematical details</h4>
 
 Here are some of the mathematical details from the week:
 
@@ -135,10 +145,13 @@ Here are some of the mathematical details from the week:
 * **Mercer's theorem**
   * This theorem justifies our use of a kernel as a proxy for transforming two data points/rows $(x_i, x_j)$ into a higher dimensional space according to some transformation $\phi$ and then computing $\phi(x_i)^T \phi(x_j)$ (the dot product in the higher dimensional space). Mercer's theorem basically assures us that computing $\textbf{k}(x_i, x_i)$ with our original data $x_i, x_j$ is the same as performing $\phi(x_i)^T \phi(x_j)$ in some higher dimensional space $\mathbb{R}^D$ where $D>d$.
 
-## Things I'm unclear on (or outstanding questions)
+<hr class="with-margin">
+<h4 class="header" id="sec3">Things I'm unclear on (or outstanding questions)</h4>
 
-* TBC
+TBC
 
-## What did the textbooks say?
+<hr class="with-margin">
+<h4 class="header" id="sec4">What did the textbooks say?</h4>
+
 
 To be updated.

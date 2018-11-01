@@ -10,6 +10,16 @@ image: "kernel.png"
 
 This post only covers the concept of the 'kernel trick' and not kernels in general which often get a bad rep as they are usually poorly explained - usually in the context of SVMs. We will start by considering an example.
 <!--more-->
+<hr class="with-margin">
+
+<div class="list-of-contents">
+  <h4>Contents</h4>
+  <ul></ul>
+</div>
+
+<hr class="with-margin">
+<h4 class="header" id="intro">An example motivated by Kaggle</h4>
+
 ##### 1. Start by imagining we have a dataset with two columns which represent the height and weight of a bunch of people
 
 For notational simplicity let's call the column representing height $x_1$ and the column representing weight $x_2$.
@@ -71,6 +81,7 @@ So it turns out we can stick with our original data, use a kernel function and k
 
 Thus a kernel function is a function where it happens to turn out that computing the kernel functions in lower dimensions is the same as computing the inner product in the higher dimensional feature space. The feature space is implicit, and often infinite dimensional.
 
-##### Further reading/videos
+<hr class="with-margin">
+<h4 class="header" id="intro">Further reading/videos</h4>
 
 Good video [here](https://www.youtube.com/watch?v=XUj5JbQihlU&hd=1) and reading [here](https://stats.stackexchange.com/questions/80398/how-can-svm-find-an-infinite-feature-space-where-linear-separation-is-always-p) and [here](https://stats.stackexchange.com/questions/152897/how-to-intuitively-explain-what-a-kernel-is)
