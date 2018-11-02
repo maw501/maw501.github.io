@@ -8,12 +8,20 @@ image: "bayes_lr.png"
 Week 3 brought the topic of linear regression to an end and whilst there were some interesting ideas in the lectures there was also a few trickier aspects involving Bayesian Linear Regression, active learning, predictive distributions and the Lasso.
 
 <!--more-->
+<hr class="with-margin">
 
 This page is a summary of my notes for the above course, link [here](https://www.edx.org/course/machine-learning-columbiax-csmm-102x-4).
 
 This is my first attempt at publishing course notes and I have no intention to make it comprehensive but rather to highlight the bits I feel are important and maybe explain some of the things I found a little trickier (or weren't explained to my taste). Understanding is deeply personal though if you spot any errors or have any questions please feel free to drop me an email.
 
-## Week 3 (lectures 5 and 6): overview
+<hr class="with-margin">
+<div class="list-of-contents">
+  <h4>Contents</h4>
+  <ul></ul>
+</div>
+
+<hr class="with-margin">
+<h4 class="header" id="intro">Week 3 (lectures 5 and 6): overview</h4>
 
 I hope to be able to largely clarify some of the harder content from the lecture (for my own understanding as much as anything). First, the main ideas:
 
@@ -29,15 +37,16 @@ I hope to be able to largely clarify some of the harder content from the lecture
   * Often when $d \gg n$ we wish to perform feature selection with our data. The Lasso is analogous to Ridge Regression except we change the penalty on our weights to be the sum of the absolute values of the individual weights.
   * Fun fact: whereas Ridge Regression was shown to be the same as imposing a Gaussian prior on our weights, the Lasso is the same as imposing a Laplace (double exponential) distribution on the weights.
 
-## Week 3 (lectures 5 and 6): the big picture
+<hr class="with-margin">
+<h4 class="header" id="big">Week 3 (lectures 5 and 6): the big picture</h4>
 
 Week 3 brings the way we look at linear regression into a fully Bayesian framework before moving on to talk about the case where we have more dimensions to our data than observations. Bayesian Linear Regression allows us to ask (and answer!) questions with our data we are unable to do in a non-Bayesian setting.
 
-#### Bayesian Linear Regression allows us to obtain a full probability distribution for our model parameters
+##### Bayesian Linear Regression allows us to obtain a full probability distribution for our model parameters
 
 We can now ask questions such as whether a given parameter $w_i$ is different from 0 (i.e. whether it is significant or not). This is a departure from the non-Bayesian setting where we had no way to answer such questions. This is a very practical and useful application of Bayesian regression and occurs commonly in many fields. For example, if our variables are factors in a medical trial and we wish to determine whether the factor under scrutiny is actually having an impact (before we spend anymore money on it) it helps to know if the distribution of this parameter has a big variance vs. say, being tightly distributed and centered away from 0.
 
-#### Predicting new data
+##### Predicting new data
 I found this one of those things that you look at the slides and follow the steps and nod in agreement from one line to another without really grokking the insight into what's going on. **We can actually get a probability distribution for new data $y_0$ without seeing that data!** As follows:
 
 * We can obtain an expression for $p(y_0 \mid x_0, y, X)$ which is called the **predictive distribution**. We can calculate this exactly.
@@ -45,7 +54,7 @@ I found this one of those things that you look at the slides and follow the step
 * In other words we get some new data $(y_0, x_0)$ and can calculate $p(y_0 \mid x_0, w)$ which tells us how likely $y_0$ is for a given $w$ and the observed new data $x_0$. We then weight this by our current belief of $w$ which is actually our latest posterior: $p(w \mid y, X)$. This gives us the predictive distribution for the new data point.
 * **Note**: we don't actually need $y_0$ for this - this is the point!
 
-#### Active learning: the Bayesian framework allows us to update our model sequentially
+##### Active learning: the Bayesian framework allows us to update our model sequentially
 
 Suppose we build a model based on some data $(y, X)$ and estimate our model parameters $w$ from this data i.e. we can calculate the posterior $p(w \mid y, X)$. In the face of new data $(y_0, x_0)$ we are able to write the update step whereby our posterior from $(y, X)$ becomes our new prior.
 
@@ -64,12 +73,13 @@ The answer to this is shown to be equivalent to choosing the new data $x_0$ that
 Here we have: $p(y_0 \mid x_0, y, X) = N(y_0 \mid \mu_0, \sigma_0^2)$ with $\mu_0 = x_0^T \mu$ and $\sigma_0^2 = \sigma^2 + x_0^T \Sigma x_0$.
   * Note: $\mu, \sigma^2$ are the parameters of the posterior $p(w \mid y, X) = N(w \mid \mu, \Sigma)$ which we have already estimated.
 
-#### Sparse regression with the Lasso
+##### Sparse regression with the Lasso
 
 Using an $L_1$ (i.e. sum of absolute values) penalty in our objective function performs 'feature selection' and sets some of the parameter weights to 0, thus returning a 'sparse' solution. I'm not going to cover why this is the case but I will say there are many nice geometric explanations if you just type it into your favourite search engine.
   * I am covering this topic less as I am personally quite familiar with the Lasso and so instead will write a little more about some of the mathematical ideas/details that came up in the lectures below.
 
-## Main mathematical ideas from the lectures
+<hr class="with-margin">
+<h4 class="header" id="math">Main mathematical ideas from the lectures</h4>
 
 * **Bayesian posterior calculation**
   * The continuous version of Bayes rule can be thought of as: $p(\theta \mid data) = \dfrac{p(data \mid \theta) \, p(\theta)}{p(data)}$
@@ -91,8 +101,8 @@ Using an $L_1$ (i.e. sum of absolute values) penalty in our objective function p
   * Depending on how we set $p$ changes how much feature selection we get with the main note that for $p < 1$ we no longer have a convex optimization problem and so need to solve approximately using iterative algorithms.
   * **Note:** For $l_2$ norm as in Ridge the reduction in the cost function we get for reducing any parameter $w_j$ is quadratic whereas for $l_1$ (Lasso) it's linear. And so Ridge penalizes big weights more and will tend to favour all weights of similar magnitude.
 
-
-## Some mathematical details
+<hr class="with-margin">
+<h4 class="header" id="details">Some mathematical details</h4>
 
 Here are some of the mathematical details from the week:
 
@@ -128,11 +138,13 @@ Here are some of the mathematical details from the week:
   * I was actually rusty on this but I can say nothing more to explain them that the legend that is Grant Sanderson can, see the beautiful videos [here](https://www.khanacademy.org/math/multivariable-calculus/applications-of-multivariable-derivatives/lagrange-multipliers-and-constrained-optimization/v/constrained-optimization-introduction).
   * I found the way this was introduced in the lecture a little confusing as it was really brought in just to make a side-point which was another way of verifying that $w_{ln}$ is actually the smallest $l_2$ 'norm' solution of all solutions for $Xw = y$.
 
+<hr class="with-margin">
+<h4 class="header" id="sec3">Things I'm unclear on (or outstanding questions)</h4>
 
-## Things I'm unclear on (or outstanding questions)
+TBC
 
-* TBC
+<hr class="with-margin">
+<h4 class="header" id="sec4">What did the textbooks say?</h4>
 
-## What did the textbooks say?
 
 To be updated.

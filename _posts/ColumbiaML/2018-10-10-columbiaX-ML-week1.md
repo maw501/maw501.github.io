@@ -8,12 +8,18 @@ image: "bivariategauss2.jpeg"
 We kick start the course by introducing probabilistic modelling, MLE, multivariate Gaussians as well as the notion of OLS (including its geometry).
 
 <!--more-->
-
+<hr class="with-margin">
 This page is a summary of my notes for the above course, link [here](https://www.edx.org/course/machine-learning-columbiax-csmm-102x-4).
 
 This is my first attempt at publishing course notes and I have no intention to make it comprehensive but rather to highlight the bits I feel are important and maybe explain some of the things I found a little trickier (or weren't explained to my taste). Understanding is deeply personal though if you spot any errors or have any questions please feel free to drop me an email.
+<hr class="with-margin">
+<div class="list-of-contents">
+  <h4>Contents</h4>
+  <ul></ul>
+</div>
 
-## Week 1 (lectures 1 and 2): overview
+<hr class="with-margin">
+<h4 class="header" id="intro">Week 1 (lectures 1 and 2): overview</h4>
 
 There were a few key ideas for those who've perhaps done some machine learning but haven't dug behind the scenes. In the rough order they were introduced they were:
 
@@ -24,11 +30,12 @@ There were a few key ideas for those who've perhaps done some machine learning b
 * Polynomial regression
 * Geometry of LS
 
-## Week 1 (lectures 1 and 2): the big picture
+<hr class="with-margin">
+<h4 class="header" id="big">Week 1 (lectures 1 and 2): the big picture</h4>
 
 I feel a little that the main story of week 1 is slightly hard to tell without referencing week 2 as we wandered off into a few technical derivations which made the story harder to decipher initially than I think was necessary. As a result I'm just going to state where we are initially heading.
 
-#### We wish to contrast two different ways of looking at the problem of linear regression:
+##### We wish to contrast two different ways of looking at the problem of linear regression:
 
 1. **LS approach:** assume a loss function and minimize it based on the linear model choice, there are no (explicit) assumptions about the data. We return a set of weights from the optimization.
 
@@ -38,7 +45,8 @@ It will turn out that the **'optimal'** set of weights from both approaches are 
 
 We also discussed how polynomial regression is an acceptable extension of linear regression as well as the geometry of least squares.
 
-## Main mathematical ideas from the lectures
+<hr class="with-margin">
+<h4 class="header" id="math">Main mathematical ideas from the lectures</h4>
 
 * **Differentiate the joint (log) likelihood function to find your MLE parameters**
   * We assume our data $x$ is generated according to some probability distribution $p(x \mid \theta)$. Further assuming the data is [iid](https://en.wikipedia.org/wiki/Independent_and_identically_distributed_random_variables) means we can compute the joint likelihood of our data as the product of the probability of each individual observation.
@@ -49,7 +57,8 @@ We also discussed how polynomial regression is an acceptable extension of linear
 * **The geometry of least squares linear regression**
   * This is quite a fun topic, particularly if you know a little linear algebra and grok the concept of matrix column and row spaces. This is perhaps worthy of a post on its own so I might come back to it at a later point.
 
-## Some mathematical details
+<hr class="with-margin">
+<h4 class="header" id="details">Some mathematical details</h4>
 
 There were quite a few of these hiding behind the scenes (and some in plain sight) so I'm going to try to out a few of them now.
 
@@ -60,11 +69,14 @@ There were quite a few of these hiding behind the scenes (and some in plain sigh
 * Note that $X^{T}X = \sum_{i=1}^{n} x_i x_i^{T}$
   * i.e. that matrix multiplication is the same as summing over all the individual outer products. This point will matter when we talk about active learning later in the course.
 
-## Things I'm unclear on (or outstanding questions)
+<hr class="with-margin">
+<h4 class="header" id="sec3">Things I'm unclear on (or outstanding questions)</h4>
 
 * The main thing appears to be the gap between the quiz difficulty which is so far quite straightforward vs. the technical details covered in lectures. This will be the topic of another post giving my initial course thoughts.
 * There are also a few little points around the technical details of deriving the MLE solution and the LS solution.
 
-## What did the textbooks say?
+<hr class="with-margin">
+<h4 class="header" id="sec4">What did the textbooks say?</h4>
+
 
 To be updated.

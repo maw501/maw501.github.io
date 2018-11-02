@@ -15,6 +15,7 @@ This page is a summary of my notes for the above course, link [here](https://www
 
 This is my first attempt at publishing course notes and I have no intention to make it comprehensive but rather to highlight the bits I feel are important and maybe explain some of the things I found a little trickier (or weren't explained to my taste). Understanding is deeply personal though if you spot any errors or have any questions please feel free to drop me an email.
 
+<hr class="with-margin">
 <div class="list-of-contents">
   <h4>Contents</h4>
   <ul></ul>

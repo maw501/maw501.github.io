@@ -8,12 +8,19 @@ image: "knn.jpg"
 Week 4 started the topic of classification and touched on the k-NN classifier, Bayes classifier as the optimal classifier (the main idea of the week really) before moving onto linear classification and the perceptron algorithm.
 
 <!--more-->
-
+<hr class="with-margin">
 This page is a summary of my notes for the above course, link [here](https://www.edx.org/course/machine-learning-columbiax-csmm-102x-4).
 
 This is my first attempt at publishing course notes and I have no intention to make it comprehensive but rather to highlight the bits I feel are important and maybe explain some of the things I found a little trickier (or weren't explained to my taste). Understanding is deeply personal though if you spot any errors or have any questions please feel free to drop me an email.
 
-## Week 4 (lectures 7 and 8): overview
+<hr class="with-margin">
+<div class="list-of-contents">
+  <h4>Contents</h4>
+  <ul></ul>
+</div>
+
+<hr class="with-margin">
+<h4 class="header" id="intro">Week 4 (lectures 7 and 8): overview</h4>
 
 I felt (again) that some of the intuition as to what we were trying to achieve was lost in a sea of dense notation so I hope I can simplify it a little below. The main ideas:
 
@@ -29,11 +36,12 @@ I felt (again) that some of the intuition as to what we were trying to achieve w
 * **The perceptron algorithm**
   * This is an algorithm for binary classification that cannot be solved analytically (i.e. we can't differentiate the loss function and set to 0) so some form of learning algorithm (e.g. gradient descent) is required to learn the parameters. The perceptron assumes our data is linearly separable and so directly finds a hyperplane separating the data. The perceptron is more (famously and) recently known as a core building block of modern neural networks.
 
-## Week 4 (lectures 7 and 8): the big picture
+<hr class="with-margin">
+<h4 class="header" id="big">Week 4 (lectures 7 and 8): the big picture</h4>
 
 Week 4 really dug into the dirt with classifiers and, as is typical for people of a theoretical inclination, immediately started discussing an optimal classifier that we can't actually use in practice. However it did allow us to introduce the topic of **generative modelling** which actually has a lot advanced areas of research at the moment which are considered cutting edge. Here is my take on the main ideas in more detail.
 
-#### In classification we wish to model $P(Y =y \mid X=x)$, Bayes rule allows us to flip this around and instead model $P(Y=y)$ and $P(X=x \mid Y=y)$
+##### In classification we wish to model $P(Y =y \mid X=x)$, Bayes rule allows us to flip this around and instead model $P(Y=y)$ and $P(X=x \mid Y=y)$
 
 * The Bayes classifier represents the best we can do if we know the probability distribution from which our data comes
   * In this case it can be shown that in order to get the lowest misclassification error rate we can simply choose our predicted class as the class which has the highest probability, i.e. $\underset{y \, \in \, Y}{\operatorname{argmax}} P (Y=y \mid X=x)$ where we are assuming this probability comes from the true distribution $\Phi$.
@@ -48,7 +56,7 @@ Week 4 really dug into the dirt with classifiers and, as is typical for people o
   * We could choose to define our class conditional density $P(x \mid Y=y) = N(x \mid u_y, \Sigma_y)$. In other words as a Gaussian with a different mean and covariance for each class. The NBC makes the assumption that the covariates $X$ are conditionally independent given $y$. In other words, there is no correlation between the features given the class. This allows us to write the class conditional densities as a product of one dimensional densities.
   * Whilst we do not expect these assumptions to hold the NBC often performs well in practice, one reason being that the simple model has few parameters and so is reasonably robust to over-fitting.
 
-#### A note on the difference between discriminative and generative modelling (not covered in lecture):
+##### A note on the difference between discriminative and generative modelling (not covered in lecture):
 * Loosely speaking **generative** models focus on building a model for our $X$ data which we are then able to sample from. This is very different from what we have been doing so far by learning $P(Y \mid X)$ which is called **discriminative** modelling and puts all its effort into trying to learn these conditional distributions and the explicit boundaries between our data classes. We typically call discriminative any classifiers that aren't generative.
 * As a consequence, generative models impose structural assumptions onto your data which discriminative models do not. Generative models often outperform discriminative models on small data because the assumptions place some structure on your model that can help prevent over-fitting.
 * That said, if we have a lot of data we usually achieve lower error rates by modelling $P(Y \mid X)$ directly as in the discriminative case.
@@ -58,7 +66,7 @@ Week 4 really dug into the dirt with classifiers and, as is typical for people o
   * Stack exchange [question](https://stats.stackexchange.com/questions/12421/generative-vs-discriminative?rq=1) on the topic.
 * Further reading: no less a hero that Andrew Ng has a paper on the topic of discriminative vs. generative classifiers [topic](https://ai.stanford.edu/~ang/papers/nips01-discriminativegenerative.pdf).
 
-#### Linear classifiers classify our data according to which side of the decision boundary they fall on (and assume the data is linearly separable)
+##### Linear classifiers classify our data according to which side of the decision boundary they fall on (and assume the data is linearly separable)
 In the binary classification sense where our data is linearly separable a linear classifier works by classifying points according to which side of the hyperplane/boundary they fall (we are assuming linear separability of the data).
 * In the binary case where we assume $P(x \mid y) = N(x \mid u_y, \Sigma)$ then this leads to a linear decision boundary and is called **Linear Discriminant Analysis (LDA).**
   * Note that we are assuming our $x$ data given the class $y$ shares the same covariance but has its own class mean (so think of two multivariate Gaussians just centred at different locations).
@@ -66,7 +74,8 @@ In the binary classification sense where our data is linearly separable a linear
 * If we assume $P(x \mid y) = N(x \mid u_y, \Sigma_y)$ then we end up with a quadratic decision boundary and this is called **Quadratic Discriminant Analysis (LDA)** although it is still linear in the weights (think of polynomial classification/regression).
 * It is important to note that in the case of LDA and QDA we have explicit formula for $w$ and $w_0$ analogous to the LS setting where we can solve things exactly.
 
-## Main mathematical ideas from the lectures
+<hr class="with-margin">
+<h4 class="header" id="math">Main mathematical ideas from the lectures</h4>
 
 * **Gaussian class conditional densities**
    * Defining $p(x \mid Y=y) = N(x \mid \mu_y, \Sigma_y)$ then we can calculate the MLE estimates of $(\mu_y, \Sigma_y)$ which are just the empirical mean and covariances of the corresponding class $y$.
@@ -80,7 +89,8 @@ In the binary classification sense where our data is linearly separable a linear
 * **Hyperplanes**
   * The main idea is that $x^Tw + w_0$ gives a sense of distance from the hyperplane with the sign telling us which side we are on. The lecture notes have some nice illustrations of this that are much easier to follow than words so please refer to those.
 
-## Some mathematical details
+<hr class="with-margin">
+<h4 class="header" id="math">Some mathematical details</h4>
 
 Here are some of the mathematical details from the week:
 
@@ -100,10 +110,13 @@ Here are some of the mathematical details from the week:
 * **Cosine similarity and hyperplanes**
   * Note: this was incorrectly stated as the cosine rule in lecture which means something else. Cosine similarity is a measure of how 'similar' two vectors are my calculating the angle between them - vectors that point in the similar directions have a higher cosine similarity.
 
-## Things I'm unclear on (or outstanding questions)
+<hr class="with-margin">
+<h4 class="header" id="sec3">Things I'm unclear on (or outstanding questions)</h4>
 
-* TBC
+TBC
 
-## What did the textbooks say?
+<hr class="with-margin">
+<h4 class="header" id="sec4">What did the textbooks say?</h4>
+
 
 To be updated.

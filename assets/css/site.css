@@ -332,10 +332,11 @@ p.huge {
   font-size: 1.5em;
 }
 
+/* Text that goes below image */
 em.figure {
   padding-top: 1em;
   display: block;
-  text-align: center;
+  text-align: center
 }
 
 ul.list-unstyled.with-padding li {

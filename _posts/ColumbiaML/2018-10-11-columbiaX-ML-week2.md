@@ -9,12 +9,19 @@ image: "rr.png"
 Week 2 of the course covers the link between MLE and OLS, introduces Ridge Regression and Bayes Rule and finishes by showing how RR has a probabilistic interpretation under MAP.
 
 <!--more-->
+<hr class="with-margin">
 
 This page is a summary of my notes for the above course, link [here](https://www.edx.org/course/machine-learning-columbiax-csmm-102x-4).
 
 This is my first attempt at publishing course notes and I have no intention to make it comprehensive but rather to highlight the bits I feel are important and maybe explain some of the things I found a little trickier (or weren't explained to my taste). Understanding is deeply personal though if you spot any errors or have any questions please feel free to drop me an email.
+<hr class="with-margin">
+<div class="list-of-contents">
+  <h4>Contents</h4>
+  <ul></ul>
+</div>
 
-## Week 2 (lectures 3 and 4): overview
+<hr class="with-margin">
+<h4 class="header" id="intro">Week 2 (lectures 3 and 4): overview</h4>
 
 Week 2 had a more pleasing finale than week 1 where it felt we really wrapped up some big ideas into a nice summary (though there was no trumpet at the end). Quite a few things were introduced along the way but the main ideas were:
 
@@ -28,11 +35,12 @@ Week 2 had a more pleasing finale than week 1 where it felt we really wrapped up
 * Introduce Bayes rule
 * Show how maximizing MAP with a distributional assumption about the weights (along with Bayes rule) gives the same weights as RR. That is (under certain assumptions): $w_{RR} = w_{MAP}$
 
-## Week 2 (lectures 3 and 4): the big picture
+<hr class="with-margin">
+<h4 class="header" id="big">Week 2 (lectures 3 and 4): the big picture</h4>
 
 Again I feel it's easier to state where we will end up as it provides a nice orientation for the details along the way.
 
-#### Loosely speaking we will show ML is to LS what MAP is to RR.
+##### Loosely speaking we will show ML is to LS what MAP is to RR.
 
 1. **LS and ML:** LS has a probabilistic interpretation if we assume our data is generated as $y \sim N(Xw, \sigma^2 I).$ Maximizing the joint log likelihood of our data in this probabilistic setting is the same as minimizing the LS solution and gives $w_{ML} = w_{LS}$.
 
@@ -40,13 +48,14 @@ Again I feel it's easier to state where we will end up as it provides a nice ori
 
 So ML adds a probabilistic assumption about our data whereas MAP also adds one about the model parameters - we use Bayes rule in MAP.
 
-#### Having a view on the distribution of our model's parameters *biases* them and we see that the bias we introduce trades off with the parameter's variance under a LS setting.
+##### Having a view on the distribution of our model's parameters *biases* them and we see that the bias we introduce trades off with the parameter's variance under a LS setting.
 
 If we solve LS without blindly we are optimising (within the constraints of a linear model) to the particular dataset we have. This can cause us to *overfit* the data and perform worse out of sample, which is what we really care about. Expressing some view (or penalty) about the parameters biases the outcome but may help us be more robust to new data. There are many excellent explanations of the bias-variance trade-off online so I'm not going to repeat them here. The interesting aspect from the lecture was deriving the expected squared error (i.e. the generalization error) of our prediction and showing how this can be written into a form we can recognise as noise, bias and variance.
 
 This problem is the inescapable reality of machine learning although it's usually not possible to get nice equations for the trade-off and so we use cross-validation instead.
 
-## Main mathematical ideas from the lectures
+<hr class="with-margin">
+<h4 class="header" id="math">Main mathematical ideas from the lectures</h4>
 
 * **Deriving $w_{ML}$ from the joint log likelihood, the multivariate Gaussian**
   * In particular it is shown that when $y \sim N(Xw, \sigma^2 I)$ i.e. $\mu = Xw$ then $w_{ML} = w_{LS}.$ This we are in a sense making an independent Gaussian noise assumption about the error $e_i = y_i - x_i^Tw$
@@ -72,7 +81,8 @@ This problem is the inescapable reality of machine learning although it's usuall
 
   Note: ML and MAP are what is called 'point estimates', that is, they are the set of parameter values that maximize the posterior - we come onto the distribution of $w$ in the next week.
 
-## Some mathematical details
+<hr class="with-margin">
+<h4 class="header" id="details">Some mathematical details</h4>
 
 Here are some of the mathematical details from the week:
 
@@ -99,13 +109,15 @@ Here are some of the mathematical details from the week:
   * We then integrate (sum) over all our predictions noting that $y_0$ is a single observation and $y$ is $n$ observations.
 * Note that in $E[(y_0 - x_0^T\hat{w})^2 \mid X, x_0]$ both $\hat{w}$ and $y_0$ are treated as random as $\hat{w}$ is found using $y$ (which is a RV) and then is used to predict $y_0$.
 
-## Things I'm unclear on (or outstanding questions)
+<hr class="with-margin">
+<h4 class="header" id="sec3">Things I'm unclear on (or outstanding questions)</h4>
 
 * Why does: $p(y_0 \mid X, x_0, w) = p(y \mid X, w) \, p(y_0\mid x_0, w)$ ?
   * Here $(y, X)$ represents original data and $(y_0, x_0)$ new data we receive.
 * Why under the model $y \sim N(Xw, \sigma^2 I)$ when we calculate $E[w_{ML}]$ do we have: $E[w_{ML}] = \int [(X^TX)^{-1}X^Ty]\,p(y \mid X, w)\, dy$ ?
   * Recall: $w_{ML} = (X^TX)^{-1}X^Ty$
 
-## What did the textbooks say?
+<hr class="with-margin">
+<h4 class="header" id="sec4">What did the textbooks say?</h4>
 
 To be updated.
