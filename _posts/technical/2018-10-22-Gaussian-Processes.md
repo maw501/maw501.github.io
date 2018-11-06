@@ -7,7 +7,7 @@ tags: ['gaussian_processes', 'kernels']
 image: "gp.png"
 ---
 
-In a loose sense Gaussian Processes can be thought of as a probabilistic yet non-parametric form of non-linear regression. In this article we will go over two examples which will illustrate how powerful these models are. 
+In a loose sense Gaussian Processes can be thought of as a probabilistic yet non-parametric form of non-linear regression. In this article we will go over two examples which will illustrate how powerful these models are.
 
 <!--more-->
 <hr class="with-margin">
@@ -20,7 +20,7 @@ In a loose sense Gaussian Processes can be thought of as a probabilistic yet non
 <hr class="with-margin">
 <h4 class="header" id="intro">Introducing Gaussian Processes (GPs)</h4>
 
-Something I don't usually do (but in line with the fact I'm not wanting to explain everything from scratch but just give my take on things): preliminary reading [here](http://katbailey.github.io/post/gaussian-processes-for-dummies/), [here](http://platypusinnovation.blogspot.com/2016/05/a-simple-intro-to-gaussian-processes.html) and [here](http://keyonvafa.com/gp-tutorial/). There are also good lectures [here](https://www.youtube.com/watch?v=4vGiHC35j9s&list=PLE6Wd9FR--EdyJ5lbFl8UuGjecvVw66F6&t=0s&index=9) from none other than Nando de Freitas that cover Gaussian Processes a lot more thoroughly than we did in lectures.
+Something I don't usually do (but in line with the fact I'm not wanting to explain everything from scratch but just give my take on things): preliminary reading [here](http://katbailey.github.io/post/gaussian-processes-for-dummies/), [here](http://platypusinnovation.blogspot.com/2016/05/a-simple-intro-to-gaussian-processes.html) and [here](http://keyonvafa.com/gp-tutorial/). There are also good lectures [here](https://www.youtube.com/watch?v=4vGiHC35j9s&list=PLE6Wd9FR--EdyJ5lbFl8UuGjecvVw66F6&t=0s&index=9) from none other than Nando de Freitas that cover Gaussian Processes a lot more thoroughly.
 
 <hr class="with-margin">
 <h4 class="header" id="intro">First attempt at an explanation</h4>
@@ -37,8 +37,6 @@ So our kernel (which we haven't yet defined) computes the similarity between eac
 <blockquote class="tip">
 <strong>Observation:</strong> we can now simulate functions from $f$
 </blockquote>
-
-
 
 At this point you probably hear phrases like "Gaussian Processes are simply an infinite-dimensional distribution over functions" which do nothing to aid understanding. "Ah yes" you say, "a distribution over functions, why I do that all the time".
 
@@ -73,6 +71,8 @@ K_{s}^T & K_{ss}\\
 \right)}
 
 $$
+
+In other words we are saying the function $f$ that generated the data we see is jointly distributed as a Gaussian with $f_s$, the function generating our new data. We are interested in making statements about $f_s$.
 
 <hr class="with-margin">
 * **Side note:** There is an important result for multivariate Gaussians that says that when you have two sets of variables that are jointly Gaussian (here $f$ and $f_s$) then the conditional distribution of one on the other is again Gaussian, here, $p(f_s \mid f)$.
