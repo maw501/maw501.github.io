@@ -3,13 +3,11 @@ layout: post
 title: Gaussian Processes
 date: 2018-10-22
 use_math: true
-['gaussian_processes', 'kernels']
+tags: ['gaussian_processes', 'kernels']
 image: "gp.png"
 ---
 
-**Note: still a work in progress**
-
-In a loose sense Gaussian Processes can be thought of as a probabilistic non-parametric form of non-linear regression.
+In a loose sense Gaussian Processes can be thought of as a probabilistic yet non-parametric form of non-linear regression. In this article we will go over two examples which will illustrate how powerful these models are. 
 
 <!--more-->
 <hr class="with-margin">
