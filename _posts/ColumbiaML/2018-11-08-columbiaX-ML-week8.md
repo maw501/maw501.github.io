@@ -5,6 +5,7 @@ date: 2018-11-08
 use_math: true
 tags: ['em_algorithm', 'gaussian_mixture', 'kmeans']
 image: "gmm.png"
+comments: true
 ---
 In week 8 we take a look at the EM algorithm, an iterative algorithm which helps us find parameter estimates when we cannot directly solve the model equations to obtain solution. We also looked at soft vs. hard clustering and use the EM algorithm to solve a Gaussian Mixture Model.
 
@@ -147,8 +148,6 @@ Essentially we work as follows:
 
 Writing an algorithm to solve a GMM using EM was actually this week's project and so I'm not going (or allowed) to give the numpy code example applying EM to GMMs which really helps to clarify the equations. As a compromise the scikit-learn documentation is pretty [readable](https://scikit-learn.org/stable/modules/mixture.html).
 
-Below are some notes on using EM for a GMM example. In this setting we have the following data generating process:
-
 <hr class="with-margin">
 
 For observation $i$:
@@ -166,6 +165,8 @@ $\pi$ is a $K$-dimensional probability distribution which is the probability of 
 </blockquote>
 
 Remember we don't have the cluster labels $c_i$ like we do in a K-class Bayes classifier setting - our assumption is on how the data is generated and we will work back to the cluster labels based on this.
+
+Below are some notes on using EM for a GMM example. In this setting we have the following data generating process (if all images don't display please refresh page):
 
 <p align="center">
     <img src="/assets/img/emgmm1.png" alt="Image" width="600" height="800" />
