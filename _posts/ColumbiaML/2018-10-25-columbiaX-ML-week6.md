@@ -47,7 +47,7 @@ Thus it can be confusing to see the big picture. In the context of two linearly 
   * Note: primal and dual problems are from optimization theory. Great discussion [here](https://www.svm-tutorial.com/2016/09/duality-lagrange-multipliers/).
 
 * **Bonus of the dual problem:** we realise that the dual problem is calculated more efficiently than the primal (if few support vectors) and further, in the dual problem we note we are taking the dot product between two data points...**enter the kernel trick** which allows us to still do the computation with our original data points but is equivalent to operating in a higher dimensional space.
-  * If the kernel bit didn't make sense see [here](../19/The-kernel-trick).
+  * If the kernel bit didn't make sense see [here](../../../2018/10/19/The-kernel-trick).
 
 #### Walking through the primal to dual formulation
 

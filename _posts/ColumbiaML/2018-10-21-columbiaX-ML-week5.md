@@ -78,11 +78,11 @@ Feature or basis expansions are usually introduced in quite a mathematically hea
 
 ##### Kernels are a way of assessing the similarity of our data points to each other (i.e. the rows of our $X$ matrix) - they also have the fearsome idea of the *kernel trick*
 
-I have written a separate post on the kernel trick [here](../19/The-kernel-trick) and kernels more generally [here](../22/Why-Kernels-Matter).
+I have written a separate post on the kernel trick [here](../../../2018/10/19/The-kernel-trick) and kernels more generally [here](../../../2018/10/22/Why-Kernels-Matter).
 
 ##### Gaussian Processes (GPs)
 
-These are getting their own blog post [here](../22/Gaussian-Processes).
+These are getting their own blog post [here](../../../2018/10/22/Gaussian-Processes).
 
 <hr class="with-margin">
 <h4 class="header" id="math">Main mathematical ideas from the lectures</h4>
@@ -115,7 +115,7 @@ $$p(w \mid x, y) = \dfrac{\prod_{i = 1}^{n} \sigma(y_i \cdot w) \, p(w)}{\int \p
 
 ##### Kernels
 
-Kernels in general are going to be dealt with more thoroughly in [this](../22/Why-Kernels-Matter) post.
+Kernels in general are going to be dealt with more thoroughly in [this](../../../2018/10/22/Why-Kernels-Matter) post.
 
 Kernels are symmetric functions taking in two vectors in $\mathbb{R}^d$ and computing the similarity between them according to some specified way such that the result is positive. Thus $K$ is a $n$ by $n$ matrix with the similarity of each data point to every other. In this sense $K$ satisfies the properties of a covariance matrix. A few points on kernels:
   * We can reformulate many existing linear models into an expression involving a kernel, for example ridge regression. This means that instead of predicting $y(\textbf{x}) = w^T \phi(\textbf{x})$ for a new point/row $\textbf{x}$ (after it may have been transformed by $\phi$) we can instead predict using:
