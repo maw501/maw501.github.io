@@ -62,7 +62,7 @@ A few comments on the above formulation:
 <hr class="with-margin">
 <h4 class="header" id="probpca">Probabilistic PCA</h4>
 
-Probabilistic PCA feels like somewhat a rabbit-hole that contains several technical details which we are not going to have time to cover here (and were not fully covered in the lecture) except to give a sketch overview. One of the authors of the original probabilistic PCA paper is Chris Bishop (author of one of the [texts](https://www.amazon.co.uk/Pattern-Recognition-Learning-Information-Statistics/dp/0387310738) for this course) - which might give some hint as to why this crept into the syllabus. If you want to read more about it you can see Chapter 12 of Bishop's book or the original paper [here](http://www.robots.ox.ac.uk/~cvrg/hilary2006/ppca.pdf).
+Probabilistic PCA feels like somewhat of a rabbit-hole that contains several technical details which we are not going to have time to cover here (and were not fully covered in the lecture) except to give a sketch overview. One of the authors of the original probabilistic PCA paper is Chris Bishop (author of one of the [texts](https://www.amazon.co.uk/Pattern-Recognition-Learning-Information-Statistics/dp/0387310738) for this course) - which might give some hint as to why this crept into the syllabus. If you want to read more about it you can see Chapter 12 of Bishop's book or the original paper [here](http://www.robots.ox.ac.uk/~cvrg/hilary2006/ppca.pdf).
 
 Probabilistic PCA is closely tied to matrix factorization and we will quickly present this view first before stating the generative process.
 

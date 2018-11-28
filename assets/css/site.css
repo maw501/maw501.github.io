@@ -61,6 +61,12 @@ h5
   font-size: 1em
 }
 
+h6
+{
+  color: #7700d5;
+  font-size: 1em
+}
+
 h1 a:hover,h2 a:hover,h3 a:hover,h4 a:hover
 {
   color:#04277E
