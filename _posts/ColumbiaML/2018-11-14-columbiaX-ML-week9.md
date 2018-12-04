@@ -196,7 +196,7 @@ In other words the matrix multiplication ${(B\Theta)}$ gives us all the probabil
 
 Note: $B$ is of dimension $V$ by $K$ where $V$ is the size of our vocabulary and $\Theta$ is of dimension $K$ by $D$.
 
-Solving this problem for the various distributions (the set of topics, their associated word probabilities, the topic of each word, and the particular topic mixture of each document) is what Bayesian inference does and we are not going to cover this now. I will come back to this in a later post as it uses techniques such as Gibbs sampling are more advanced techniques.
+Solving this problem for the various distributions (the set of topics, their associated word probabilities, the topic of each word, and the particular topic mixture of each document) is what Bayesian inference does and we are not going to cover this now. I will come back to this in a later post as it uses techniques such as Gibbs sampling which are more advanced techniques.
 
 <hr class="with-margin">
 <h4 class="header" id="mathdetails">Some comments on the mathematics this week</h4>
