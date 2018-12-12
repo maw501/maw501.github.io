@@ -45,8 +45,8 @@ Week 4 really dug into the dirt with classifiers and, as is typical for people o
 
 * The Bayes classifier represents the best we can do if we know the probability distribution from which our data comes
   * In this case it can be shown that in order to get the lowest misclassification error rate we can simply choose our predicted class as the class which has the highest probability, i.e. $\underset{y \, \in \, Y}{\operatorname{argmax}} P (Y=y \mid X=x)$ where we are assuming this probability comes from the true distribution $\Phi$.
-* We don't know this distribution $\Phi$ and so cannot maximize $P(Y =y \mid X=x)$ directly, instead we write it as $P(Y=y) \,P(X=x \mid Y=y)$ using Bayes (ignoring the constant denominator) and approximate these terms instead.
-* We now have to approximate both of the former terms somehow.
+* We don't know this distribution $\Phi$ and so cannot maximize $P(Y =y \mid X=x)$ directly, instead we write it as $P(Y=y) \,P(X=x \mid Y=y)$ using Bayes (ignoring the constant denominator) and we will choose some distribution to approximate these terms instead.
+* Our classifier will lose the status of the optimal classifier once we do this.
 * We can think of $P(Y=y)$ as the class prior which could be just the base rate of how the classes are distributed e.g. if we have training data with 65% in class 1 and 35% in class 2 we can just set $P(Y=1) = 0.65$ and $P(Y=2) = 0.35$ and call it a day.
 * $P(X=x \mid Y=y)$ is our data likelihood and we can think of it as a class conditional distribution of our $X$ data given which class we are in. This is big departure from what we have done before where we have now made an assumption about how our covariates are distributed.
   * Note: $P(X=x \mid Y=y)$ is assuming $X$ is discrete, if it's continuous we can just use the class conditional density $P(x \mid Y=y)$.

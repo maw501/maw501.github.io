@@ -70,7 +70,7 @@ This problem is the inescapable reality of machine learning although it's usuall
 * **Using the SVD to analyse the solutions to LS and RR**
   * This is quite an ugly calculation which really masks the understanding of the result which has nice links back to linear algebra (eigenvalues, PCA etc...). The upshot is that the term $\lambda$ acts as a sort of protection to stop us dividing by really small values when calculating $w_{RR}.$    
     * This is loosely analogous to what we sometimes do to avoid division by 0 errors or blow-ups: i.e. add a term $\lambda$: $1/(\lambda + t)$.
-  * In particular it is shown that $w_{RR} = VS_{\lambda}^{-1}U^Ty$ where we are using the SVD to decompose $X$ into 3 separate matrices $X = USV^T$. $S$ is the matrix holding the singular values (i.e. the square roots of the eigenvalues) of $X$. $S_{\lambda}^{-1}$ refers to a diagonal matrix (when it all comes out of the wash by plugging $X = USV^T$ into the definition of $w_{RR}$) with each term of the form: $\dfrac{S_{ii}}{\lambda + S_{ii}}$. $S$ is a $d$ by $d$ matrix.
+  * In particular it is shown that $w_{RR} = VS_{\lambda}^{-1}U^Ty$ where we are using the SVD to decompose $X$ into 3 separate matrices $X = USV^T$. $S$ is the matrix holding the singular values (i.e. the square roots of the eigenvalues) of $X$. $S_{\lambda}^{-1}$ refers to a diagonal matrix (when it all comes out of the wash by plugging $X = USV^T$ into the definition of $w_{RR}$) with each term of the form: $\dfrac{S_{ii}}{\lambda + S^2_{ii}}$. $S$ is a $d$ by $d$ matrix.
     * So we finally see (!) how $\lambda$ for $w_{RR}$ stops us getting weights that are huge when we have small singular values in $X$.
 * **Calculating the bias-variance trade-off for a general function**
   * Decompose generalization error into noise, squared bias and variance.
@@ -98,7 +98,10 @@ Here are some of the mathematical details from the week:
   * $U$ is $n$ by $d$ with orthonormal columns
   * $S$ is $d$ by $d$ with non-negative diagonal entries.
   * $V$ is $d$ by $d$ with orthonormal columns
-* It was stated in the lecture that our squared prediction error for a new data point $(x_0, y_0)$ is: $$E[(y_0 - x_0^T\hat{w})^2 \mid X, x_0] = \int_{\mathbb{R}}^{} \int_{\mathbb{R^n}}^{} (y_0 - x_0^T\hat{w})^2 \, p(y \mid X, w) \, p(y_0\mid x_0, w) \, dy \, dy_0$$
+* It was stated in the lecture that our squared prediction error for a new data point $(x_0, y_0)$ is:
+
+$$E[(y_0 - x_0^T\hat{w})^2 \mid X, x_0] = \int_{\mathbb{R}}^{} \int_{\mathbb{R^n}}^{} (y_0 - x_0^T\hat{w})^2 \, p(y \mid X, w) \, p(y_0\mid x_0, w) \, dy \, dy_0$$
+
   * First observation: WTF
   * Second observation: WTF I hate big integrals
   * Third observation: I'll come back to this
