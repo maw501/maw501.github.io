@@ -124,12 +124,14 @@ For each example in our original mini-batch of inputs, $x$, we now multiply it (
 
 Given we can think of each row of $a$ as representing a probability distribution then multiplying $x$ by this and summing can be thought of (is the same) as calculating expectation over all words in the sentence of a word being important in determining sentiment. By calculating the expectation over all words in the sentence we allow them all to contribute (even though it's likely only a few will) - this is called soft attention.
 
-Enough explanations, let's see the code! The below is also on my github with an example [here](https://github.com/maw501/blog-notebooks/blob/master/attention_example.ipynb).
+Enough explanations, let's see the code!
 
 <hr class="with-margin">
 <h4 class="header" id="code">Function for single forward step</h4>
 
 It's perhaps easier to initially present attention as a function that performs a single attention forward step - the below is commented to match the above explanation.
+
+The below code is also on my github with a simple example [here](https://github.com/maw501/blog-notebooks/blob/master/attention_example.ipynb).
 
 <pre><code class="language-python">import torch
 def attention(x, weight, hidden_dim, max_len):
@@ -165,6 +167,8 @@ def attention(x, weight, hidden_dim, max_len):
 <h4 class="header" id="code_cls">Attention PyTorch class</h4>
 
 Below is the implementation as a PyTorch class.
+
+The below code is also on my github with a simple example [here](https://github.com/maw501/blog-notebooks/blob/master/attention_example.ipynb).
 
 <pre><code class="language-python">import torch
 import torch.nn as nn
