@@ -157,9 +157,9 @@ def attention(x, weight, hidden_dim, max_len):
     a = a / torch.sum(a, 1, keepdim=True) + 1e-10 # bs, max_len
 
     # Calculate expectation by summing across max_len dim to
-    # get single number per hidden state:
-    weighted_input = x * torch.unsqueeze(a, -1)  # bs, max_len, 2*hidden_state
-    att_x = torch.sum(weighted_input, 1)  # bs, 2*hidden_state
+    # get single number per hidden dim:
+    weighted_input = x * torch.unsqueeze(a, -1)  # bs, max_len, 2*hidden_dim
+    att_x = torch.sum(weighted_input, 1)  # bs, 2*hidden_dim
     return att_x
 </code></pre>
 
