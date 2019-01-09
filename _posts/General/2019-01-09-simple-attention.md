@@ -14,9 +14,9 @@ In particular we will focus on breaking down the calculation into several easier
 <!--more-->
 <hr class="with-margin">
 
-The aim of this post is not to explain 'what' or 'why' of attention but rather 'how' it works. If you would like either of the former please see, for example, this excellent article [here](http://www.wildml.com/2016/01/attention-and-memory-in-deep-learning-and-nlp/) of which there are many.
+The aim of this post is not to explain in detail the 'what' or 'why' of attention but rather 'how' it works. We will give a brief explanation of what attention tries to accomplish but if you want more details, see, for example, this excellent article [here](http://www.wildml.com/2016/01/attention-and-memory-in-deep-learning-and-nlp/) of which there are many more similar.
 
-If you just want to see the code you can jump to it by clicking the content page heading below.
+If you just want to see the code you can jump to it by clicking the content page heading below - the below explanation is quite a detailed walk-through.
 
 <hr class="with-margin">
 <div class="list-of-contents">
@@ -25,38 +25,80 @@ If you just want to see the code you can jump to it by clicking the content page
 </div>
 
 <hr class="with-margin">
-<h4 class="header" id="intro">Overview</h4>
+<h4 class="header" id="intro">Quick recap: simple NLP model & what is attention?</h4>
+
+<blockquote class="tip">
+<strong>TLDR:</strong> attention is a layer within an NLP model which calculates how much 'attention' the model should pay to each word when deciding the sentiment of the sentence by learning a probability distribution over words in the sentence. This is $a$ in Fig. 0 below.
+</blockquote>
+
+Below is the structure of a simple NLP model:
+<pre><code class="language-python">import packages
+def dummy_NLP_model_with_attention(x):
+    '''This is pseudo-code. the input x has shape: bs, max_len'''
+    x_embedded = get_embedding(x)  # bs, max_len, emb_dim
+    x_lstm = bi_directional_lstm(x_embedded)  # bs, max_len, 2*hidden_size
+    att_x = attention(x_lstm)  # bs, 2*hidden_size  <--- WHERE WE WILL FOCUS
+    out = relu(linear_layer(att_x))  # bs, 1
+    return out
+</code></pre>
+
+A mini-batch of sentences $x$ come into the model and each word retrieves its embedding vector, this gives the tensor `x_embedded`. This tensor is then passed into a bi-directional LSTM that runs over each sentence forwards and backwards and maps the embedding dimensionality into a new dimensionality that we get to choose - this is often called the hidden size of the LSTM.
+
+We then pass this `x_lstm` tensor to our attention block which works out how much attention we should pay to each word in the sentence (which is of length `max_len`). It does this by calculating a probability distribution over all the words in our sentences for each example - we then take the expectation of our original input with these learned distributions.
+
+Notice that the output from this no longer has a dimension for the sentence length - this is the calculation we are going to explain in this blog post. Also notice that for each example in our mini-batch we output a single number which is our sentiment prediction.
+
+The below shows the basic steps for a single example of batch size 1 (excluding the last linear layer as I ran out of room) for the above NLP model. The probability distribution $a$ is learned as part of the `attention` function.
+
+<p align="center">
+    <img src="/assets/img/simple_nlp.jpg" alt="Image" width="600" height="800" />
+</p>
+
+<em class="figure">Fig. 0: a simple NLP model</em>
+
+##### What if we excluded the attention layer?
+
+If in the above model we decided to exclude the attention layer we would need to still find a way to reduce the `x_lstm` tensor over the sentence dimension. This could be done by a pooling layer before it's passed into the linear layer for output which maps the hidden dimensions of the LSTM to a single number. For example:
+
+<pre><code class="language-python">import packages
+def dummy_NLP_model_no_attention(x):
+    '''This is pseudo-code. the input x has shape: bs, max_len'''
+    x_embedded = get_embedding(x)  # bs, max_len, emb_dim
+    x_lstm = bi_directional_lstm(x_embedded)  # bs, max_len, 2*hidden_size
+    pool_x = avg_pool(x_lstm, 1)  # bs, 2*hidden_size
+    out = relu(linear_layer(pool_x))  # bs, 1
+    return out
+</code></pre>
+
+<hr class="with-margin">
+<h4 class="header" id="intro">Overview for sentiment analysis</h4>
 
 ##### Problem set-up
 
-Classically attention was introduced in terms of translating from one language to another word by word. Typically we have a input vector $x$ of length $T$ and wanted to decode it into a another vector $y$ of potentially different length. In our example we are going to be thinking about sentiment analysis so for a single sentence (or mini-batch of sentences, which is our input) we simply need to output a single number which indicates the sentiment of that sentence.
-
-##### Goal
-
-We wish to direct our model to focus on some part of the sentence. We can think of this as trying to end up with a tensor of the same length as our sentence which will provide a weighting for each word - we can think of this as how much attention we pay to each word when calculating the sentiment.
+Classically attention was introduced in terms of translating from one language to another word by word. Typically we have a input vector $x$ of length $T$ and wanted to decode it into another vector $y$ of potentially different length. In our example we are going to be thinking about sentiment analysis so for a single sentence (or mini-batch of sentences, which is our input) we simply need to output a single number which indicates the sentiment of that sentence.
 
 Note: the terms tensor and vector will be used interchangeably where appropriate.
 
 ##### Parameters
 
-$\text{bs}$ = batch size
+`bs` = batch size
 
-$\text{max_len}$ = the length of each sentence (padded if less than max_len)
+`max_len` = the length of each sentence (padded if less than max_len)
 
-$\text{hidden_dim}$ = the dimensionality of the LSTM whose output we pass into the attention layer (note we pass in a tensor with shape $2 * \text{hidden_dim}$ as we generally use a bi-directional LSTM, not explained here. But explained [here](https://towardsdatascience.com/introduction-to-sequence-models-rnn-bidirectional-rnn-lstm-gru-73927ec9df15))
+`hidden_dim` = the dimensionality of the LSTM whose output we pass into the attention layer (note we pass in a tensor with shape 2 * `hidden_dim` as we generally use a bi-directional LSTM, not explained here. But explained [here](https://towardsdatascience.com/introduction-to-sequence-models-rnn-bidirectional-rnn-lstm-gru-73927ec9df15))
 
-In this example we will have $\text{bs} = 32, \text{max_len}  = 70 $ and $\text{hidden_dim} = 75$.
+In this example we will have `bs` = 32, `max_len` = 70 and `hidden_dim` = 75.
 
 <hr class="with-margin">
 <h4 class="header" id="attention">Walking through attention with pictures</h4>
 
-The input to our attention function is of shape: $(\text{bs}, \text{max_len}, 2 * \text{hidden_dim})$
+The input to our attention function is of shape: (`bs`, `max_len`, 2 * `hidden_dim`).
 
-Note our input to the attention mechanism isn't the raw sentence embeddings (if it was it would be of shape: $(\text{bs}, \text{max_len}, \text{emb_dim})$) as we are assuming it's been through a bi-directional LSTM first which has encoded each word into tensors of dimension $2 * \text{hidden_dim}$.
+Note our input to the attention mechanism isn't the raw sentence embeddings (if it was it would be of shape: (`bs`, `max_len`, `emb_dim`) as we are assuming it's been through a bi-directional LSTM first which has encoded each word into tensors of dimension: 2 * `hidden_dim`.
 
 ##### Viewing the input
 
-This is what our input tensor to the attention function looks like:
+This is what our input tensor to the attention function looks like after it has been through the bi-directional LSTM layer:
 
 <p align="center">
     <img src="/assets/img/attention_input.jpg" alt="Image" width="600" height="400" />
@@ -76,9 +118,9 @@ This is the point whereby typical explanations of attention get themselves in a 
 
 Whilst this is technically true in my view this masks the true understanding which is fairly natural.
 
-Recall our goal is to weight each word in the sentence according to how important it is in determining the sentiment. Well, if this is the case it would be nice to have a tensor that is of shape $(\text{bs}, \text{max_len})$ in order to weight each word in the sentence. In other words, for each of the 32 sentences in our mini-batch we wish to obtain a vector which weights how much importance each of the 70 words contributes towards determining sentiment.
+Recall our goal is to weight each word in the sentence according to how important it is in determining the sentiment. Well, if this is the case it would be nice to have a tensor that is of shape (`bs`, `max_len`) in order to weight each word in the sentence. In other words, for each of the 32 sentences in our mini-batch we wish to obtain a vector which weights how much importance each of the 70 words contributes towards determining sentiment.
 
-To do this we need to perform some opThis requires the above reading to have been doneeration that can get us to a tensor of the shape we want: $(\text{bs}, \text{max_len})$ - there are many ways to do this but we will focus on a way which uses the information we have to hand from our input tensor $x$. As Montell Jordan said, [this is how we do it](https://www.youtube.com/watch?v=0hiUuL5uTKc):
+To do this we need to perform some operation that can get us to a tensor of the shape we want: (`bs`, `max_len`) - there are many ways to do this but we will focus on a way which uses the information we have to hand from our input tensor $x$. As Montell Jordan said, [this is how we do it](https://www.youtube.com/watch?v=0hiUuL5uTKc):
 
 <p align="center">
     <img src="/assets/img/attention_reshape_weight.png" alt="Image" width="600" height="400" />
@@ -88,7 +130,7 @@ To do this we need to perform some opThis requires the above reading to have bee
 
 We first reshape our 3d tensor by stacking all the encodings on top of each other as shown above. The red tensor is the encodings for all the first words in our sequence and of shape (32, 150). We do the same for all 70 words in our sequence to end up with a tensor of shape (70 * 32, 150).
 
-Next we perform matrix multiplication with a vector of shape (150, 1) to end up with an output of shape (70 * 32, 1). We then reshape this back to a tensor of shape (32, 70) which is our output, let's call it $e_{ij}$ to match the orinal paper's notation.
+Next we perform matrix multiplication with a vector of shape (150, 1) to end up with an output of shape (70 * 32, 1). We then reshape this back to a tensor of shape (32, 70) which is our output, let's call it $e_{ij}$ to match the original paper's notation.
 
 It's important to realise that the reshaping was just a convenience thing to do and really all we did was take a linear combination of the 150 hidden dimensions using a weight vector $w$.
 
@@ -97,16 +139,16 @@ This tensor $e_{ij}$ is now the shape we want and can be thought of as giving th
 ##### Let's call it a neural network
 
 <blockquote class="tip">
-<strong>Step summary:</strong> apply a non-linearity then softmax activation to get a probability distribution for each mini-batch example.
+<strong>Step summary:</strong> apply a non-linearity then soft-max activation to get a probability distribution for each mini-batch example.
 </blockquote>
 
 Recall that a single layer neural network is just a function of the form: $\sigma \,(Xw + b)$ for some non-linear activation $\sigma$.
 
-Well, we've just done the matrix multiplication bit so let's now apply a non-linear function to $e_{ij}$ and we can the declare it a neural network. The activation we apply is a $\text{tanh}$ function followed by a softmax. Applying the softmax over the $\text{max_len}$ dimension forces the model to favour a particular part of the sentence to focus on as softmax will tend to favour one large activation. Let's call our output $a$:
+Well, we've just done the matrix multiplication bit so let's now apply a non-linear function to $e_{ij}$ and we can the declare it a neural network. The activation we apply is a $\text{tanh}$ function followed by a soft-max. Applying the soft-max over the `max_len` dimension forces the model to favour a particular part of the sentence to focus on as soft-max will tend to favour one large activation. Let's call our output $a$:
 
 $$ a = \dfrac{\exp(e_{ij})}{\sum_{k=1}^{T} \exp(e_{ik})}$$
 
-Note: $a$ is still have a tensor of shape $(\text{bs}, \text{max_len})$ but as we've passed it through a softmax each row now sums to 1 and can be thought of as a probability distribution telling us where to focus for each input sentence.
+Note: $a$ is still have a tensor of shape (`bs`, `max_len`) but as we've passed it through a soft-max each row now sums to 1 and can be thought of as a probability distribution telling us where to focus for each input sentence.
 
 ##### The output (take expectations)
 
@@ -114,7 +156,7 @@ Note: $a$ is still have a tensor of shape $(\text{bs}, \text{max_len})$ but as w
 <strong>Step summary:</strong> calculate the expectation over each word in the input sentence.
 </blockquote>
 
-For each example in our original mini-batch of inputs, $x$, we now multiply it (element-wise) by $a$ and then take the sum over each sentence as shown below
+For each example in our original mini-batch of inputs, $x$, we now multiply it (element-wise) by $a$ and then take the sum over each sentence as shown below:
 
 <p align="center">
     <img src="/assets/img/attention_output.png" alt="Image" width="600" height="400" />
@@ -122,7 +164,9 @@ For each example in our original mini-batch of inputs, $x$, we now multiply it (
 
 <em class="figure">Fig. 3: the attention output</em>
 
-Given we can think of each row of $a$ as representing a probability distribution then multiplying $x$ by this and summing can be thought of (is the same) as calculating expectation over all words in the sentence of a word being important in determining sentiment. By calculating the expectation over all words in the sentence we allow them all to contribute (even though it's likely only a few will) - this is called soft attention.
+The above is really just another way of viewing the same calculation we saw for `att_x` in Fig 0. except we are now doing it for a mini-batch and not a single example.
+
+As we can think of each row of $a$ as representing a probability distribution then multiplying $x$ by this and summing can be thought of (is the same) as calculating expectation over all words in the sentence of a word being important in determining sentiment. By calculating the expectation over all words in the sentence we allow them all to contribute (even though it's likely only a few will) - this is called soft attention.
 
 Enough explanations, let's see the code!
 
