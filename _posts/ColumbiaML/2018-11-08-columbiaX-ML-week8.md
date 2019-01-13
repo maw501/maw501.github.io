@@ -7,7 +7,7 @@ tags: ['em_algorithm', 'gaussian_mixture', 'kmeans']
 image: "gmm.png"
 comments: true
 ---
-In week 8 we take a look at the EM algorithm, an iterative algorithm which helps us find parameter estimates when we cannot directly solve the model equations to obtain solution. We also looked at soft vs. hard clustering and use the EM algorithm to solve a Gaussian Mixture Model.
+In week 8 we take a look at the EM algorithm, an iterative algorithm which helps us find parameter estimates when we cannot directly solve the model equations to obtain a solution. We also looked at soft vs. hard clustering and use the EM algorithm to solve a Gaussian Mixture Model.
 
 <!--more-->
 <hr class="with-margin">
