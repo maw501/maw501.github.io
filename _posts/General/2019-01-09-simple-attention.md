@@ -7,16 +7,16 @@ tags: ['attention', 'deep_learning']
 image: "attention.png"
 comments: true
 ---
-We are going to take a look at the attention mechanism in relation to sentiment analysis focusing on the classic implementation from [Bahdanau 2015](https://arxiv.org/abs/1409.0473), Neural Machine Translation by Jointly Learning to Align and Translate.
+We are going to take a look at the attention mechanism in relation to sentiment analysis focusing on the classic implementation from [Bahdanau 2015](https://arxiv.org/abs/1409.0473), *Neural Machine Translation by Jointly Learning to Align and Translate*.
 
 In particular we will focus on breaking down the calculation into several easier to understand steps.
 
 <!--more-->
 <hr class="with-margin">
 
-The aim of this post is not to explain in detail the 'what' or 'why' of attention but rather 'how' it works. We will give a brief explanation of what attention tries to accomplish but if you want more details, see, for example, this excellent article [here](http://www.wildml.com/2016/01/attention-and-memory-in-deep-learning-and-nlp/) of which there are many more similar.
+The aim of this post is not to explain in detail the 'what' or 'why' of attention but rather 'how' the calculation works. We will give a brief explanation of what attention tries to accomplish but if you want more details, see, for example, the excellent article [here](http://www.wildml.com/2016/01/attention-and-memory-in-deep-learning-and-nlp/) of which there are many more similar.
 
-If you just want to see the code you can jump to it by clicking the content page heading below - the below explanation is quite a detailed walk-through.
+If you just want to see the code you can jump to it by clicking the content page heading below - the below explanation is quite a detailed walk-through. There is also a section now with a few reminders of some of the mathematics based on feedback.
 
 <hr class="with-margin">
 <div class="list-of-contents">
@@ -58,7 +58,7 @@ The below shows the basic steps for a single example of batch size 1 (excluding 
 
 ##### What if we excluded the attention layer?
 
-If in the above model we decided to exclude the attention layer we would need to still find a way to reduce the `x_lstm` tensor over the sentence dimension. This could be done by a pooling layer before it's passed into the linear layer for output which maps the hidden dimensions of the LSTM to a single number. For example:
+If in the above model we decided to exclude the attention layer we would need to still find a way to reduce the `x_lstm` tensor over the sentence dimension as in sentiment analysis our goal is to summarise the whole sentence into a single output number expressing sentiment. This could be done by a pooling layer before it's passed into the linear layer for output which maps the hidden dimensions of the LSTM to a single number. For example:
 
 <pre><code class="language-python">import packages
 def dummy_NLP_model_no_attention(x):
@@ -69,6 +69,13 @@ def dummy_NLP_model_no_attention(x):
     out = relu(linear_layer(pool_x))  # bs, 1
     return out
 </code></pre>
+
+Note: what we are calling `att_x` can be thought of as a context vector. As we are doing sentiment analysis we have a single context vector for each mini-batch example but in the original paper (cited above) on machine translation they output a context vector for each of words in the decoder sentence.
+
+* **Sentiment analysis**: sentences of length `max_len`, output a single number.  
+  * The context vector looks over the whole input sentence.
+* **Translation**: sentences of length `max_len`, output a fixed length vector translation.
+  * For each output word we have a context vector that has looked over the whole input sentence - we thus have as many context vectors as output words.
 
 <hr class="with-margin">
 <h4 class="header" id="intro">Overview for sentiment analysis</h4>
@@ -144,7 +151,10 @@ This tensor $e_{ij}$ is now the shape we want and can be thought of as giving th
 
 Recall that a single layer neural network is just a function of the form: $\sigma \,(Xw + b)$ for some non-linear activation $\sigma$.
 
-Well, we've just done the matrix multiplication bit so let's now apply a non-linear function to $e_{ij}$ and we can the declare it a neural network. The activation we apply is a $\text{tanh}$ function followed by a soft-max. Applying the soft-max over the `max_len` dimension forces the model to favour a particular part of the sentence to focus on as soft-max will tend to favour one large activation. Let's call our output $a$:
+Well, we've just done the matrix multiplication bit so let's now apply a non-linear function to $e_{ij}$ and we can the declare it a neural network. The activation we apply is a $\text{tanh}$ function followed by a soft-max which forces each row of the resulting tensor to now sum to 1 (without changing its shape).
+* Note: we applied the soft-max over the `max_len` dimension forces the model to favour a particular part of the sentence to focus on as soft-max will tend to favour one large activation.
+
+Let's call our output $a$:
 
 $$ a = \dfrac{\exp(e_{ij})}{\sum_{k=1}^{T} \exp(e_{ik})}$$
 
@@ -196,8 +206,7 @@ def attention(x, weight, hidden_dim, max_len):
     ).view(-1, max_len)  # bs, max_len
 
     # tanh non-linearity then softmax:
-    eij = torch.tanh(eij)
-    a = torch.exp(eij)  # bs, max_len        
+    eij = torch.exp(eij)  # bs, max_len        
     a = a / torch.sum(a, 1, keepdim=True) + 1e-10 # bs, max_len
 
     # Calculate expectation by summing across max_len dim to
@@ -252,3 +261,26 @@ class Attention(nn.Module):
         weighted_input = x * torch.unsqueeze(a, -1)
         return torch.sum(weighted_input, 1)  
 </code></pre>
+
+<hr class="with-margin">
+<h4 class="header" id="intro">A bit of mathematics to remember</h4>
+
+##### Soft-max function
+
+Recall that for a vector $\textbf{a}$ the soft-max function, $\sigma$ can be written as:
+
+$$ \sigma (\textbf{a}) = \dfrac{\exp(a_i)}{\sum_{j=1}^{N} \exp(a_j)} $$
+
+for $i = 1, ..., N$
+
+In words: we take the exponential of every element in the vector of length $N$ then divide each word by the sum. This has two implications:
+
+* The resulting vector now sums to 1 so can be thought of as a probability distribution.
+* The fact we took the exponential of each element means small differences in the original vector are amplified. i.e. the soft-max function favours picking one element as the dominant one.
+
+In attention we apply the soft-max over the words in our sentence, so we can think of it as emphasising a particular word to focus on.
+
+##### Expectations
+
+In the last steps of attention we multiply our original input $x$ by $a$ and then sum over each row (the sentence dimension). This is exactly calculating the expected value over each sentence as each row of $a$ is a probability distribution.
+<hr class="with-margin">
