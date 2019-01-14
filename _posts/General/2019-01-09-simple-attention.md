@@ -46,9 +46,9 @@ A mini-batch of sentences $x$ come into the model and each word retrieves its em
 
 We then pass this `x_lstm` tensor to our attention block which works out how much attention we should pay to each word in the sentence (which is of length `max_len`). It does this by calculating a probability distribution over all the words in our sentences for each example - we then take the expectation of our original input with these learned distributions.
 
-Notice that the output from this no longer has a dimension for the sentence length - this is the calculation we are going to explain in this blog post. Also notice that for each example in our mini-batch we output a single number which is our sentiment prediction.
+Notice that the output from this no longer has a dimension for the sentence length - this is the calculation we are going to explain in this blog post and is a direct consequence of the expectation calculation we mentioned in the previous paragraph. Also notice that for each example in our mini-batch we output a single number which is our sentiment prediction.
 
-The below shows the basic steps for a single example of batch size 1 (excluding the last linear layer as I ran out of room) for the above NLP model. The probability distribution $a$ is learned as part of the `attention` function.
+The below shows the basic steps for a single example of batch size 1 (excluding the last linear layer as I ran out of room) for the above NLP model. The probability distribution $a$ is learned as part of the `attention` function for each example in a mini-batch.
 
 <p align="center">
     <img src="/assets/img/simple_nlp.jpg" alt="Image" width="600" height="800" />
@@ -69,6 +69,8 @@ def dummy_NLP_model_no_attention(x):
     out = relu(linear_layer(pool_x))  # bs, 1
     return out
 </code></pre>
+
+By using average pooling we would be weighting each word in the sentence equally - attention will explicitly learn the weighting for each word via the probability distribution $a$ as previously discussed.
 
 Note: what we are calling `att_x` can be thought of as a context vector. As we are doing sentiment analysis we have a single context vector for each mini-batch example but in the original paper (cited above) on machine translation they output a context vector for each of words in the decoder sentence.
 
@@ -152,13 +154,13 @@ This tensor $e_{ij}$ is now the shape we want and can be thought of as giving th
 Recall that a single layer neural network is just a function of the form: $\sigma \,(Xw + b)$ for some non-linear activation $\sigma$.
 
 Well, we've just done the matrix multiplication bit so let's now apply a non-linear function to $e_{ij}$ and we can the declare it a neural network. The activation we apply is a $\text{tanh}$ function followed by a soft-max which forces each row of the resulting tensor to now sum to 1 (without changing its shape).
-* Note: we applied the soft-max over the `max_len` dimension forces the model to favour a particular part of the sentence to focus on as soft-max will tend to favour one large activation.
+* Note: we applied the soft-max over the `max_len` dimension forces the model to favour a particular part of the sentence to focus on as soft-max will tend to favour one large activation. Please see the section at the very end for a refresher on soft-max if you are rusty.
 
 Let's call our output $a$:
 
 $$ a = \dfrac{\exp(e_{ij})}{\sum_{k=1}^{T} \exp(e_{ik})}$$
 
-Note: $a$ is still have a tensor of shape (`bs`, `max_len`) but as we've passed it through a soft-max each row now sums to 1 and can be thought of as a probability distribution telling us where to focus for each input sentence.
+Note: $a$ is still have a tensor of shape (`bs`, `max_len`) but as we've passed it through a soft-max each row now sums to 1 and so can be thought of as a probability distribution telling us where to focus for each input sentence.
 
 ##### The output (take expectations)
 
