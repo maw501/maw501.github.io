@@ -5,10 +5,9 @@ date: 2018-10-19
 use_math: true
 image: "kernel.png"
 ---
+This post only covers the concept of the 'kernel trick' and not kernels in general. Kernels often get a bad reputation as they are usually poorly explained, usually in the context of SVMs.
 
-**Note: still a work in progress**
-
-This post only covers the concept of the 'kernel trick' and not kernels in general which often get a bad rep as they are usually poorly explained - usually in the context of SVMs. We will start by considering an example.
+We will start with a simple motivating example and follow it through in detail to get to the heart of the trick.
 <!--more-->
 <hr class="with-margin">
 
