@@ -241,17 +241,16 @@ class Attention(nn.Module):
         nn.init.xavier_uniform_(weight)
         self.weight = nn.Parameter(weight)
 
-        if bias: self.b = nn.Parameter(torch.zeros(step_dim))
+        if bias: self.b = nn.Parameter(torch.zeros(1))
 
     def forward(self, x, mask=None):
         '''x is bs, max_len, 2*hidden_dim'''
         feature_dim = self.feature_dim
-        step_dim = self.step_dim
 
         eij = torch.mm(
             x.contiguous().view(-1, feature_dim),
             self.weight  
-        ).view(-1, step_dim)  
+        ).view(-1, self.step_dim)  
 
         if self.bias: eij = eij + self.b  
 

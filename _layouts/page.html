@@ -64,5 +64,8 @@
         hljs.initHighlightingOnLoad();
     </script>
     <script src="{{ site.baseurl }}/lib/site.js"></script>
+    {% if jekyll.environment == 'production' %}
+    {% include analytics.html %}
+    {% endif %}
 </body>
 </html>
