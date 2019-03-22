@@ -4,6 +4,7 @@ title: ColumbiaX - ML - week 1
 date: 2018-10-10
 use_math: true
 image: "bivariategauss2.jpeg"
+comments: true
 ---
 We kick start the course by introducing probabilistic modelling, MLE, multivariate Gaussians as well as the notion of OLS (including its geometry).
 
