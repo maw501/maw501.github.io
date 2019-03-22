@@ -14,8 +14,10 @@ layout: page
     <script>
       var disqus_config = function () {
         this.page.url = "{{ site.baseurl }}{{ page.url }}";
+        //this.page.url = "{{page.url | prepend site.baseurl}}";
         this.page.identifier = "{{ page.identifier }}";
         this.page.title = "{{ page.title }}";
+        //this.page.category_id = '123456';  // MW added...remove?
       };
 
       (function() { // DON'T EDIT BELOW THIS LINE
