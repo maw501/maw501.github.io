@@ -10,14 +10,16 @@ html {
 *:after {
     box-sizing: inherit;
 }
-
+/* This controls main shape of blog posts */
 body {
     position: relative;
     min-height: 100%;
     padding-bottom: 6rem;
     background: whitesmoke;
-    line-height: 200%;
+    line-height: 150%;
     font-size:15px;
+    width: 850px;
+    margin: auto;
 }
 
 h1,h2,h3,h4,h5,h6
@@ -130,7 +132,7 @@ p
     margin: 0;
     padding: 0;
     display: inline-block;
-    width: 120px;
+    width: 120px;  /* navigation banner at top Blog Projects etc..*/
     line-height: 50px;
     font-size: 1.4em;
     font-family: "Share", cursive;
@@ -169,6 +171,7 @@ p
     bottom: 0;
     left: 0;
     right: 0;
+    height: 80px;  /* MW added this */
     text-align: center;
     padding: 1rem;
     background-color: #3c3c3c;
