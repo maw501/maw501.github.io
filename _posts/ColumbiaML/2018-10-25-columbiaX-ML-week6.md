@@ -5,6 +5,7 @@ date: 2018-10-25
 use_math: true
 tags: ['SVMs', 'decision_trees']
 image: "svm.jpg"
+comments: true
 ---
 Week 6 in some ways introduced the old guard before handing over to the (relatively) new kids on the block. SVMs were all the rage over a decade ago whilst more modern data mining techniques (on non-huge datasets) now tend to lean heavily on decision trees.
 

@@ -4,6 +4,7 @@ title: ColumbiaX - ML - week 4
 date: 2018-10-16
 use_math: true
 image: "knn.jpg"
+comments: true
 ---
 Week 4 started the topic of classification and touched on the k-NN classifier, Bayes classifier as the optimal classifier (the main idea of the week really) before moving onto linear classification and the perceptron algorithm.
 

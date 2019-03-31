@@ -4,6 +4,7 @@ title: ColumbiaX - ML - week 3
 date: 2018-10-13
 use_math: true
 image: "bayes_lr.png"
+comments: true
 ---
 Week 3 brought the topic of linear regression to an end and whilst there were some interesting ideas in the lectures there was also a few trickier aspects involving Bayesian Linear Regression, active learning, predictive distributions and the Lasso.
 

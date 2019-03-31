@@ -5,6 +5,7 @@ date: 2018-10-31
 use_math: true
 tags: ['boosting', 'kmeans']
 image: "boosting.png"
+comments: true
 ---
 In week 7 we cover boosting, a powerful algorithm that has had a lot of success in data mining with more advanced implementations in the manner of gradient boosting (e.g. libraries such as XGBoost and LightGBM). We then went onto start the next major topic of unsupervised learning by looking at the K-means algorithm.
 

@@ -4,6 +4,7 @@ title: ColumbiaX - ML - week 2
 date: 2018-10-11
 use_math: true
 image: "rr.png"
+comments: true
 ---
 
 Week 2 of the course covers the link between MLE and OLS, introduces Ridge Regression and Bayes Rule and finishes by showing how RR has a probabilistic interpretation under MAP.

@@ -4,6 +4,7 @@ title: ColumbiaX - ML - week 5
 date: 2018-10-21
 use_math: true
 image: "logreg.png"
+comments: true
 ---
 
 Week 5 introduced the topic of logistic regression in several guises before getting into more technical topics such as Laplace approximation, kernels and ultimately Gaussian Processes. Gaussian Processes in particular are quite tricky to understand initially and I've spent more than a couple of hours trying to become fully happy with various aspects of them.

@@ -4,6 +4,7 @@ title: The kernel trick
 date: 2018-10-19
 use_math: true
 image: "kernel.png"
+comments: true
 ---
 This post only covers the concept of the 'kernel trick' and not kernels in general. Kernels often get a bad reputation as they are usually poorly explained, usually in the context of SVMs.
 
