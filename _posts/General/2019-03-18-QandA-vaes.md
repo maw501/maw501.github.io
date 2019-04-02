@@ -337,7 +337,7 @@ Due to the fact the KL divergence is always non-negative we have shown that maxi
 So we can instead maximize the ELBO (which is tractable) in order to maximize $\log P(X)$.
 
 <blockquote class="tip">
-<strong>Upshot:</strong> We can maximize the ELBO (which is tractable) instead of directly trying to maximize $\log P(X)$.
+<strong>Upshot:</strong> We can maximize the ELBO (which is tractable) instead of directly trying to maximize $\log P(X).$
 </blockquote>
 
 Of course, the above derivation doesn't immediately make obvious how we are going to end up with a VAE as an encoder-decoder model trained via stochastic gradient descent but it does provide the theoretical basis.
