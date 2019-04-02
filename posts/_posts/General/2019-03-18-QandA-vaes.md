@@ -85,7 +85,7 @@ We will however start with a quick explanation of the two above points.
 
 VAEs make the (unusual) assumption that samples of $z$ can be drawn from a simple (in this case, normal) distribution. They are able to do this due to the fact that we can map any set of normally distributed variables to an arbitrarily complex distribution if we use a sufficiently complicated function.
 
-For VAEs we choose the 'sufficiently complicated function' to be a neural network and so can choose $P(z)$ to be a multi-dimensional isotropic Gaussian (isotropic just meaning the covariance matrix is the identity i.e. all covariance terms are 0, $\Sigma = \sigma^2 I$).
+For VAEs we choose the 'sufficiently complicated function' to be a neural network and so can choose $P(z)$ to be a multi-dimensional isotropic Gaussian (isotropic just meaning the covariance matrix is the identity i.e. all covariance terms are 0, $\Sigma = I$).
 
 We can therefore say $P(z)=\mathcal{N}(z \| 0, I)$ is the prior.
 
@@ -107,11 +107,12 @@ Quoting [Doersch](https://arxiv.org/abs/1606.05908):
 
 ##### A final point on the ELBO
 
-As we are not actually going to use the prior $P(z)=\mathcal{N}(z \| 0, I)$ to sample $z$ from we need some way to relate the distribution of $z$ output from $Q$ to $P(X)$, which is the term we wish to maximize. This is where the oft cited ELBO derivation comes in and results in the final objective term we will optimise. The ELBO derivation is contained in [Doersch](https://arxiv.org/abs/1606.05908) and whilst it is reasonably straightforward we will still explain it below in the mathematics section.
+As we are not actually going to use the prior $P(z)=\mathcal{N}(z \| 0, I)$ to sample $z$ from we need some way to relate the distribution of $z$ output from $Q$ to $P(X)$, which is the term we wish to maximize. This is where the oft cited ELBO derivation comes in and results in the final objective term we will optimise. The ELBO derivation is contained in [Doersch](https://arxiv.org/abs/1606.05908) and whilst it is reasonably straightforward we will still explain it below in the [mathematics section](#elbo_deriv).
 
 <hr class="with-margin">
 <h4 class="header" id="QandAconceptual">Q and A: conceptual</h4>
 
+<a name="overload"></a>
 ### Why is there so much notational overload?
 
 Tell me about it.
@@ -130,11 +131,13 @@ Technically the encoder and decoder output parameters for a distribution which w
 
 Note: the **;** semi-colon you see being used above is notation to distinguish between different types of inputs, usually input variables and parameters.
 
+<a name="enc_dec"></a>
 #### What is the difference between the encoder, decoder, inference network and generator network?
 
 * **Encoder or inference network**: these are two terms for the same thing. The encoder takes as input the data $X$ and trains a neural network with parameters denoted by $\phi$, outputting parameters to $Q_{\phi}(z∣X)$ which is a probability density function. Thus if $Q$ is a Gaussian distribution, the encoder neural network will learn a vector of means and variances whose length depends on the dimensionality of the latent variables (we choose this).
 * **Decoder or generative network**: these are two terms for the same thing. The decoder takes as input latent variables $z$ and trains a neural network with parameters denoted by $\theta$, outputting parameters to $P_{\theta}(X∣z)$ which is a probability density function. Thus if $P$ is a Gaussian distribution, the decoder neural network will learn a vector of means and variances whose length depends on the dimensionality of the original data.
 
+<a name="graphical_model"></a>
 #### Why does the VAE graphical model notation only show the generator?
 
 Commonly we see the graphical model for a VAE specified as something like Fig 0 which describes the decoder/generative network only:
@@ -151,9 +154,10 @@ In somewhat circular feeling reasoning this is because this is the really the gr
 
 Two points on this:
 * VAEs learn $z$ via the encoder/inference network.
-  * Technically they actually learn $z\|X$, this will be discussed later.
+  * Technically they actually learn $z\|X$, this is mentioned [above](#enc_dec).
 * Loosely speaking the ELBO derivation shows (amongst other things) us that learning $z$ via an encoder network we are able to still maximize the term we want, $P(X)$.
 
+<a name="variational"></a>
 #### Why does the term variational appear in the name?
 
 Because we are performing variational inference, which means we are using an approximation to the posterior of interest rather than trying to calculate the exact posterior directly. Recall this posterior is the output of the encoder and is over the latent variables, i.e. $Q(z \| X) $.
@@ -165,6 +169,7 @@ I quite liked [this](https://www.quora.com/What-is-variational-inference) quote:
 <hr class="with-margin">
 <h4 class="header" id="QandAtheoretical">Q and A: theoretical</h4>
 
+<a name="dist_assumptions"></a>
 #### What distributional assumptions are we making about the data?
 
 With all the talk of Gaussians it's tempting to think VAEs place restrictive distributions on the data we wish to model. This is not the case.
@@ -188,6 +193,7 @@ Thus $P(X\|z)$ in this case is now Gaussian, where $z$ would denote a per observ
 </p>
 <em class="figure">Fig. 1: Illustration of data being Gaussian conditioned upon cluster assignment.</em>
 
+<a name="map_rvs"></a>
 ##### Mapping independent normal RVs to any function (illustration)
 
 To see that we can go from independent normal random variables (RVs) in 2d to any complicated function consider the example below, from [Tutorial on Variational Autoencoders](https://arxiv.org/abs/1606.05908) by Carl Doersch.
@@ -219,9 +225,10 @@ def arb_func(X):
 out = arb_func(X)
 </code></pre>
 
-#### Why do we need the KL term in the objective function?
+<a name="kl_obj"></a>
+#### Why do we need a KL loss term in the objective function?
 
-The intuition surrounding this explanation is very interesting and worth the effort to understand.
+The intuition surrounding this explanation is very interesting and worth the effort to understand. It also relies on knowing the final form of the term we will maximize (the ELBO)- if you aren't familiar with this you can see it in the [section](#elbo_obj_term) where we derive the ELBO.
 
 <blockquote class="tip">
 <strong>Short answer:</strong> the KL loss forces the encoder to distribute the latent representations for each $x_i$ around the centre of the (high-dimensional) latent space. In other words it stops the encoder outputting a different $\mu$ and $\sigma$ for every observation $i$ which would result in a non-smooth latent state representation and would be troublesome to sample from.
@@ -248,6 +255,7 @@ Fig 3. shows 3 cases:
 
 For further reading on this topic consult the fantastic posts [here](https://towardsdatascience.com/intuitively-understanding-variational-autoencoders-1bfe67eb5daf) and [here](https://www.jeremyjordan.me/variational-autoencoders/) which I have used as reference.
 
+<a name="mean_field"></a>
 #### What is mean-field and amortized inference?
 
 This is perhaps the area of VAEs that is least clearly explained in my view.
@@ -269,19 +277,21 @@ Yes, the model is now less expressive as in addition to making the approximate p
 
 More reading [here](https://www.quora.com/What-is-amortized-variational-inference), [here (section 6)](https://arxiv.org/pdf/1711.05597.pdf) and [here](http://bjlkeng.github.io/posts/variational-bayes-and-the-mean-field-approximation/).
 
+<a name="iso_gauss"></a>
 #### Why do VAEs assume $p(z)$ is an isotropic Gaussian - isn't this restrictive?
 
 <blockquote class="tip">
 <strong>Short answer:</strong> No, due to the fact that we can map any set of independent normally distributed variables to an arbitrarily complex distribution if we use a sufficiently complicated function.
 </blockquote>
 
-This is answered elsewhere in this post under the question: *What distributional assumptions are we making about the data?.*
+This is also answered [here](#map_rvs).
 
-The longer answer is beyond the scope of this blog post.
+The longer answer is beyond the scope of this blog post and my present knowledge.
 
 <hr class="with-margin">
 <h4 class="header" id="QandAmath">Q and A: mathematical</h4>
 
+<a name="elbo_deriv"></a>
 #### How does the derivation of the ELBO help us?
 
 The ELBO derivation is what links the term we wish to maximize but are unable to do so directly, $P(X)$, with an equivalent expression we can solve which is tractable.
@@ -326,11 +336,15 @@ $$\log P(X) - \mathcal{D}[Q(z) \| P(z | X)] = E_{z \sim Q}[ \log P(X | z)] - \un
 
 and can note the term on the right can be rewritten as a KL term. Note that $Q$ can be any distribution we choose (we just want to sample $z$ from it) and so it makes sense to make $Q$ actually depend on $X$. This leaves us with
 
+<a name="elbo_obj_term"></a>
+
 $$\underbrace{\log P(X)}_\text{want to max}
  - \underbrace{\mathcal{D}[Q(z|X) \| P(z | X)]}_{\geq 0} =
  \overbrace{\underbrace{E_{z \sim Q}[ \log P(X | z)]}_\text{reconstruction loss}
  - \underbrace{\mathcal{D}[Q(z|X) \| P(z)]}_\text{KL loss}}^\text{ELBO}
  $$
+
+We will maximize the right-hand side, the ELBO.
 
 Due to the fact the KL divergence is always non-negative we have shown that maximizing the ELBO is equivalent to maximizing $P(X)$ as ELBO $\leq \log P(X)$ (because we have to add a non-negative term to the ELBO to get $P(X)$).
 
@@ -344,6 +358,7 @@ Of course, the above derivation doesn't immediately make obvious how we are goin
 
 **Note:** ELBO stands for Evidence Lower BOund and refers to the fact the ELBO provides a lower bound for $ \log P(X)$, the log probability of the observed data.
 
+<a name="calc_var"></a>
 #### What is the calculus of variations and how does it relate to VAEs?
 
 Pending.
@@ -351,6 +366,7 @@ Pending.
 <hr class="with-margin">
 <h4 class="header" id="QandApractical">Q and A: practical</h4>
 
+<a name="decoder_output"></a>
 #### What is the output of the decoder? And what if I have real-valued data, which loss function should I use?
 
 This point confused me when training a VAE for a different dataset with real-valued output (i.e. numeric data).
@@ -370,6 +386,7 @@ You can read more about this practice [here](http://ruishu.io/2018/03/14/vae/).
 
 If you are inputting real-valued numeric data (i.e. simple structured data from a csv) you can use MSE as a loss function for the decoder. If you do this be sure to centre and scale the data appropriately and remove any sigmoid function from the end of the decoder.
 
+<a name="post_collapse"></a>
 #### What is posterior collapse and should I be scared of it?
 
 Yes, probably.
@@ -384,7 +401,7 @@ Why is it a bad thing that $Q(z\|X)$ equals the prior - isn't this what we are t
 
 No. We wanted to learn a distribution $Q$ over $z$ values that depended on $X$ (hence are likely to have produced $X$) in order to save ourselves searching the whole $z$ space. If the output of the encoder is always the prior (i.e. $\mu_{z\|X} = 0$ and $ \Sigma_{z\|X} = 1$) regardless of what $X$ we feed in, how is the decoder going to decode these $z$ into reconstructed $X$ samples? It won't be able to and we will get nonsense out of the decoder.
 
-The idea of minimizing the KL term $\mathcal{D}[Q(z\|X) \| P(z)]$ isn't to drive it to 0 but rather to use the prior as a regulariser on the structure of the latent space the encoder learns when it outputs parameters to $Q(z\|X)$. See the question above on: *Why do we need the KL term in the objective function?*
+The idea of minimizing the KL term $\mathcal{D}[Q(z\|X) \| P(z)]$ isn't to drive it to 0 but rather to use the prior as a regulariser on the structure of the latent space the encoder learns when it outputs parameters to $Q(z\|X)$. See the related question [here](#kl_obj).
 
 ##### How can we solve posterior collapse?
 
