@@ -1,6 +1,6 @@
 ---
 layout: post
-title: VAEs - questions and answers when first encountering
+title: Variational Autoencoders - questions and answers when first encountering
 date: 2019-03-18
 use_math: true
 tags: ['VAEs', 'bayesian', 'generative_modelling']
