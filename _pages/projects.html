@@ -5,18 +5,7 @@ category: projects
 
 ---
 <div class="container">
-    <div class="row">
-        <div class="col-12 d-table">
-            <div class="d-table-cell align-middle">
-                <p class="text-center huge">Coming to a page near you</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="container">
-{% for post in site.drafts %}
+{% for post in site.categories.projects %}
 {% if post.foreign_url == null %}
 <div class="card post post-link" href="{{ post.url }}">
 {% else %}
@@ -25,7 +14,7 @@ category: projects
     <div class="card-block">
         <div class="row">
             <div class="col-3">
-                <img class="img-fluid" width=250 src="assets/img/{{ post.image }}">
+                <img class="img-fluid" width=250 src="../assets/img/{{ post.image }}">
             </div>
             <div class="col-9">
                 <h4 class="header">{{ post.title }}</h4>
