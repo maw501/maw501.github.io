@@ -145,7 +145,7 @@ A final point on the differences to HMM: both $x_t$ and $s_t$ are constrained by
 We are commonly interested in two separate posterior distributions:
 
 * **Kalman filtering problem:** $p(s_t \mid x_1, ..., x_t)$
-  * This is the distribution on the current state the sequence data that we've observed up until time $t$.
+  * This is the distribution on the current state given a sequence of data that we've observed up until time $t$.
   * This problem is learning the continuously evolving distributions on the states in a real time setting.
 * **Kalman smoothing problem:** $p(s_t \mid x_1, ..., x_T)$
   * This is the distribution on each latent state given all the data, including future data.
