@@ -105,18 +105,6 @@ The input to our attention function is of shape: (`bs`, `max_len`, 2 * `hidden_d
 
 Note our input to the attention mechanism isn't the raw sentence embeddings (if it was it would be of shape: (`bs`, `max_len`, `emb_dim`) as we are assuming it's been through a bi-directional LSTM first which has encoded each word into tensors of dimension: 2 * `hidden_dim`.
 
-##### Viewing the input
-
-This is what our input tensor to the attention function looks like after it has been through the bi-directional LSTM layer:
-
-<p align="center">
-    <img src="/assets/img/attention_input.jpg" alt="Image" width="600" height="400" />
-</p>
-
-<em class="figure">Fig. 1: input tensor to attention block</em>
-
-We have a batch size of 32, a sentence length of 70 and each word is encoded into 150 dimensions. I've coloured a few strips where the red strip represents the encodings of the first words of all sentences in our mini-batch, the green strip is the second word's encodings across all examples in the mini-batch etc...
-
 ##### Unpacking each word and calculating 'alignment'
 
 <blockquote class="tip">
