@@ -7,7 +7,7 @@ image: "kernel.png"
 comments: true
 tags: ['kernels', 'SVMs']
 ---
-This post only covers the concept of the kernel trick (not kernels in general). From my experience kernels often get a bad reputation as they are usually poorly explained, usually in the context of SVMs. In this article our goal will be to explain them via a simple motivating example which we will follow through in detail to get to the heart of the trick.
+In this article our goal will be to explain the kernel trick via a simple motivating example which we will follow through in detail to get to the heart of the trick.
 <!--more-->
 <hr class="with-margin">
 
@@ -15,6 +15,20 @@ This post only covers the concept of the kernel trick (not kernels in general). 
   <h4>Contents</h4>
   <ul></ul>
 </div>
+<hr class="with-margin">
+<h4 class="header" id="prereq">Prerequisites</h4>
+From my experience kernels often get a bad reputation as they are usually poorly explained, usually in the context of SVMs. This article will focus on the kernel trick, it is therefore helpful to have knowledge of the following topics:
+
+###### Kernel functions
+A kernel function $ \textbf{k}$ takes in two data points $x, y \, \in \mathbb{R}^d$ and returns a single number expressing how similar the data points are - the function is symmetric. Formally this can be written as:
+
+$$ \textbf{k}(x, y) : \mathbb{R}^d \times \mathbb{R}^d \rightarrow \mathbb{R} $$
+
+###### SVMs
+A support vector machine is a discriminative classifier defined by a separating hyperplane - some notes [here](../../../../project_edx_ml/2018/10/25/columbiaX-ML-week6).
+
+###### Maths
+Some basic linear algebra would be useful, pretty much only the [dot product](https://en.wikipedia.org/wiki/Dot_product).
 
 <hr class="with-margin">
 <h4 class="header" id="intro">Motivating example</h4>
@@ -55,7 +69,7 @@ $\textbf{b}^T = (b_1, b_2) = (3, 4)$ giving entries:
 
 $$(1, \sqrt{2}b_1, \sqrt{2}b_2, \sqrt{2}b_1b_2, b_1^2, b_2^2) = (1, 3\sqrt{2}, 4\sqrt{2}, 12\sqrt{2}, 9, 16)$$
 
-If we compute the dot product of these two new rows we get 144.
+If we compute the dot product of these two new rows we get 144 as shown in Fig. 0.
 
 Another friend Alice pops over and sees what we are doing. She laughs that we bothered creating all those new columns and tells us there is a simpler way to get the same answer. She says we should try just computing $(1 + \textbf{a}^T\textbf{b})^2 \,$ directly instead with our original data and not to bother with Bob's idea.
 
@@ -74,19 +88,17 @@ The kernel trick just happened, that's what.
 <strong>Spoiler:</strong> The kernel trick is when we can take a shortcut such as Alice suggested. This means we can perform a calculation between rows of our original data that is equivalent to having created a bunch of new features and performed a calculation with the newly created data. Such kernels are of interest to us when the equivalent long-winded expansion (as suggested by Bob) is a basis for a more complex transformation.
 </blockquote>
 
-Alice sees our confusion and starts as follows:
+Alice sees our confusion and decides to explain to us why this worked.
 
-Call
+We can call our new features some transformation of our original data, $\phi(\textbf{a})$, so:
 
 $$\phi(\textbf{a}) = (1, \sqrt{2}a_1, \sqrt{2}a_2, \sqrt{2}a_1a_2, a_1^2, a_2^2)$$
 
-the transformation of row $\textbf{a}$  and
+and similary for row $\textbf{b}$:
 
 $$\phi(\textbf{b}) = (1, \sqrt{2}b_1, \sqrt{2}b_2, \sqrt{2}b_1b_2, b_1^2, b_2^2)$$
 
-the transformation of row $\textbf{b}$.
-
-We have that:
+The dot product between $\phi(\textbf{a})$ and $\phi(\textbf{b})$ gives:
 
 $$\phi(\textbf{a})^T\phi(\textbf{b}) = 1 + 2a_1b_1 + 2a_2b_2 + 2a_1a_2b_1b_2 + a_1^2b_1^2 + a_2^2b_2^2$$
 
@@ -102,29 +114,24 @@ We have thus shown that
 
 $$\phi(\textbf{a})^T\phi(\textbf{b}) = (1 + \textbf{a}^T\textbf{b})^2 $$
 
-for some transformation $\phi$. This transformation $\phi$ above is actually the basis for a second-order polynomial expansion. The reason it looks a little more complicated is because our dataset has 2 columns and so we get some cross terms as well.
+for some transformation $\phi$ from our original space (which had vectors in 2d) to a feature space over polynomials of the original variables of degree 2. This is called the [quadratic kernel](https://en.wikipedia.org/wiki/Polynomial_kernel).
 
-So if we want to fit a second-order polynomial mapping for our data we have two choices:
+Weighing up what we have done there are two choices:
 
-1. Start creating loads of new columns as we did per Bob's suggestion to get $\phi(\textbf{a})$ and  $\phi(\textbf{b})$.
-  * Note this will create a massive amount of columns if we start with more than 2 initially and want a polynomial of higher order.
-2. Compute $(1 + \textbf{a}^T\textbf{b})^2 = \textbf{k}(\textbf{a},\textbf{b})$ instead. We will call this the kernel between two rows/data points.
+1. Start creating numerous columns as per Bob's suggestion to get $\phi(\textbf{a})$ and  $\phi(\textbf{b})$. This will create a large amount of extra columns if we start with more than 2 initially and want a polynomial kernel of high order.
+2. Compute $(1 + \textbf{a}^T\textbf{b})^2 = \textbf{k}(\textbf{a},\textbf{b})$ instead - we call this the kernel between two rows/data points.
 
 It's clear that it's computationally much easier to work with our original data and not start creating new columns.
 
 ##### Further explanation
 
-Both approaches are the same as 'mapping' our data to a 'higher dimensional space' (in this case that of 2nd order polynomials) and doing a calculation there. The **kernel trick** is that we are able to actually just use our original data and compute $\textbf{k}(\textbf{a},\textbf{b}) = (1 + \textbf{a}^T\textbf{b})^2$ without having to have the complexity of 'transforming' it to this higher dimensional space by creating new columns and so we save the computational overhead it would bring.
-
 <blockquote class="tip">
 <strong>Remember:</strong> The special functions for which it turns out allow us to stay in our original lower dimensional space but are equivalent to operating in a higher dimensional space are called kernel functions.
 </blockquote>
 
-For this to work we must be able to write the calculation in the new higher dimensional feature space as dot/inner products e.g. $\phi(\textbf{a})^T\phi(\textbf{b}).$
+The **kernel trick** is that we do not need to use the transformation $\phi$ and can actually just stick with our original data and compute $\textbf{k}(\textbf{a},\textbf{b}) = (1 + \textbf{a}^T\textbf{b})^2$ instead. The fact we don't need to perform the transformation to a higher dimensional space by creating new columns saves us a lot of computational overhead. This allows us to find complex non linear boundaries that are able to better separate the classes in our dataset.
 
-Thus we can stick with our original data, use a kernel function and know that it corresponds to taking the dot product of the transformed vectors in a higher dimensional space - **without even visiting it or sometimes even knowing what $\phi$ is (see section on below)!**  This allows us to find complex non linear boundaries that are able to better separate the classes in our dataset.
-
-Thus a kernel function is a function where it happens to turn out that computing the kernel functions in lower dimensions is the same as computing the inner product in a higher dimensional feature space. This feature space is implicit, and often infinite dimensional.
+For the kernel trick to work we must be able to write the calculation in the new higher dimensional feature space as dot products e.g. $\phi(\textbf{a})^T\phi(\textbf{b}).$ This feature space is implicit, and often infinite dimensional.
 
 <hr class="with-margin">
 <h4 class="header" id="mercer"> Creating kernels</h4>

@@ -6,3 +6,5 @@ _site/
 *.log
 *~
 .DS_Store
+*.sh
+*.txt
