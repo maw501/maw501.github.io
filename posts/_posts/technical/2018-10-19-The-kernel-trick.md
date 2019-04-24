@@ -133,6 +133,28 @@ The **kernel trick** is that we do not need to use the transformation $\phi$ and
 
 For the kernel trick to work we must be able to write the calculation in the new higher dimensional feature space as dot products e.g. $\phi(\textbf{a})^T\phi(\textbf{b}).$ This feature space is implicit, and often infinite dimensional.
 
+##### Why do the $\sqrt{2}$s appear?
+
+Consider:
+
+$$\textbf{k}(\textbf{a},\textbf{b}) = (1 + \textbf{a}^T\textbf{b})^2$$
+
+recalling that $\textbf{a}^T = (a_1, a_2)$ and $\textbf{b}^T = (b_1, b_2)$. We have already shown above that this is
+
+$$\textbf{k}(\textbf{a},\textbf{b}) = 1 + 2a_1b_1 + 2a_2b_2 + 2a_1a_2b_1b_2 + a_1^2b_1^2 + a_2^2b_2^2$$
+
+In order to match the 2s that appear in front of the terms above our $\phi$ transformations needed to have $\sqrt{2}$s in the appropriate places:
+
+$$\phi(\textbf{a}) = (1, \sqrt{2}a_1, \sqrt{2}a_2, \sqrt{2}a_1a_2, a_1^2, a_2^2)$$
+
+$$\phi(\textbf{b}) = (1, \sqrt{2}b_1, \sqrt{2}b_2, \sqrt{2}b_1b_2, b_1^2, b_2^2)$$
+
+This is so the terms match when we compute $\phi(\textbf{a})^T\phi(\textbf{b})$. This is essentially what ensures $\phi$ is the correct transformation such that
+
+$$\textbf{k}(\textbf{a},\textbf{b}) = \phi(\textbf{a})^T\phi(\textbf{b})$$
+
+holds.
+
 <hr class="with-margin">
 <h4 class="header" id="mercer"> Creating kernels</h4>
 
@@ -144,8 +166,10 @@ The discussion above doesn't tell us how to obtain functions $\textbf{k}(\textbf
 
 In other words we can multiply, add and take the exponential of any existing kernels and still end up with a valid kernel. In these cases we may end up not knowing what the equivalent $\phi$ is, but this doesn't matter as we don't actually need it.
 
+C.M. Bishop, (2006) Pattern Recognition and Machine Learning has a more comprehensive set of ways to construct new kernels.
+
 <hr class="with-margin">
-<h4 class="header" id="intro">Further reading/videos</h4>
+<h4 class="header" id="further">Further reading/videos</h4>
 
 Good video [here](https://www.youtube.com/watch?v=XUj5JbQihlU&hd=1), reading [here](https://stats.stackexchange.com/questions/80398/how-can-svm-find-an-infinite-feature-space-where-linear-separation-is-always-p) and [here](https://stats.stackexchange.com/questions/152897/how-to-intuitively-explain-what-a-kernel-is).
 <hr class="with-margin">
