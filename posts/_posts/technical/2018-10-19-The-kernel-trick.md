@@ -25,7 +25,13 @@ A kernel function $ \textbf{k}$ takes in two data points $x, y \, \in \mathbb{R}
 $$ \textbf{k}(x, y) : \mathbb{R}^d \times \mathbb{R}^d \rightarrow \mathbb{R} $$
 
 ###### SVMs
-A support vector machine is a discriminative classifier defined by a separating hyperplane - some notes [here](../../../../project_edx_ml/2018/10/25/columbiaX-ML-week6).
+A support vector machine is a discriminative classifier defined by a separating hyperplane - some notes [here](../../../../project_edx_ml/2018/10/25/columbiaX-ML-week6). It would also be helpful to have knowledge of linear separability and how certain transformations of our data may allow a hyperplane in the new feature space where it wasn't possible in the original space as shown below.
+
+<p align="center">
+    <img src="/assets/img/kernel_trick.png" alt="Image" width="500" height="300" />
+</p>
+
+<em class="figure">Fig. 0: mapping data to a new feature space can often allow easier separability between classes, [image credit](https://towardsdatascience.com/the-kernel-trick-c98cdbcaeb3f).</em>
 
 ###### Maths
 Some basic linear algebra would be useful, pretty much only the [dot product](https://en.wikipedia.org/wiki/Dot_product).
@@ -57,7 +63,7 @@ We decide to try this by hand.
     <img src="/assets/img/svm_calc.jpg" alt="Image" width="600" height="400" />
 </p>
 
-<em class="figure">Fig. 0: Expanding our original dataset with new features (note it isn't clear yet why we use these new features)</em>
+<em class="figure">Fig. 1: Expanding our original dataset with new features (note it isn't clear yet why we use these new features)</em>
 
 The above is:
 
@@ -69,7 +75,7 @@ $\textbf{b}^T = (b_1, b_2) = (3, 4)$ giving entries:
 
 $$(1, \sqrt{2}b_1, \sqrt{2}b_2, \sqrt{2}b_1b_2, b_1^2, b_2^2) = (1, 3\sqrt{2}, 4\sqrt{2}, 12\sqrt{2}, 9, 16)$$
 
-If we compute the dot product of these two new rows we get 144 as shown in Fig. 0.
+If we compute the dot product of these two new rows we get 144 as shown in Fig. 1.
 
 Another friend Alice pops over and sees what we are doing. She laughs that we bothered creating all those new columns and tells us there is a simpler way to get the same answer. She says we should try just computing $(1 + \textbf{a}^T\textbf{b})^2 \,$ directly instead with our original data and not to bother with Bob's idea.
 
