@@ -7,7 +7,7 @@ tags: ['gaussian_processes', 'probabilistic_modelling', 'kernels']
 image: "gp.png"
 comments: true
 ---
-In a loose sense Gaussian processes (GPs) can be thought of as a probabilistic yet non-parametric form of non-linear regression. In this article we give an in-depth introduction to the topic collating many of the excellent references on the topic.
+In a loose sense Gaussian processes (GPs) can be thought of as a probabilistic yet non-parametric form of non-linear regression which sit within the Bayesian framework. In this article we give an in-depth introduction to the topic collating many of the excellent references on the topic.
 
 <!--more-->
 <hr class="with-margin">
@@ -43,6 +43,8 @@ In general, capital letters are matrices, bold font represents vectors and lower
 * $m(\mathbf{x}\_{i})$ or $m(X)$: $m$ is some function that models the mean of an observation, often set to be $m(\mathbf{x}\_{i}) = 0$ for $i = 1, ..., n$
 * $\boldsymbol{\mu}$ or $\mu(X)$: is $(m(\mathbf{x}\_{1}), m(\mathbf{x}\_{2}), ..., m(\mathbf{x}\_{n}))$ a vector of length $n$
 * $\mu_{+}$: mean for a single test point
+* $\mu_{f_{+} \| \mathbf{f}}$: mean vector for predicted data after conditioning on observed data
+* $\Sigma_{f_{+} \| \mathbf{f}}$: covariance matrix for predicted data after conditioning on observed data
 
 <hr class="with-margin">
 <h4 class="header" id="outline">Outline</h4>
@@ -51,9 +53,10 @@ Here is a roadmap of what is covered in this post:
 
 * Introduction
   * Kernels and functions as vectors
+  * Visualizing multivariate Gaussians
   * Posterior predictive view
-* GP regression (noise free)
   * Define a GP
+* GP regression (noise free)
   * Derive predictive equations
   * Plot example
   * Code
@@ -69,7 +72,7 @@ Here is a roadmap of what is covered in this post:
 * References
 
 <hr class="with-margin">
-<h4 class="header" id="intro_gp">Introducing Gaussian Processes (GPs)</h4>
+<h4 class="header" id="intro_gp">Gaussian process preliminaries</h4>
 
 <blockquote class="tip">
 <strong>TLDR:</strong> GPs give a way to express a view on functions. In particular they allow us to specify how smooth we expect a function to be rather than how many parameters we expect it to have. The key idea they rely on is that data points that are close in input space are expected to be similar in output space, i.e. if $\mathbf{x}_{i}$ and $\mathbf{x}_{j}$ are similar then $f(\mathbf{x}_{i})$ and $f(\mathbf{x}_{j})$ will be close in value too.
@@ -85,7 +88,7 @@ What if, instead, we wished to think about all possible functional forms for $f$
 
 ##### Kernels and functions as vectors
 
-Before proceeding it is worth briefly explaining a few concepts.
+It is worth briefly explaining a few concepts.
 
 ###### Kernels
 
@@ -93,7 +96,7 @@ In the context of Gaussian processes a kernel function is a function that takes 
 
 We can go further and say that the problem of learning with Gaussian processes is exactly the problem of learning the hyper-parameters of the kernel function - this will be discussed in greater detail later.
 
-There are many kernels that can describe different classes of functions, however in this post we will restrict ourselves to the most common, the [radial basis function (or Gaussian) kernel](https://en.wikipedia.org/wiki/Radial_basis_function_kernel):
+There are many kernels that can describe different classes of functions, including to encode properties such as periodicity. In this post we will restrict ourselves to the most common kernel, the [radial basis function (or Gaussian) kernel](https://en.wikipedia.org/wiki/Radial_basis_function_kernel):
 
 $$
 \kappa(\mathbf{x_i}, \mathbf{x_j}) = \sigma^{2} \exp (-\frac{ \| \mathbf{x_i} - \mathbf{x_j} \|^{2}}{2 l^{2}})
@@ -113,14 +116,59 @@ Kernel functions are also sometimes referred to as covariance functions.
 </blockquote>
 
 ###### Functions as vectors
-Loosely speaking a function can be viewed as an infinitely long vector. We could imagine discretizing the input space with a huge grid of values containing every possible combination of floating point numbers for each dimension of our matrix $X$. Theoretically (but not practically) we could then evaluate $\mathbf{f} = (f(\mathbf{x}\_{1}), ..., f(\mathbf{x}\_{n}))$ for this huge $n$ and so $\mathbf{f}$ would be a very large vector now containing our function's values.
+Loosely speaking a function can be viewed as an infinitely long vector. We could imagine discretizing the input space with a huge grid of values containing every possible combination of floating point numbers for each dimension of our matrix $X$. Theoretically (but not practically) we could then evaluate $\mathbf{f} = (f(\mathbf{x}\_{1}), ..., f(\mathbf{x}\_{n}))$ for this huge $n$ and so $\mathbf{f}$ would be a very large vector now containing the function's values for the domain of interest.
 
-Alas, we can’t store a vector containing the function values for every possible input, though it is possible to define a multivariate Gaussian prior on it. Given (potentially) noisy observations of some of the elements of this vector, it will turn out that we can infer other elements of the vector without explicitly having to represent the whole object.
+Alas, we can’t store a vector containing the function values for every possible input (recall each $\mathbf{x_i}$ is $d$ dimensional), though it is possible to define a multivariate Gaussian prior on it. Given (potentially) noisy observations of some of the elements of this vector, it will turn out that we can infer other elements of the vector without explicitly having to represent the whole object.
 
-Whilst the above seems a little hand-wavy it can be made rigorous.
+The miraculous thing about GPs is that they provide a rigorous, elegant and tractable way to deal with the above problem.
+
+Note that whilst talk of functions as vectors can seem a little hand-wavy it can be made rigorous.
+
+##### A different way to view multivariate distributions
+
+In order to aid the discussion on large dimensional Gaussians it's crucial to switch to a different way to visualize them. We start by thinking of each data-point $\mathbf{x_i}$ having $d$-dimensions, so $X$ is $n \times d$ and $\mathbf{x_1}$ and $\mathbf{x_2}$ refer to 2 observations from our data where $\mathbf{y} = \\{y_1, y_2\\}$ is the function value for each data-point.
+
+Using the kernel function we can calculate the covariance matrix, $\Sigma$, between any 2 points (using $X$ only), for example:
+
+$$
+\Sigma=\left[ \begin{array}{ll}{1} & {.7} \\ {.7} & {1}\end{array}\right]
+$$
+
+and by the assumption we make for GPs (see [below](#gp_defn)) we assume the output function values are jointly distributed according to a Gaussian:
+
+$$
+p(\mathbf{y} | \Sigma) \propto \exp \left(-\frac{1}{2} \mathbf{y}^{\top} \Sigma^{-1} \mathbf{y}\right)
+$$
+
+Using this idea it is then possible to visualize what the 2-dimensional Gaussian looks like and draw samples from it. Notice that the covariance between function values is fully specified by the corresponding input values, and not in any way by the actual values of the function; this is a property of the Gaussian Process.
+
+The left hand plots in the below image show contour/density plots for a 2-dimensional Gaussian with a given correlation coefficient (in reality this is calculated by the kernel function) and zero mean vector. The red points shown in the left hand plots are samples from this 2-dimensional Gaussian.
+
+<p align="center">
+    <img src="/assets/img/gp_contours.png" alt="Image" width="650" height="500" />
+</p>
+<em class="figure">A different way to visualize a sample from a 2-dimensional Gaussian</em>
+
+The right hand plots show an alternate way to visualize this sample, where the y-axis represents the value of $y_1$ and $y_2$ respectively. In this way we could easily imagine calculating the covariance matrix between more data-points and plotting a sample in the way shown in the right hand plots, but the left hand plots don't allow this view. This is how we are able to represent multi-dimensional Gaussians on a single plot, as below:
+
+<p align="center">
+    <img src="/assets/img/gp_many_dims_single.png" alt="Image" width="500" height="350" />
+</p>
+<em class="figure">A single sample from a multi-dimensional Gaussian</em>
+
+
+<a name="prelim_plot"></a>
+###### Hold on, what's the x-axis for the above plot?
+
+In the above plot we ordered the points according to their index in the covariance matrix but this was simply for illustrative purposes only. In general, the x-axis will be the values of $X$ for which we wish to calculate a point at and thus can take on any real-value. Note once $d > 1$ we can't think of the x-axis as being 1-dimensional any more and so even the above plot breaks down. The input space is simply a  grid (arbitrarily fine if we wish) for which we can calculate function values at.
+
+Nevertheless, when $d=1$ this way of visualizing helps us plot multi-dimensional Gaussians a lot easier and will be helpful for the examples we encounter in the rest of this post.
+
+<blockquote class="tip">
+<strong>Remember:</strong> for GPs the multi-dimensional aspect of Gaussians refers to the number of data-points, not the dimensionality, $d$, of $X$. Once we have computed the covariance matrix via the kernel function we can essentially throw the original $X$ data away.
+</blockquote>
 
 ##### Probability perspective
-
 Before we start with the equations for GPs we draw a link to traditional modelling in machine learning. Typically in machine learning the Bayesian approach to modelling involves inferring the posterior distribution of the parameters of some model given data, i.e. $p(\theta \| \mathcal{D})$. GPs allow us instead to model $p(f \| \mathcal{D})$ and we can then use this modelled function to predict on new data, $X_{+}$:
 
 <div class="math">
@@ -136,6 +184,7 @@ and so for each new test point in $X_{+}$ we obtain a probability distribution f
 
 Whilst the above formulation is useful in linking Gaussian processes into the wider Bayesian framework (by showing a likelihood and a prior) it's not typically the most intuitive place to start. For that, it's much easier to start by defining a Gaussian process and rely upon some key properties of the multivariate Gaussian distribution. These are given [below](#mult_rvs) and assumed from now on - though we will make reference to them as we use them.
 
+<a name="gp_defn"></a>
 ##### Definition of a Gaussian process
 The derivation of the predictive update equations for GPs follow from the definition and assumptions made within it, and this definition is where we will start.
 
@@ -152,15 +201,17 @@ Thinking of a GP as a Gaussian distribution with an infinitely long mean vector 
 
 It is also worth clarifying that in the case of Gaussian processes each data point is a random variable and thus the multivariate Gaussian has the same number of dimensions as the number of data-points: for the training data it is a $n$-dimensional Gaussian. Once we add test data for which to predict the Gaussian will have $n + n_{+}$ dimensions.
 
-We now move onto deriving the predictive equations for the noise-free case.
+We now move onto the predictive equations for the noise-free case.
 
 <hr class="with-margin">
 <h4 class="header" id="gp_reg_no_noise">GP regression (noise-free)</h4>
 
-##### Problem set-up
-We start by assuming we are given 3 training data-points $\mathcal{D} = \\{ (x_1, f_1), (x_2, f_2), (x_3, f_3)\\}$ and a new test point $x_{+}$ for which we wish to predict $f_{+}$. We assume here that the training data we are given has no noise and contains samples from the true unknown function, that is, $f_i = y_i$ for all $i$.
+We will walk through a small example with a small amount of data, the below holds for data of any size.
 
-By the definition of a GP it is assumed that any set of random variables (i.e. output function values for some data-points) are distributed as a multivariate Gaussian. Given this assumption we can write the joint distribution as:
+##### Problem set-up
+We start by assuming we are given 3 training data-points $\mathcal{D} = \\{ (x_1, f_1), (x_2, f_2), (x_3, f_3)\\}$ and a new test point $x_{+}$ for which we wish to predict $f_{+}$. We assume that the training data has no noise and contains samples from the true unknown function, that is, $f_i = y_i$ for all $i$.
+
+By the definition of a GP it is assumed that any set of random variables, which are the output function values for the data-points, are distributed as a multivariate Gaussian. Given this assumption we can write the joint distribution between our observed training data and the predicted output as:
 
 $$
 \left[ \begin{array}{l}{\mathbf{f}} \\ {f_{+}}\end{array}\right]
@@ -204,7 +255,7 @@ The above generalizes to many data points and in general $K$ has dimensions $n \
 
 Using the properties of multivariate Gaussians mentioned [above](#mult_rvs) we are able to quickly write down the predictive equations for GPs. Note that in contrast to other Bayesian analysis we do not need to trouble ourselves with computing a posterior explicitly, nor do we need to explicitly perform any integration.
 
-Instead we condition on the observed training data, $f$, to obtain the posterior predictive (conditional) distribution for $f_{+}$. Using the result for the conditioning of Gaussians we have, for a single test point:
+Instead we condition on the observed training data, $f$, to obtain the posterior predictive (conditional) distribution for $f_{+}$. Using the result for the [conditioning](#mult_rvs) of Gaussians we have, for a single test point:
 
 <div class="math">
 \begin{align*}
@@ -217,7 +268,7 @@ p(f_{+} | X_{+}, X, \mathbf{f}) &= \mathcal{N}\left(f_{+} | \mu_{+}, \Sigma_{+}\
 
 The above conditioning reduces a 4-dimensional Gaussian down to a 1-dimensional Gaussian - we can thus think of the conditioning as cutting 3 slices in the 4-dimensional space to leave us with a 1-dimensional distribution. In general, once we have conditioned on the observed data we will be left with a multivariate Gaussian with dimensionality equal to the number of test points.
 
-To then obtain the marginal distribution of each test point we use the marginalization property of multivariate Gaussians to obtain the mean prediction and variance estimate for each point. In this way the prediction is not just an estimate for that point, but also has uncertainty information - it is a 1-dimensional Gaussian distribution (which is the marginal distribution at that point).
+To then obtain the marginal distribution of each test point we use the marginalization property of multivariate Gaussians to obtain the mean prediction and variance estimate for each point (in this case there is no need to as we are left with a 1-dimensional distribution for our single test point). In this way the prediction is not just an estimate for that point, but also has uncertainty information - for understanding why knowing uncertainty is important see the Q and A [below](#know_uncertainty).
 
 ##### Adding more data
 
@@ -228,7 +279,7 @@ We now give an example to illustrate the above discussion.
 
 In this example we are given 3 training data-points $\mathcal{D} = \\{(-2, 1), (1, -1.5), (4, 2)\\}$ and a new test point $x_{+} = 3$ and we wish to predict $f_{+} = f(3)$.
 
-Below is a chart and in the discussion below we explain each subplot.
+The below chart visualizes parts of the GP fit process and is explained below:
 
 <p align="center">
     <img src="/assets/img/gp_blog_plots.png" alt="Image" width="700" height="500" />
@@ -251,25 +302,16 @@ Here we have fit the GP regression model and show the outcome. The blue dot is t
 Similar to what we did when we sampled from the prior we can predict the GP for a range of x values, here do it for many points along the x-axis and show the resulting mean vector (red-dashed line) and $\pm 2$ standard deviation estimates for each prediction. Note that where we have observed data the functions from the posterior are constrained to go through the data but in the places where we have no data the possible function fits are many and varied.
 
 ##### Comment
-
 Recall that we can represent a function as a big vector where we assume this unknown vector was drawn from a big correlated Gaussian distribution, this is a Gaussian process. As we observe elements of the vector this constraints the values the function can take and by conditioning we are able to create a posterior  distribution for functions. This posterior is also Gaussian, i.e. the posterior over functions is still a Gaussian process. The marginalisation property of Gaussian distributions allows us to only work with the finite set of function instantiations $\mathbf{f} = (f(\mathbf{x}\_{1}), ..., f(\mathbf{x}\_{n}))$ which  constitute the observed data and jointly follow a marginal Gaussian distribution.
 
-We next move on to show the case where the training data target values we observe are corrupted by noise.
-
 <hr class="with-margin">
-<h4 class="header" id="gp_reg_noise">GP regression (noisy)</h4>
-##### GP regression (noisy)
+<h4 class="header" id="post_first">A different approach - posterior first</h4>
 
-We start with the definition of a Gaussian process and along the way explain how the posterior is calculated before returning to the above predictive distribution.
-
-<hr class="with-margin">
-<h4 class="header" id="post_first">A different perspective - thinking about the posterior first</h4>
-
-For the below analysis it will pay to bear in mind Baye's rule in the form below (the extra conditioning variable $X$ just gets carried along for the ride):
+We present a slightly different approach to GPs by reasoning from Baye's rule in order to obtain the predictive equations. For the below analysis it will pay to bear in mind Baye's rule in the form below (the extra conditioning variable $X$ just gets carried along for the ride):
 
 $$p(f|X, y) = \dfrac{p (f, y | X)}{p(y|X)} = \dfrac{p(y | X, f) \, p(f | X)}{p(y|X)} $$
 
-To get things going a GP assumes the prior, $p(f \| X)$ to be a Gaussian process, that is:
+We start by assuming the prior, $p(f \| X)$, is a Gaussian process, that is:
 
 $$ p(f | X) = \mathcal{N}(m(X), \kappa(X, X)) $$
 
@@ -287,14 +329,11 @@ where $\epsilon$ is an unknown noise variable, assumed Gaussian and independent 
 
 Under these assumptions the likelihood is also Gaussian:
 
-
 $$
 p(y | X, f)=\prod_{i=1}^{N} \mathcal{N}\left(y_{i} ; f_{i}, \sigma_{\epsilon}^{2}\right)=\mathcal{N}\left(y ; f, \sigma_{\epsilon}^{2} \, I_{N}\right)
 $$
 
 In other words, both the prior and likelihood are Gaussian distributions which means the posterior will also be a Gaussian with a known closed form.
-
-###### Obtaining the posterior
 
 To combine the prior and the likelihood is to multiply two Gaussian density functions.
 
@@ -302,7 +341,7 @@ To combine the prior and the likelihood is to multiply two Gaussian density func
 \begin{align*}
 
 p(f, y | X) &= p(y | X, f) \, p(f | X) \\[5pt]
-&= \mathcal{N}\left(y ; f, \sigma_{\epsilon}^{2} \, I_{N}\right) \, \,  \mathcal{N}(m(X), \kappa(X, X))
+&= \mathcal{N}\left(y ; f, \sigma_{\epsilon}^{2} \, I_{N}\right) \,  \mathcal{N}(m(X), \kappa(X, X))
 \end{align*}
 </div>
 
@@ -599,7 +638,21 @@ Explain link to covariance function and producing a PSD matrix which we can samp
 
 Use this link: https://www.inf.ed.ac.uk/teaching/courses/mlpr/2016/notes/w7b_gaussian_processes.html
 
-##### A different way to visualize multivariate Gaussians
+##### Combining the mean of Gaussians
+
+The mean of the joint distribution relies on the fact that the resulting mean, $\mu$ of the product of two Gaussian densities with the same means (i.e. $\mu_1 = \mu_2$) is $\mu = \mu_1 = \mu_2$ from:
+
+<div class="math">
+\begin{align*}
+\mu &= \frac{\sigma_{1}^{-2} \mu_{1}+\sigma_{2}^{-2} \mu_{2}}{\sigma_{1}^{-2}+\sigma_{2}^{-2}} \\[5pt]
+\end{align*}
+</div>
+
+this is regardless of the values of $\sigma_{1}$ and $\sigma_{2}$ (factor the above).
+
+###### Explain noise term
+
+
 
 <hr class="with-margin">
 <h4 class="header" id="appendix">Q and A</h4>
@@ -621,6 +674,7 @@ The kernel is actually the crucial thing that determines what sort of functions 
 
 How do I choose the kernel? Read [this](http://www.cs.toronto.edu/~duvenaud/cookbook/index.html).
 
+<a name="know_uncertainty"></a>
 ##### Why is knowing the uncertainty important?
 
 Can tell us where to sample next if experiments are costly. In high dimensions it takes many function  evaluations to be certain everywhere.
@@ -629,8 +683,7 @@ Can tell us where to sample next if experiments are costly. In high dimensions i
 
 See Rasmussen pg 201 - cholesky
 
-##### Explain link between two views of multivariate Gaussians
-Link to goertler post with visualization.
+
 
 ##### Why do we assume correlation between observations?
 
