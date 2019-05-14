@@ -1,14 +1,15 @@
 ---
 layout: post
-title: Gaussian processes - a first encounter
+title: Grokking Gaussian processes
 date: 2019-05-08
 use_math: true
 tags: ['gaussian_processes', 'probabilistic_modelling', 'kernels']
-image: "gp.png"
+image: "gp_main.png"
 comments: true
 ---
-In a loose sense Gaussian processes (GPs) can be thought of as a probabilistic yet non-parametric form of non-linear regression which sit within the Bayesian framework. In this article we give an in-depth introduction to the topic collating many of the excellent references on the topic.
+Gaussian processes (GPs) can be thought of as a probabilistic yet non-parametric form of non-linear regression which sit within the Bayesian framework.
 
+In this article we give an in-depth introduction to the topic collating many of the excellent references on the topic.
 <!--more-->
 <hr class="with-margin">
 
@@ -49,25 +50,11 @@ In general, capital letters are matrices, bold font represents vectors and lower
 <hr class="with-margin">
 <h4 class="header" id="outline">Outline</h4>
 
-Here is a quick roadmap of what is covered in this post:
+We start with some preliminaries which cover some key prerequisite concepts such as kernels, thinking of functions as vectors, a different way to visualize multivariate Gaussians before defining a Gaussian process.
 
-* Preliminaries
-  * Introduction
-  * Kernels
-  * Functions as vectors
-  * Visualizing multivariate Gaussians
-  * Posterior predictive view
-  * Defining a GP
-* GP regression (noise-free)
-  * Problem set-up
-  * Predictive equations
-  * Plots
-* Algorithm for a GP
-  * Plots
-  * Python code
-* Helpful mathematical results
-* Q and A
-* References
+We then walk through the predictive equations for the noise-free case and move onto showing the code and plots for the noisy case which is a simple extension.
+
+Towards the end we detail some helpful mathematical results before a Q and A section which lists some common questions that arise whilst understanding Gaussian processes.
 
 <hr class="with-margin">
 <h4 class="header" id="intro_gp">Gaussian process preliminaries</h4>
@@ -172,7 +159,7 @@ Before we start with the equations for GPs we draw a link to traditional modelli
 <div class="math">
 \begin{align*}
 
-\underbrace{p\left(f_{+} | X_{+}, X, \mathbf{y}\right)}_\text{posterior predictive} &= \int \underbrace{p\left(f_{+} | f, X_{+}\right)}_\text{likelihood} \, \underbrace{p(f | X, \mathbf{y})}_\text{posterior} \, df \\[5pt]
+\underbrace{p\left(f_{+} | X_{+}, X, \mathbf{y}\right)}_\text{posterior predictive} &= \int \underbrace{p\left(f_{+} | f, X_{+}\right)}_\text{likelihood} \, \underbrace{p(f | X, \mathbf{y})}_\text{posterior} \, df \tag{1} \\[5pt]
 &= \int p\left(f_{+}, f | X, X_{+}, \mathbf{y}\right) \, df
 
 \end{align*}
@@ -219,7 +206,7 @@ $$
 \left[ \begin{array}{c}{\boldsymbol{\mu}} \\ {\mu_{+}}\end{array}\right] \, , \,
 
 \left[ \begin{array}{cc}{K} & {K_{+}} \\ {K_{+}^T} & {K_{\\++}}\end{array}\right]
-\Bigg)
+\Bigg) \tag{2}
 $$
 
 It is normally common to assume the mean functions are 0 for Gaussian processes, the reasons for why this is are discussed in the Q and A section [below](#mean_modelling).
@@ -258,9 +245,9 @@ Instead we condition on the observed training data, $f$, to obtain the posterior
 <div class="math">
 \begin{align*}
 
-p(f_{+} | X_{+}, X, \mathbf{f}) &= \mathcal{N}\left(f_{+} | \mu_{+}, \Sigma_{+}\right) \\[5pt]
-\underbrace{\mu_{f_{+} | \mathbf{f}}}_\text{predictive mean} &= \underbrace{\mu\left(x_{+}\right) + K_{+}^{T} K^{-1}(\mathbf{f} - \mu(X))}_\text{linear in $\mathbf{f}$} \\[5pt]
-\underbrace{\Sigma_{f_{+} | \mathbf{f}}}_\text{predictive uncertainty} &= \underbrace{K_{\\++}}_\text{prior uncertainty} - \underbrace{K_{+}^{T} K^{-1} K_{+}}_\text{reduction in uncertainty}
+p(f_{+} | X_{+}, X, \mathbf{f}) &= \mathcal{N}\left(f_{+} | \mu_{+}, \Sigma_{+}\right) \tag{3} \\[5pt]
+\underbrace{\mu_{f_{+} | \mathbf{f}}}_\text{predictive mean} &= \underbrace{\mu\left(x_{+}\right) + K_{+}^{T} K^{-1}(\mathbf{f} - \mu(X))}_\text{linear in $\mathbf{f}$} \tag{4} \\[5pt]
+\underbrace{\Sigma_{f_{+} | \mathbf{f}}}_\text{predictive uncertainty} &= \underbrace{K_{\\++}}_\text{prior uncertainty} - \underbrace{K_{+}^{T} K^{-1} K_{+}}_\text{reduction in uncertainty} \tag{5}
 \end{align*}
 </div>
 
@@ -537,12 +524,40 @@ In this way we do not have to worry about whether it is possible for the model t
 <hr class="with-margin">
 <h4 class="header" id="further">References</h4>
 
+In order to get a firm grip on the basics of GPs I read many sources, most listed below.
+
+###### Books and papers
+
+* Rasmussen and Williams, [Gaussian Processes for Machine Learning](http://www.gaussianprocess.org/gpml/chapters/RW.pdf)
+  * This is the canonical text for Gaussian processes
+* Murphy K, [Machine Learning: A Probabilistic Perspective](https://www.amazon.co.uk/Machine-Learning-Probabilistic-Perspective-Computation/dp/0262018020)
+  * Chapter 15 deals with GPs based on Rasmussen but with denser notation
+* Ebden M, [Gaussian Processes for Regression: A Quick Introduction](https://www.robots.ox.ac.uk/~mebden/reports/GPtutorial.pdf)
+
+###### Videos and/or presentation slides
+
+* Turner R, [ML Tutorial: Gaussian Processes](https://www.youtube.com/watch?v=92-98SYOdlY)
+  * First hour explains the view of multivariate Gaussians particularly well
+* de Freitas N, [Machine learning - Introduction to Gaussian processes](https://www.youtube.com/watch?v=4vGiHC35j9s)
+  * Probably the best detailed start with derivation from definition of Gaussians
+* de Freitas N, [Machine learning - Gaussian processes](https://www.youtube.com/watch?v=MfHKW5z-OOA)
+  * Follow on lecture including discussing links to Ridge regression
+* Murray I, [Introduction to Gaussian Processes](#https://www.cs.toronto.edu/~hinton/csc2515/notes/gp_slides_fall08.pdf)
+  * High quality slides with a good overview and intuition
+* Williams D, [Gaussian Processes](http://people.ee.duke.edu/~lcarin/David1.27.06.pdf)
+  * Overview of GPs plus discussion on the classification case.
+
+###### Blogs and web articles
+
+* Görtler J, [A Visual Exploration of Gaussian Processes](https://www.jgoertler.com/visual-exploration-gaussian-processes/)
+  * A quite stunning explanation of GPs at a very accessible level
+* Bailey K, [Gaussian Processes for Dummies](http://katbailey.github.io/post/gaussian-processes-for-dummies/)
+  * Very accessible introduction based on Murphy's book
+
 <!--
 Details on joint Gaussians [here](http://cs229.stanford.edu/section/more_on_gaussians.pdf).
 
 http://etheses.whiterose.ac.uk/9968/1/Damianou_Thesis.pdf
-
-The main source I used was [Machine Learning: A Probabilistic Perspective](https://www.amazon.co.uk/Machine-Learning-Probabilistic-Perspective-Computation/dp/0262018020) by Kevin Murphy which I found more accessible than the authority on the subject: [Rasmussen and Williams](http://www.gaussianprocess.org/gpml/).
 
 http://mlg.eng.cam.ac.uk/teaching/4f13/1819/gaussian%20process.pdf
 

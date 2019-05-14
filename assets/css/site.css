@@ -124,6 +124,13 @@ p
     color: #891408;
 }
 
+.topmost .bold_subtitle {
+    padding-bottom: 20px;
+    font-size: 1.2em;
+    font-family: "Space", monospace;
+    color: #891408;
+}
+
 
 /* ---------- */
 /* Navigation */
@@ -295,7 +302,6 @@ hr.small-margin {
 img.button-image {
     height: 50px;
 }
-
 
 /* ----------------- */
 /* Banners and notes */
