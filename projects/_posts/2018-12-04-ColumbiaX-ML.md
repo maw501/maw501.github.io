@@ -4,13 +4,14 @@ title: ColumbiaX - Machine Learning
 date: 2018-10-10
 use_math: true
 tags: ['project']
-image: "ml_edx_cropped.png"
+image: "ML_proj_cropped.png"
 comments: true
 category: projects
 foreign_url: /projects/edx/
 ---
+My take on the course notes for the ColumbiaX Machine Learning graduate-level course offered through edX as part of their [Artificial Intelligence MicroMasters](https://www.edx.org/micromasters/columbiax-artificial-intelligence). This is a comprehensive and theoretical course covering most of the topics in statistical machine learning. Reference texts: [ESL](http://web.stanford.edu/~hastie/ElemStatLearn/) and [PRML](https://www.springer.com/gb/book/9780387310732).
 
-My take on the course notes for the ColumbiaX Machine Learning graduate-level course offered through edX as part of their [Artificial Intelligence MicroMasters](https://www.edx.org/micromasters/columbiax-artificial-intelligence). This is a comprehensive and theoretical course covering most of the topics in statistical machine learning. Reference texts are [The Elements of Statistical Learning](http://web.stanford.edu/~hastie/ElemStatLearn/) and [Pattern Recognition and Machine Learning](https://www.springer.com/gb/book/9780387310732).
+By end of May 2019: will be updated to become more stand-alone and provide code where appropriate.
 
 <!--
 <hr class="with-margin">

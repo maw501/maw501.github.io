@@ -83,7 +83,7 @@ I have written a separate post on the kernel trick [here](/../posts/2018/10/19/T
 
 ##### Gaussian Processes (GPs)
 
-These are getting their own blog post [here](/../posts/2018/10/22/Gaussian-Processes).
+These have their own blog post [here](/../posts/2019/05/08/Gaussian-Processes).
 
 <hr class="with-margin">
 <h4 class="header" id="math">Main mathematical ideas from the lectures</h4>
