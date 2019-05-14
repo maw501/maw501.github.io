@@ -40,8 +40,8 @@ In general, capital letters are matrices, bold font represents vectors and lower
 * $K$: $\kappa(X, X)$, a $n \times n$ matrix, where the $i , j$ th entry is $\kappa(\mathbf{x}\_{i}, \mathbf{x}\_{j})$
 * $K_{+}$: $\kappa(X, X_{+})$, a $n \times n_{+}$ matrix
 * $K_{\++}$: $\kappa(X_{+}, X_{+})$, a $n_{+} \times n_{+}$ matrix
-* $m(\mathbf{x}\_{i})$ or $m(X)$: $m$ is some function that models the mean of an observation, often set to be $m(\mathbf{x}\_{i}) = 0$ for $i = 1, ..., n$
-* $\boldsymbol{\mu}$ or $\mu(X)$: is $(m(\mathbf{x}\_{1}), m(\mathbf{x}\_{2}), ..., m(\mathbf{x}\_{n}))$ a vector of length $n$
+* $\mu(\mathbf{x}\_{i})$ or $\mu(X)$: $\mu$ is some function that models the mean of an observation, often set to be $\mu(\mathbf{x}\_{i}) = 0$ for $i = 1, ..., n$, discussed [here](#mean_modelling)
+* $\boldsymbol{\mu}$ or $\mu(X)$: is $(\mu(\mathbf{x}\_{1}), \mu(\mathbf{x}\_{2}), ..., \mu(\mathbf{x}\_{n}))$ a vector of length $n$
 * $\mu_{+}$: mean for a single test point
 * $\mu_{f_{+} \| \mathbf{f}}$: mean vector for predicted data after conditioning on observed data
 * $\Sigma_{f_{+} \| \mathbf{f}}$: covariance matrix for predicted data after conditioning on observed data
@@ -49,26 +49,24 @@ In general, capital letters are matrices, bold font represents vectors and lower
 <hr class="with-margin">
 <h4 class="header" id="outline">Outline</h4>
 
-Here is a roadmap of what is covered in this post:
+Here is a quick roadmap of what is covered in this post:
 
-* Introduction
-  * Kernels and functions as vectors
+* Preliminaries
+  * Introduction
+  * Kernels
+  * Functions as vectors
   * Visualizing multivariate Gaussians
   * Posterior predictive view
-  * Define a GP
-* GP regression (noise free)
-  * Derive predictive equations
-  * Plot example
-  * Code
-* GP regression (noisy)
-  * Derive predictive equations
-  * Plot example
-  * Code    
-* Recipe for a GP
-* Take home messages
-* Key mathematical ideas and results
+  * Defining a GP
+* GP regression (noise-free)
+  * Problem set-up
+  * Predictive equations
+  * Plots
+* Algorithm for a GP
+  * Plots
+  * Python code
+* Helpful mathematical results
 * Q and A
-  * How to get kernel parameters
 * References
 
 <hr class="with-margin">
@@ -94,7 +92,7 @@ It is worth briefly explaining a few concepts.
 
 In the context of Gaussian processes a kernel function is a function that takes in two vectors (observations in $\mathbb{R}^ d$) and outputs a similarity scalar between them. As covariance matrices must be positive semi-definite valid kernels are those that satisfy this requirement. For GPs we evaluate the kernel function for each pairwise combination of data-points to retrieve the covariance matrix. The covariance matrix will end up not only describing the shape of our learned distribution, but ultimately determines the characteristics of the function that we want to predict.
 
-We can go further and say that the problem of learning with Gaussian processes is exactly the problem of learning the hyper-parameters of the kernel function - this will be discussed in greater detail later.
+We can go further and say that the problem of learning with Gaussian processes is exactly the problem of learning the hyperparameters of the kernel function. How to learn the kernel hyperparameters is not the subject of this post but is mentioned briefly in the Q and A section [here](#kernel_hyper).
 
 There are many kernels that can describe different classes of functions, including to encode properties such as periodicity. In this post we will restrict ourselves to the most common kernel, the [radial basis function (or Gaussian) kernel](https://en.wikipedia.org/wiki/Radial_basis_function_kernel):
 
@@ -102,12 +100,12 @@ $$
 \kappa(\mathbf{x_i}, \mathbf{x_j}) = \sigma^{2} \exp (-\frac{ \| \mathbf{x_i} - \mathbf{x_j} \|^{2}}{2 l^{2}})
 $$
 
-with hyper-parameters $\sigma$ and $l$. The variance $\sigma^2$ determines the magnitude of fluctuation of values away from the mean and $l^2$ determines the reach of neighbouring data-points (small $l$ will give wiggly functions, increasing $l$ gives smoother functions). See the plot below for the effect of different values of the hyper-parameters.
+with hyperparameters $\sigma$ and $l$. The variance $\sigma^2$ determines the magnitude of fluctuation of values away from the mean and $l^2$ determines the reach of neighbouring data-points (small $l$ will give wiggly functions, increasing $l$ gives smoother functions). See the plot below for the effect of different values of the hyperparameters.
 
 <p align="center">
     <img src="/assets/img/gp_kernel_params.png" alt="Image" width="600" height="400" />
 </p>
-<em class="figure">Effect of different kernel hyper-parameters</em>
+<em class="figure">Effect of different kernel hyperparameters</em>
 
 Kernel functions are also sometimes referred to as covariance functions.
 
@@ -305,290 +303,94 @@ Similar to what we did when we sampled from the prior we can predict the GP for 
 Recall that we can represent a function as a big vector where we assume this unknown vector was drawn from a big correlated Gaussian distribution, this is a Gaussian process. As we observe elements of the vector this constraints the values the function can take and by conditioning we are able to create a posterior  distribution for functions. This posterior is also Gaussian, i.e. the posterior over functions is still a Gaussian process. The marginalisation property of Gaussian distributions allows us to only work with the finite set of function instantiations $\mathbf{f} = (f(\mathbf{x}\_{1}), ..., f(\mathbf{x}\_{n}))$ which  constitute the observed data and jointly follow a marginal Gaussian distribution.
 
 <hr class="with-margin">
-<h4 class="header" id="post_first">A different approach - posterior first</h4>
+<h4 class="header" id="small_example">Algorithm for GP regression</h4>
+We now walk through an example with Python code detailing how to actually fit a Gaussian process for regression with noise. We start by defining the general algorithmic steps before supplying code and charts.
 
-We present a slightly different approach to GPs by reasoning from Baye's rule in order to obtain the predictive equations. For the below analysis it will pay to bear in mind Baye's rule in the form below (the extra conditioning variable $X$ just gets carried along for the ride):
-
-$$p(f|X, y) = \dfrac{p (f, y | X)}{p(y|X)} = \dfrac{p(y | X, f) \, p(f | X)}{p(y|X)} $$
-
-We start by assuming the prior, $p(f \| X)$, is a Gaussian process, that is:
-
-$$ p(f | X) = \mathcal{N}(m(X), \kappa(X, X)) $$
-
-or
-
-$$ f(X) \sim \mathcal{N}(m(X), \kappa(X, X)) $$
-
-where $m(X)$ is a function that models the mean and $\kappa(X, X)$ a function that models the covariance matrix - we will come back to these shortly.
-
-What about the likelihood, $p(y \| X, f)$? In the case of additive noise we assume the data has the form, for every observation:
-
-$$y = f(x)+\epsilon$$
-
-where $\epsilon$ is an unknown noise variable, assumed Gaussian and independent on each data point, i.e. $\epsilon \sim \mathcal{N}\left(0, \sigma_{e}^{2}\right)$.
-
-Under these assumptions the likelihood is also Gaussian:
-
-$$
-p(y | X, f)=\prod_{i=1}^{N} \mathcal{N}\left(y_{i} ; f_{i}, \sigma_{\epsilon}^{2}\right)=\mathcal{N}\left(y ; f, \sigma_{\epsilon}^{2} \, I_{N}\right)
-$$
-
-In other words, both the prior and likelihood are Gaussian distributions which means the posterior will also be a Gaussian with a known closed form.
-
-To combine the prior and the likelihood is to multiply two Gaussian density functions.
-
-<div class="math">
-\begin{align*}
-
-p(f, y | X) &= p(y | X, f) \, p(f | X) \\[5pt]
-&= \mathcal{N}\left(y ; f, \sigma_{\epsilon}^{2} \, I_{N}\right) \,  \mathcal{N}(m(X), \kappa(X, X))
-\end{align*}
-</div>
-
-which leads to (see box below), after the application of standard results, the following expression for the joint density:
-
-$$
-\left[ \begin{array}{l}{f} \\ {y}\end{array}\right]
-\sim
-\mathcal{N}
-\Bigg(
-\left[ \begin{array}{c}{m(X)} \\ {m(X)}\end{array}\right] \, , \,
-
-\left[ \begin{array}{cc}{K} & {K} \\ {K} & {K+\sigma_{\epsilon}^{2} I_{N}}\end{array}\right]
-\Bigg)
-$$
-
-<blockquote class="tip">
-<strong>Sidebar on the joint distribution</strong>
-<br/>
-Explanation of the above expression.
-
-The mean of the joint distribution relies on the fact that the resulting mean, $\mu$ of the product of two Gaussian densities with the same means (i.e. $\mu_1 = \mu_2$) is $\mu = \mu_1 = \mu_2$ from:
-
-<div class="math">
-\begin{align*}
-\mu &= \frac{\sigma_{1}^{-2} \mu_{1}+\sigma_{2}^{-2} \mu_{2}}{\sigma_{1}^{-2}+\sigma_{2}^{-2}} \\[5pt]
-\end{align*}
-</div>
-
-this is regardless of the values of $\sigma_{1}$ and $\sigma_{2}$ (factor the above).
-
-The covariance matrix is a little trickier to explain but start by recalling both $f$ and $y$ are being evaluated for the same data, $X$. The covariance matrix of the joint distribution is:
-
-<div class="math">
-\begin{align*}
-\Sigma &= \left[ \begin{array}{cc}{\Sigma_{ff}} & {\Sigma_{fy}} \\ {\Sigma_{yf}} & {\Sigma_{yy}}\end{array}\right] \\[5pt]
-&= \left[ \begin{array}{cc}{K(X, X)} & {K(X, X)} \\ {K(X, X)} & {K(X, X) + \sigma_{\epsilon}^{2} I_{N}}\end{array}\right] \\[5pt]
-\end{align*}
-</div>
-
-where the above result stems from the fact that marginal of a joint Gaussian is also Gaussian. The noise term appears in $\Sigma_{yy}$ only due to the assumption about the independence of the noise and that it is only $y$ that is a noise added process.
-
-More reading on the technical details of the above can be found in the reference section at the end of the blog.
-
+<blockquote class="algo">
+<hr class="small-margin">
+<strong>Algorithm: GP regression</strong>
+<hr class="small-margin">
+1. $L = \operatorname{cholesky}(K + \sigma_{y}^2 \, I)$
+<br>
+2. $\alpha=L^{T} \backslash(L \backslash \mathbf{y})$
+<br>
+3. $\mathbb{E}\left[\mathbf{f_{+}}\right]=K_{+}^{T} \alpha$
+<br>
+4. $v = L \backslash K_{+}$
+<br>
+5. $\operatorname{var}\left[\mathbf{f_{+}}\right]=\kappa\left(X_{+}, X_{+}\right)-v^{T} v$
+<br>
 </blockquote>
 
-We can now apply standard Gaussian conditioning to obtain an expression for the posterior:
+Note the solution for $A\mathbf{x} = B$ is often denoted as $A \backslash B$.
 
-$$
-p(f | y, X)=\mathcal{N}\left(m(X)+K\left[K+\sigma_{\epsilon}^{2} I_{N}\right]^{-1}(y-m(X)), \quad K-K\left[K+\sigma_{\epsilon}^{2} I_{N}\right]^{-1} K\right)
-$$
-
-For the relevant theory of how to derive the above, refer to [Murphy](https://www.cs.ubc.ca/~murphyk/MLbook/), section 4.3.1.
-
-###### Looking at the posterior predictive
-
-Most discussions on GPs usually start with the statement of the joint and THEN conditioning BLAH posterior predictive and show conditioing leads
-
-###### What are $m(X)$ and $\kappa(X,X)$?
-TODO: This has different notation atm
-
-where we have that $m(x)$ is the mean function and $k\left(\mathbf{x}, \mathbf{x}^{\prime}\right)$ is the covariance function. Requiring that
-
-$$
-\begin{aligned} m(\mathbf{x}) &=\mathbb{E}[f(\mathbf{x})] \\ \kappa\left(\mathbf{x}, \mathbf{x}^{\prime}\right) &=\mathbb{E}\left[(f(\mathbf{x})-m(\mathbf{x}))\left(f\left(\mathbf{x}^{\prime}\right)-m\left(\mathbf{x}^{\prime}\right)\right)^{T}\right] \end{aligned}
-$$
-
-$$
-f(\mathbf{x}) \sim \mathcal{G P}\left(m(\mathbf{x}), k\left(\mathbf{x}, \mathbf{x}^{\prime}\right)\right)
-$$
-
-
-###### A function $f$ is a random variable?
-
-
-###### Tying up the dimensions
-
-
-
-##### Grokking this shizzle
-
-Notice that the covariance between function values is fully specified by the corresponding input locations, and not at all by the actual values of the function; this is a property of the Gaussian Process.
-
-
-
-
-<hr class="with-margin">
-<h4 class="header" id="small_example">Recipe for a Gaussian process</h4>
-We will now walk through a small example detailing both the maths and the code:
-
-<hr class="with-margin">
-Recipe for GP example (before we have observed any data):
-* Define the kernel function $\textbf{k}$ which will output matrices we call $K$, $K_s$ or $K_{ss}$ depending on which data points we are computing similarity between (e.g. train to train, train to test, test to test).
-* Pick the domain we are interested in $X_{test}$, here $-5 \leq x \leq 5$ and compute the kernel between all evenly spaced points in this region.
-  * Note as $X_{test}$ is evenly spaced the kernel will only have strong values down the diagonal as we are saying further points are less related.
-* Sample from $f_s \sim N(\mu_s, \Sigma_s)$ to see what the functions look like. To actually sample we actually use $f_s \sim \mu_{s} + L \, N(0, I)$ with $LL^T = K_{ss}$ which involves using a Cholesky decomposion on $K_{ss}$.
-  * Note this is really just using the fact that $x \sim N(\mu, \sigma^2)$ can be written as $x \sim \mu + \sigma N(0, 1)$ except we have a matrix instead of $\sigma$ and so taking the 'square root of a matrix' is what the Cholesky decomposition does, loosely.
-  * We assume in this example that $\mu_s$ = 0.
-
+For why we use the Cholesky decomposition see the Q and A section [below](#cholesky)
 <hr class="with-margin">
 
-Example python code of the small GP example:
-<pre><code class="language-python">import numpy as np
-import matplotlib.pyplot as plt
+##### Problem set-up
 
-def kernel(a, b):
-    """ GP squared exponential kernel i.e. the distance/similarity function"""
-    kernelParameter = 0.1
-    sqdist = np.sum(a**2,1).reshape(-1,1) + np.sum(b**2,1) - 2*np.dot(a, b.T)
-    return np.exp(-.5 * (1/kernelParameter) * sqdist)
-
-n = 50  # number of test points
-Xtest = np.linspace(-5, 5, n).reshape(-1, 1)  # test points
-K_ss = kernel(Xtest, Xtest)  # kernel at test points
-# Draw samples from the prior at the test points:
-L_prior = np.linalg.cholesky(K_ss + 1e-6*np.eye(n))   # K = LL^T and L is (n, n)
-f_prior = np.dot(L_prior, np.random.normal(size=(n, 3)))  # Sample 3 points per f_s ~ LN(0, I)
-plt.plot(Xtest, f_prior) # these are now samples from the GP prior
-</code></pre>
-
-
-Plotting this we get a look at the prior $p(f_s)$:
+Given 10 noisy observations from a sine wave over the domain $(-5, 5)$, predict the function for an evenly spaced set of 50 points over the same domain. The red crosses are the training data points and the blue curve shows the true unknown function for illustrative purposes. In plot 3 the red dashed line is the mean prediction for the test points.
 
 <p align="center">
-    <img src="/assets/img/gprior_simple.png" alt="Image" width="350" height="250" />
+    <img src="/assets/img/gp_noise_example.png" alt="Image" width="700" height="575" />
 </p>
 
-<em class="figure">Fig. 1: Gaussian Prior samples</em>
+<em class="figure">Gaussian process example with limited data for a sine wave</em>
 <hr class="with-margin">
 
-##### Comments on what we just did
+##### Comments on the above GP fit
+* We could technically compute each sample at finer and finer points in the $X$ domain instead of the 50 we did here - this is what we mean by sampling functions.
+* All the prior functions are different but come from the same distribution whose covariance (dictated by the choice of kernel and its hyperparameters) controls the smoothness of the functions.
+* The prior is over the test points as it's the prior belief for functions before seeing any data.
+* Conditioning on data reduces the set of posterior samples to be close to the observed data. As we are observing noisy values of the function the samples will not pass exactly through these points but must come close.
+* The uncertainty bands are wide when we have little observed data - this makes sense. This is a function of the kernel hyperparameters and indicates our prior is perhaps too 'wiggly' for the true unknown function. We briefly discuss how to set the kernel hyperparameters [here](kernel_hyper).
 
-* We say we are 'sampling functions' as we could technically compute each sample at more and more points in the $x$ domain instead of the 50 we did here.
-* All the functions are different but they all come from the same distribution whose covariance (dictated by the choice of kernel) controls the smoothness of these functions (i.e. how far apart is the function value for two input points that are close by allowed to be).
-* We call this the prior even though it's over what we termed the $X_{test}$ domain as it's the domain of interest which we wish to predict for. We thus view the sample of functions over this domain before seeing any data to get a sense of what they look like.
-* When we then see some data this will reduce the set of functions from $p(f_s)$ to the posterior $p(f_s \mid f) = p(f_s \mid X_{test}, X, y)$ .
+##### Python code
 
-<hr class="with-margin">
-<h4 class="header" id="extended_example">Extended GP example</h4>
-
-Let's see some data now and see what happens.
-
-
-<hr class="with-margin">
-Recipe for GP example (after observing data):
-
-* As for the smaller example we can calculate the prior and sample from it
-* We now create some training data from an underlying function and add some noise to it (as we are pretending we observe a noisy version of it)
-* We can then calculate the relevant values in order to obtain the posterior distribution which we can sample from. In particular we have that:
-
-$$p(f_s \mid X_s, X, y) = N(f_s \mid \mu_s, \Sigma_s)$$
-
-$$\mu_s = K_s^T K_y^{-1}y$$
-
-$$\Sigma_s = K_{ss} - K_s^T K_y^{-1}K_s$$
-
-where we are calling $K_y = K + noise$ (i.e. the kernel of the noisy data we see).
-
-<hr class="with-margin">
-
-Example python code of the extended GP example (excluding plotting code):
+Example python code of the GP example (excludes plotting code):
 
 <pre><code class="language-python">import numpy as np
-# This is the true unknown function we are trying to approximate
-f = lambda x: np.sin(0.9*x).flatten()
 
-# Inputs
-N = 10         # number of observed training points
-n = 50         # number of test points to predict for
-s = 0.0005     # noise variance to create data with
+def kernel(a, b, variance=0.5, length=1):
+    """GP squared exponential kernel for 1d inputs: the similarity function"""
+    sqdist = np.sum(a**2,1).reshape(-1,1) + np.sum(b**2,1) - 2*np.dot(a, b.T)
+    return np.exp(-.5 * (1/length) * sqdist) * variance
 
-# 1. As before create data for domain we're going to make predictions at (i.e. evenly spaced) and sample:
-Xtest = np.linspace(-5, 5, n).reshape(-1,1)
+f = lambda x: np.sin(0.9*x).flatten()  # true unknown function to approx
+
+n_train, n_test = 10, 50     # number training & test points
+n_prior_samples, n_post_samples = 10, 10
+s = 0.2    # noise variance to create data with
+
+# 1. Compute prior over test domain
+Xtest = np.linspace(-5, 5, n_test).reshape(-1,1)
 K_ss = kernel(Xtest, Xtest)
-L_prior = np.linalg.cholesky(K_ss + 1e-6*np.eye(n))
-f_prior = np.dot(L_prior, np.random.normal(size=(n, 3)))
+L_prior = np.linalg.cholesky(K_ss + 1e-6*np.eye(n_test))
+f_prior = np.dot(L_prior, np.random.normal(size=(n_test, n_prior_samples)))
 
-# 2. Observe some data get the noisy versions of the function evaluated at these points (this is the training data)
-X = np.random.uniform(-5, 5, size=(N, 1))  # (10, 1)
-y = f(X) + s*np.random.randn(N) # (10, 1)
-K = kernel(X, X)  # N by N matrix of distances for training data
-L = np.linalg.cholesky(K + s*np.eye(N))  # K = LL^T
+# 2. Create noisy training data and compute kernel function for training data
+X = np.random.uniform(-5, 5, size=(n_train, 1))
+y = f(X) + s*np.random.randn(n_train)
+K = kernel(X, X)
+L = np.linalg.cholesky(K + s*np.eye(n_train))  # K = LL^T
 
-# 3. We also need to compute the distance between the train and test data
+# 3. Compute kernel function between train and test data
 alpha = np.linalg.solve(np.dot(L, L.T), y)
 K_s = kernel(X, Xtest)
 
-# 4. Get the mean and variance over whole test domain
+# 4. Get mean prediction and uncertainty for each test point
 mu = np.dot(K_s.T, alpha)
 Lk = np.linalg.solve(L, K_s)
 s_var = np.diag(K_ss) - np.sum(Lk**2, axis=0)
 stdev = np.sqrt(s_var)
 
-# 5. If we want, draw samples from the posterior within test domain
-L_post = np.linalg.cholesky(K_ss + 1e-6*np.eye(n) - np.dot(Lk.T, Lk))
-f_post = mu.reshape(-1,1) + np.dot(L_post, np.random.normal(size=(n, 3)))
+# 5. Optional: sample from the posterior at test points
+L_post = np.linalg.cholesky(K_ss + 1e-6*np.eye(n_test) - np.dot(Lk.T, Lk))
+f_post = mu.reshape(-1,1) + np.dot(L_post, np.random.normal(size=(n_test, n_post_samples)))
 </code></pre>
 
-Plotting this we get the following:
-
-<p align="center">
-    <img src="/assets/img/predict.png" alt="Image" width="350" height="250" />
-</p>
-
-<em class="figure">Fig. 2: True function (blue), fitted function (red dash), noisy observed data (red cross) and 3*standard deviation (grey)</em>
-
-<p align="center">
-    <img src="/assets/img/post.png" alt="Image" width="350" height="250" />
-</p>
-
-<em class="figure">Fig. 3: Gaussian Posterior samples</em>
 <hr class="with-margin">
-
-##### A few comments on the above charts
-
-* The uncertainty bands are wide when we have no observed data. In fact they are so wide even when we have data and actually look a bit silly. This is because the prior we specified was very flexible i.e. we chose a kernel that allowed functions which are not very smooth (relative to the underlying data generating process, a sine wave). We can change the kernel parameter to fix this, see figure 4 below.
-
-<p align="center">
-    <img src="/assets/img/predict_smooth.png" alt="Image" width="350" height="250" />
-</p>
-
-<em class="figure">Fig. 4: Gaussian Posterior with smoother kernel parameter (different data)</em>
-
-* This looks much better as we are now more confident in regions where we have seen more data. Note that even if we specified a poor prior as we kept seeing more data it would eventually overwhelm the poor assumption. That said, GPs are powerful when we are able to make strong prior choices about the data generating process and thus can perform well with data paucity if we get this assumption correct.
-* In figure 3 above when we sampled from the posterior what we are essentially doing is now drawing samples from the updated distribution in light of the data we have observed. As we can the samples now look a little closer the data we observed.
-
-
-<hr class="with-margin">
-<h4 class="header" id="take_home">Take-home messages</h4>
-
-
-[Summary](http://people.ee.duke.edu/~lcarin/David1.27.06.pdf)
-Gaussian Process Take-Home Message
-
-Gaussian processes are non-parametric.
-
-A Gaussian process is a collection of random variables,any finite number of which have joint Gaussian distributions.
-
-A Gaussian process is fully specified by a mean function and a covariance function.
-
-The problem of learning with Gaussian processes is exactly the problem of learning the hyperparameters of the covariance function.
-
-Basic rules of multivariate Gaussian distributions govern manipulation of the Gaussian process after a finite number of data points is observed.
-
-
-<hr class="with-margin">
-<h4 class="header" id="math">Key mathematical results and ideas</h4>
+<h4 class="header" id="math">Helpful mathematical results</h4>
 <a name="mult_rvs"></a>
 ##### Multivariate Gaussians - 2 key results
 
@@ -632,72 +434,110 @@ and so conditioning also gives us a Gaussian.
 
 Both of these results will play a key role in Gaussian processes and the use of them will be highlighted when they are encountered. For references on how to derive the above see CS229 notes [here](http://cs229.stanford.edu/section/more_on_gaussians.pdf).
 
-##### Functions as vectors and kernel functions
-
-Explain link to covariance function and producing a PSD matrix which we can sample from. Explain how Cholesky helps us sample from a multivariate Gaussian where the entries are correlated (which we want them to be!).
-
-Use this link: https://www.inf.ed.ac.uk/teaching/courses/mlpr/2016/notes/w7b_gaussian_processes.html
-
-##### Combining the mean of Gaussians
-
-The mean of the joint distribution relies on the fact that the resulting mean, $\mu$ of the product of two Gaussian densities with the same means (i.e. $\mu_1 = \mu_2$) is $\mu = \mu_1 = \mu_2$ from:
-
-<div class="math">
-\begin{align*}
-\mu &= \frac{\sigma_{1}^{-2} \mu_{1}+\sigma_{2}^{-2} \mu_{2}}{\sigma_{1}^{-2}+\sigma_{2}^{-2}} \\[5pt]
-\end{align*}
-</div>
-
-this is regardless of the values of $\sigma_{1}$ and $\sigma_{2}$ (factor the above).
-
-###### Explain noise term
-
-
-
 <hr class="with-margin">
 <h4 class="header" id="appendix">Q and A</h4>
 <a name="col_rvs"></a>
 ##### What is a collection of random variables?
 
-Talk about stochastic processes.
+Collections of random variables are stochastic processes, the most common of which is the [random walk](https://en.wikipedia.org/wiki/Random_walk). A Gaussian process is a stochastic process such that every finite collection of those random variables has a multivariate normal distribution.
 
 <a name="mean_modelling"></a>
-##### What does it mean that GPs can model the mean arbitrarily well?
+##### Why is the mean function often set to 0 in the prior?
 
-See: https://stats.stackexchange.com/questions/222238/why-is-the-mean-function-in-gaussian-process-uninteresting
+Even if we set the mean function to 0 in the prior the predicted mean for a test data-point will not be 0. To see this recall the predictive mean becomes:
 
-Put image of prior dragging function to 0.
+<div class="math">
+\begin{align*}
+\mu_{f_{+} | \mathbf{f}} &= \mu\left(x_{+}\right) + K_{+}^{T} K^{-1}(\mathbf{f} - \mu(X)) \\[5pt]  
+&= K_{+}^{T} K^{-1}\mathbf{f}
+\end{align*}
+</div>
 
-##### What is the kernel?
+even if we set the prior mean function $\mu_i = 0$ for all $i$. Thus the predictive mean depends on the kernel and on the number of training points and so can be arbitrarily flexible. It is worth noting that for predictions far away from the training data and dependent upon the kernel (and its hyperparameters) a GP may still predict $f_{+} \approx 0$ if $x_{+}$ is sufficiently far from the training set. However this is not a bad idea in general and can stop wild predictions due to extrapolation far from the observed data.
 
-The kernel is actually the crucial thing that determines what sort of functions we end up with. It basically controls the smoothness and type of functions we can get from the prior. We are not going to discuss kernels in this post as it's already too long.
+Practically when fitting GPs it is desirable to standardize the data (function values, not $X$) to have 0 mean. It can also be advisable to normalize $X$ too depending on the kernel function.
 
-How do I choose the kernel? Read [this](http://www.cs.toronto.edu/~duvenaud/cookbook/index.html).
+<a name="kernel_hyper"></a>
+##### How can we set the kernel hyperparameters?
+
+Pending.
 
 <a name="know_uncertainty"></a>
 ##### Why is knowing the uncertainty important?
 
-Can tell us where to sample next if experiments are costly. In high dimensions it takes many function  evaluations to be certain everywhere.
+Often in the real-world we care not just about the mean prediction but also the amount by which it could vary. Further, knowing where we are most uncertain is helpful if we have to make a decision about where to next obtain a sample which is expensive to compute. Examples of expensive functions could be drilling a well, conducting a clinical trial or training a large neural network.
 
-##### How can we simulate from a multivariate Gaussian
+Using uncertainty in a probabilistic model to guide search is called Bayesian optimization and is not discussed in this post.
 
-See Rasmussen pg 201 - cholesky
+<a name="cholesky"></a>
+##### How can we sample from a multivariate Gaussian
 
+Sampling from an arbitrary distribution usually involves computing the CDF of the distribution, which may not be feasible and for a Gaussian there is no closed form solution. However most software packages will have an efficient way to sample from a standard Gaussian, $\mathcal{N}(0, 1)$.
 
+Broadly speaking it will be much more efficient if we can relate everything to a standard Gaussian. In 1-dimension we can use the fact that $x \sim \mathcal{N}(\mu, \sigma^2)$ can be written as $x \sim \mu + \sigma \mathcal{N}(0, 1)$ and so sample from a Gaussian with arbitrary mean and variance by sampling from $\mathcal{N}(0, 1)$.
+
+To generalize this idea to sample from multi-dimensional correlated random variables $X \sim \mathcal{N}(\mu, \Sigma)$ we would like to be able to sample from $X \sim \mu + L \, \mathcal{N}(0, I)$ for some $L$. This $L$ needs to be computable and the equivalent to the 'square-root' of the covariance matrix, i.e. a matrix $L$ such that $LL^T = \Sigma$.
+
+$L$ is exactly what the [Cholesky decomposition](https://en.wikipedia.org/wiki/Cholesky_decomposition) gives us.
+
+In this way we can sample from $X \sim \mathcal{N}(\mu, \Sigma)$ using $X \sim \mu + L \, \mathcal{N}(0, I)$.
+
+This is a standard result but discussion is provided in [Rasmussen](http://www.gaussianprocess.org/gpml/chapters/RW.pdf) appendix section A.2.
+
+###### Inverse sampling transform
+
+The idea behind the above relates to the inverse sampling transform algorithm.
+
+<blockquote class="algo">
+<hr class="small-margin">
+<strong>Algorithm: Inverse sampling transform
+</strong>
+<hr class="small-margin">
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Inverse_transform_sampling">Inverse transform sampling</a> is a method for sampling from any distribution given its CDF, $F_X(x)$.
+</p>
+<br>
+<br>
+1. Generate a random number $u$ from the uniform distribution on $[0, 1]$.
+<br>
+2. Compute the inverse of the CDF as, $F_X^{-1}(u)$.
+<br>
+3. $F_X^{-1}(u)$ is from the target distribution.
+<br>
+<br>
+</blockquote>
+
+<!--
+<div class="admonition admonition-its">
+<p class="first admonition-title">Inverse Transform Sampling</p>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Inverse_transform_sampling">Inverse transform sampling</a>
+is a method for sampling from any distribution given its cumulative
+distribution function (CDF)
+</p>
+</div>
+-->
 
 ##### Why do we assume correlation between observations?
 
-https://www.inf.ed.ac.uk/teaching/courses/mlpr/2016/notes/w7b_gaussian_processes.html
+When forming a prior over functions we somehow must define a way to construct a covariance matrix. Clearly we don't want to specify anything manually and we'd like to use the fact that points in input space that are similar have function values that are similar, in other words, the function has some form of smoothness.
 
-We certainly can’t use a diagonal covariance matrix: if our beliefs about the function values are independent, then observing the function in one location will tell us nothing about its values in other locations. We usually want to model continuous functions: so function values for nearby inputs should have large covariances.
+If we used a diagonal covariance matrix then it would be the same as saying we believed the function values to be independent and so observing the function in one location would tell us nothing about its values in other locations. Given we usually want to model continuous functions we would like function values for more similar inputs to have large covariances.
 
 ##### Why are GPs non-parametric?
 
-Kernel parameters are hyper-parameters. Technically we integrate out all other (infinite) parameters. See Richard Turner talk.
+To quote [wikipedia](https://en.wikipedia.org/wiki/Nonparametric_statistics#Non-parametric_models):
+
+_Non-parametric models differ from parametric models in that the model structure is not specified a priori but is instead determined from data. The term non-parametric is not meant to imply that such models completely lack parameters but that the number and nature of the parameters are flexible and not fixed in advance._
+
+GPs are non-parametric models and technically have an infinite number of parameters (given by the infinite mean vector and covariance matrix) which are integrated out by the marginalization property of Gaussians.
+
+As we add more data the flexibility and capacity of the model will adjust to fit the data: we would see the mean function adjust itself to pass close to these points, and the posterior uncertainty would reduce close to the observations.
+
+In this way we do not have to worry about whether it is possible for the model to fit the data.
 
 <hr class="with-margin">
 <h4 class="header" id="further">References</h4>
 
+<!--
 Details on joint Gaussians [here](http://cs229.stanford.edu/section/more_on_gaussians.pdf).
 
 http://etheses.whiterose.ac.uk/9968/1/Damianou_Thesis.pdf
@@ -713,4 +553,6 @@ Preliminary reading [here](http://katbailey.github.io/post/gaussian-processes-fo
 Bay Opt
 
 http://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf
+
+-->
 <hr class="with-margin">

@@ -95,11 +95,12 @@ p
 /* ---------- */
 
 .topmost {
-    height: 150px;
+    height: 200px;
     text-align: center;
     background: white;
-    background-image: url('/assets/img/robot_banner.jpg');
+    background-image: url('/assets/img/robot_banner_v1.jpg');
     position: relative;
+    opacity: 0.9;
 }
 
 .topmost .text, .topmost .image {
@@ -133,8 +134,9 @@ p
     padding: 0;
     text-align: center;
     list-style: none;
-    background: #3c3c3c;
+    background: #44494d;
     display: block;
+    font-family: "Space Mono", monospace;
     width: 100%;
 }
 
@@ -156,7 +158,7 @@ p
 
 .nav a:hover,
 .nav a.active {
-    background: darkorange;
+    background: #97C2A7;  /* darkorange  or # 97C2A7*/
     color: ghostwhite;
 }
 
@@ -181,13 +183,12 @@ p
     bottom: 0;
     left: 0;
     right: 0;
-    height: 80px;  /* MW added this */
+    height: 60px;  /* MW added this */
     text-align: center;
     padding: 1rem;
     background-color: #3c3c3c;
     color: whitesmoke;
 }
-
 
 /* --------------- */
 /* Posts and Cards */
@@ -203,6 +204,7 @@ p
 
 .card.post {
     cursor: pointer;
+    background: #eef6e8;
 }
 
 .post .header {
@@ -218,6 +220,7 @@ p
     font-size: 0.9em;
     font-family: "Space Mono", monospace;
     text-align: right;
+    color: #ad270d;
 }
 
 .post .text {
@@ -244,6 +247,11 @@ hr {
 
 hr.with-margin {
     margin-top: 2em;
+}
+
+hr.small-margin {
+    margin-bottom: 0.1em;
+    margin-top: 0.1em;
 }
 
 .post .tags {
@@ -326,6 +334,7 @@ blockquote.algo {
   padding-top: 1em;
   padding-bottom: 0;
   padding-right: 2em;
+  border-color: #A90404;
 }
 
 blockquote.algo li:not(:last-child) {
@@ -364,4 +373,52 @@ ul.list-unstyled.with-padding li {
 
 .top-offset {
   padding-top: 1em;
+}
+
+/* From Keng blog */
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning, div.sidebar {
+/* stolen from Boostrap 3 (.panel .panel-default) */
+  margin-bottom: 20px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+          box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+  padding: 0 15px 15px 15px;
+}
+
+div.attention, div.caution, div.danger, div.error, div.warning {
+  /* stolen from Boostrap 3 (.panel .panel-danger) */
+  border-color: #EBCCD1;
+}
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title, div.sidebar p.sidebar-title,
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+/* stolen from Boostrap 3 (.panel .panel-default .panel-heading) */
+  font-size: 16px;
+  color: #333;
+  background-color: #F5F5F5;
+  padding: 10px 15px;
+  margin-left: -15px;
+  margin-right: -15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0);
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  color: #333;
+  background-color: #F5F5F5;
+  border-color: #DDD;
+}
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  /* stolen from Boostrap 3 (.panel .panel-danger) */
+  color: #A94442;
+  background-color: #F2DEDE;
+  border-color: #EBCCD1;
 }
