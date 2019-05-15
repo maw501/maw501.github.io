@@ -9,7 +9,7 @@ comments: true
 category: projects
 foreign_url: /projects/edx/
 ---
-My take on the course notes for the ColumbiaX Machine Learning graduate-level course offered through edX as part of their [Artificial Intelligence MicroMasters](https://www.edx.org/micromasters/columbiax-artificial-intelligence). This is a comprehensive and theoretical course covering most of the topics in statistical machine learning. Reference texts: [ESL](http://web.stanford.edu/~hastie/ElemStatLearn/) and [PRML](https://www.springer.com/gb/book/9780387310732).
+Week by week take on the course notes for the ColumbiaX Machine Learning graduate-level course offered through edX as part of their [Artificial Intelligence MicroMasters](https://www.edx.org/micromasters/columbiax-artificial-intelligence). This is a comprehensive and theoretical course covering a wide range of the topics in statistical machine learning. Reference texts: [ESL](http://web.stanford.edu/~hastie/ElemStatLearn/) and [PRML](https://www.springer.com/gb/book/9780387310732).
 
 By end of May 2019: will be updated to become more stand-alone and provide code where appropriate.
 

@@ -410,8 +410,8 @@ n_prior_samples, n_post_samples = 10, 10
 s = 0.2    # noise variance to create data with
 
 # 1. Compute prior over test domain
-Xtest = np.linspace(-5, 5, n_test).reshape(-1,1)
-K_ss = kernel(Xtest, Xtest)
+X_test = np.linspace(-5, 5, n_test).reshape(-1,1)
+K_ss = kernel(X_test, X_test)
 L_prior = np.linalg.cholesky(K_ss + 1e-6*np.eye(n_test))
 f_prior = np.dot(L_prior, np.random.normal(size=(n_test, n_prior_samples)))
 
@@ -423,25 +423,25 @@ L = np.linalg.cholesky(K + s*np.eye(n_train))  # K = LL^T
 
 # 3. Compute kernel function between train and test data
 alpha = np.linalg.solve(np.dot(L, L.T), y)
-K_s = kernel(X, Xtest)
+K_s = kernel(X, X_test)
 
 # 4. Get mean prediction and uncertainty for each test point
 mu = np.dot(K_s.T, alpha)
-Lk = np.linalg.solve(L, K_s)
-s_var = np.diag(K_ss) - np.sum(Lk**2, axis=0)
+L_k = np.linalg.solve(L, K_s)
+s_var = np.diag(K_ss) - np.sum(L_k**2, axis=0)
 stdev = np.sqrt(s_var)
 
 # 5. Optional: sample from the posterior at test points
-L_post = np.linalg.cholesky(K_ss + 1e-6*np.eye(n_test) - np.dot(Lk.T, Lk))
+L_post = np.linalg.cholesky(K_ss + 1e-6*np.eye(n_test) - np.dot(L_k.T, L_k))
 f_post = mu.reshape(-1,1) + np.dot(L_post, np.random.normal(size=(n_test, n_post_samples)))
 </code></pre>
 
 <hr class="with-margin">
 <h4 class="header" id="math">Helpful mathematical results</h4>
 <a name="mult_rvs"></a>
-##### Multivariate Gaussians - 2 key results
+##### Multivariate Gaussians - key results
 
-We do not give an exhaustive overview of the many properties of multivariate Gaussians but instead give two key properties which are of paramount importance for the use of Gaussian processes.
+We do not give an exhaustive overview of the many properties of multivariate Gaussians but instead give a few key properties which are of paramount importance for the use of Gaussian processes.
 
 <blockquote class="tip">
 <strong>Marginalization property: marginal of a joint Gaussian is Gaussian</strong>
@@ -477,10 +477,37 @@ $$X | Y \sim \mathcal{N}\left(\mu_{X}+\Sigma_{X Y} \Sigma_{YY}^{-1}\left(Y - \mu
 and so conditioning also gives us a Gaussian.
 <br>
 <br>
+For references on how to derive the first two results see CS229 notes
+<a class="reference external" href="http://cs229.stanford.edu/section/more_on_gaussians.pdf">here</a>.
+<br>
+<br>
+<strong>Product of two Gaussian densities is an (unnormalized) Gaussian</strong>
+<br>
+$$
+\mathcal{N}(\mathbf{x} | \mathbf{a}, A) \mathcal{N}(\mathbf{x} | \mathbf{b}, B)=Z^{-1} \mathcal{N}(\mathbf{x} | \mathbf{c}, C)
+$$
+
+where
+
+$$
+\mathbf{c}=C\left(A^{-1} \mathbf{a}+B^{-1} \mathbf{b}\right) \quad \text { and } \quad C=\left(A^{-1}+B^{-1}\right)^{-1}
+$$
+
+with the normalizing constant itself looking Gaussian:
+
+$$
+Z^{-1}=(2 \pi)^{-D / 2}|A+B|^{-1 / 2} \exp \left(-\frac{1}{2}(\mathbf{a}-\mathbf{b})^{\top}(A+B)^{-1}(\mathbf{a}-\mathbf{b})\right)
+$$
+
+See
+<a class="reference external" href="http://www.gaussianprocess.org/gpml/chapters/RW.pdf">Rasmussen</a> [A.7] for more details.
+<br>
+<br>
+Note that the product of two Gaussian random variables (not densities) is not necessarily Gaussian.
+
 </blockquote>
 
-Both of these results will play a key role in Gaussian processes and the use of them will be highlighted when they are encountered. For references on how to derive the above see CS229 notes [here](http://cs229.stanford.edu/section/more_on_gaussians.pdf).
-
+These results will play a key role in Gaussian processes and the use of them will be highlighted when they are encountered.
 <hr class="with-margin">
 <h4 class="header" id="appendix">Q and A</h4>
 <a name="col_rvs"></a>
@@ -507,7 +534,47 @@ Practically when fitting GPs it is desirable to standardize the data (function v
 <a name="kernel_hyper"></a>
 ##### How can we set the kernel hyperparameters?
 
-Pending.
+The kernel hyperparameters control the type of functions GPs can produce and yet we have not talked at all so far about how to set them! We amend that now and will mention one common way but many more exist (e.g. cross-validation). Recall that the kernel function dictates the prior beliefs we have about the type of functions we expect to fit the data well.
+
+###### Empirical Bayes
+
+The [empirical Bayes](https://en.wikipedia.org/wiki/Empirical_Bayes_method) approach is a popular method for choosing how to set the prior that involves estimating it from the data. In this way some Bayesians philosophically disagree with the use of empirical Bayes methods as the prior will no longer represent the view we have about functions before seeing the data.
+
+For GPs the problem is how best to choose the hyperparameters of the kernel function (or even the kernel type itself, but we leave this discussion).
+
+In order to perform empirical Bayes for GP regression we maximize the marginal likelihood, or equivalently marginal log-likelihood, of the data which is given by:
+
+$$
+p(\mathbf{y} | X)=\int p(\mathbf{y} | \mathbf{f}, X) \, p(\mathbf{f} | X) \, d \mathbf{f} \tag{11}
+$$
+
+The term marginal likelihood is used to refer to the marginalization over the function values $\mathbf{f}$. For a GP the prior is a Gaussian
+
+<div class="math">
+\begin{align*}
+p(\mathbf{f} | X) &= \mathcal{N}(0, K(X, X)) \\[5pt]  
+&= \log p(\mathbf{f} | X)=-\frac{1}{2} \mathbf{f}^{\top} K^{-1} \mathbf{f}-\frac{1}{2} \log |K|-\frac{n}{2} \log 2 \pi \tag{12}
+\end{align*}
+</div>
+
+and the likelihood is:
+
+<div class="math">
+\begin{align*}
+p(\mathbf{y} | \mathbf{f}, X) &= \mathcal{N}(\mathbf{f}, \sigma_y^2 I) \\[5pt]  
+\end{align*}
+</div>
+
+It is possible to perform the integration of $(11)$ by using the [fact](#mult_rvs) that the product of two Gaussian densities gives another (un-normalized) Gaussian. This allows us to obtain
+
+$$
+\log p(\mathbf{y} | X)=
+\underbrace{-\frac{1}{2} \mathbf{y}^{\top}\left(K+\sigma_{n}^{2} I\right)^{-1} \mathbf{y}}_\text{data fit term} -
+\underbrace{\frac{1}{2} \log \left|K+\sigma_{n}^{2} I\right|}_\text{complexity penalty} -
+\underbrace{\frac{n}{2} \log 2 \pi }_\text{normalization constant} \tag{13}
+$$
+
+an expression for the log marginal likelihood. Depending on the kernel function we chose we are now able to now compute its derivative with respect to each hyperparameter and then to estimate the hyperparameters using any standard gradient-based optimizer. However, since the objective is not convex, local minima can be a problem.
 
 <a name="know_uncertainty"></a>
 ##### Why is knowing the uncertainty important?
