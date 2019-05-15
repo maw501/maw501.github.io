@@ -52,6 +52,12 @@ We start with some preliminaries which cover some key prerequisite concepts such
 We then walk through the predictive equations for the noise-free case and move onto showing the code and plots for the noisy case which is a simple extension.
 
 Towards the end we detail some helpful mathematical results before a Q and A section which lists some common questions that arise whilst understanding Gaussian processes.
+<br>
+<br>
+<p align="center">
+    <img src="/assets/img/grok_gps.png" alt="Image" width="600" height="500" />
+</p>
+<em class="figure">Brief outline of post coverage</em>
 
 <hr class="with-margin">
 <h4 class="header" id="intro_gp">Gaussian process preliminaries</h4>
@@ -235,7 +241,7 @@ The above generalizes to many data points and in general $K$ has dimensions $n \
 
 ##### Predictive equations: condition then marginalize
 
-Using the properties of multivariate Gaussians mentioned [above](#mult_rvs) we are able to quickly write down the predictive equations for GPs. Note that in contrast to other Bayesian analysis we do not need to trouble ourselves with computing a posterior explicitly, nor do we need to explicitly perform any integration.
+Using the [properties](#mult_rvs) of multivariate Gaussians we are able to quickly write down the predictive equations for GPs. Note that in contrast to other Bayesian analysis we do not need to trouble ourselves with computing a posterior explicitly, nor do we need to explicitly perform any integration.
 
 Instead we condition on the observed training data, $\mathbf{f}$, to obtain the posterior predictive (conditional) distribution for $f_{+}$. Using the result for the [conditioning](#mult_rvs) of Gaussians we have, for a single test point:
 
