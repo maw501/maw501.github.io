@@ -28,9 +28,6 @@ In general, capital letters are matrices, bold font represents vectors and lower
 * $X_{+}$: test data matrix we wish to predict the target variable for, $n_{+} \times d$
 * $\mathbf{x}\_{i}$: $i$th observation of data with $d$ elements
 * $\mathbf{x}\_{+}$: single test point with $d$ elements
-* $\mathbf{y}$: target variable of length $n$
-* $\mathbf{y}\_{+}$: test values of target for new data, length $n_{+}$, generally unobserved
-* $y_i$: target value for $i$th observation
 * $\mathcal{D}$: some data containing both features and target variable, i.e. $\\{X, \mathbf{y}\\}$
 * $\mathbf{f}$: vector representing the Gaussian process mean for each data point, $\mathbf{f} = (f(\mathbf{x}\_{1}), ..., f(\mathbf{x}\_{n}))$
 * $\mathbf{f}\_{+}$: predictions for the target variable for new data, $X_{+}$
@@ -236,11 +233,11 @@ Similarly $K_{+}$ is a $3 \times 1$ vector which contains the evaluation of the 
 The above generalizes to many data points and in general $K$ has dimensions $n \times n$, $K_{+}$ has dimensions $n \times n_{+}$ and $K_{\\++}$ has dimensions $n_{+} \times n_{+}$.
 </blockquote>
 
-##### Condition then marginalize
+##### Predictive equations: condition then marginalize
 
 Using the properties of multivariate Gaussians mentioned [above](#mult_rvs) we are able to quickly write down the predictive equations for GPs. Note that in contrast to other Bayesian analysis we do not need to trouble ourselves with computing a posterior explicitly, nor do we need to explicitly perform any integration.
 
-Instead we condition on the observed training data, $f$, to obtain the posterior predictive (conditional) distribution for $f_{+}$. Using the result for the [conditioning](#mult_rvs) of Gaussians we have, for a single test point:
+Instead we condition on the observed training data, $\mathbf{f}$, to obtain the posterior predictive (conditional) distribution for $f_{+}$. Using the result for the [conditioning](#mult_rvs) of Gaussians we have, for a single test point:
 
 <div class="math">
 \begin{align*}
@@ -288,6 +285,63 @@ Similar to what we did when we sampled from the prior we can predict the GP for 
 
 ##### Comment
 Recall that we can represent a function as a big vector where we assume this unknown vector was drawn from a big correlated Gaussian distribution, this is a Gaussian process. As we observe elements of the vector this constraints the values the function can take and by conditioning we are able to create a posterior  distribution for functions. This posterior is also Gaussian, i.e. the posterior over functions is still a Gaussian process. The marginalisation property of Gaussian distributions allows us to only work with the finite set of function instantiations $\mathbf{f} = (f(\mathbf{x}\_{1}), ..., f(\mathbf{x}\_{n}))$ which  constitute the observed data and jointly follow a marginal Gaussian distribution.
+
+<hr class="with-margin">
+<h4 class="header" id="gp_reg_noisy">GP regression (noisy)</h4>
+
+Having walked through the noise-free case the extension to the noisy case is straightforward. We now assume that the observed data is a noisy version of the true underlying function and instead we now observe training data $\mathcal{D} = \\{X, \mathbf{y} \\}$ where
+
+$$\mathbf{y} = f(\mathbf{x_i}) + \epsilon \tag{6} $$
+
+and $\epsilon$ is additive independent identically distributed Gaussian noise such that $\epsilon \sim \mathcal{N}(0, \sigma_y^2)$.
+
+It is still the goal to predict $f_{+}$ for a single test point or $\mathbf{f_{+}}$ for many test points.
+
+Given this noise assumption the only difference in the joint distribution with the noise-free case is on the prior of the noisy observations.
+
+$$
+\left[ \begin{array}{c}{\mathbf{y}} \\ {\mathbf{f}_{+}}\end{array}\right] \sim \mathcal{N}\left(\mathbf{0}, \left[ \begin{array}{cc}{K(X, X)+\sigma_{y}^{2} I} & {K\left(X, X_{+}\right)} \\ {K\left(X_{+}, X\right)} & {K\left(X_{+}, X_{+}\right)}\end{array}\right]\right) \tag{7}
+$$
+
+where here we are assuming a 0 mean vector.
+
+<blockquote class="tip">
+<strong>Sidebar: covariance of noise term</strong>
+<br>
+Under the independent identically distributed Gaussian noise assumption assumption only a diagonal matrix is added to the noisy observed terms. We can see this by recalling a property of covariance:
+
+$$
+\operatorname{cov}(X+Y, W+V)=\operatorname{cov}(X, W)+\operatorname{cov}(X, V)+\operatorname{cov}(Y, W)+ \operatorname{cov}(Y, V)
+$$
+
+and here we have for a single point $i$:
+
+$$
+\operatorname{cov}(f(\mathbf{x_i}) + \epsilon, f(\mathbf{x_i}) + \epsilon) = \underbrace{\operatorname{cov}(f(\mathbf{x_i}), f(\mathbf{x_i}))}_\text{$K(X, X)$} +
+\underbrace{\operatorname{cov}(f(\mathbf{x_i}), \epsilon)}_\text{= 0} +  
+\underbrace{\operatorname{cov}(\epsilon, f(\mathbf{x_i}))}_\text{= 0} +
+\underbrace{\operatorname{cov}(\epsilon, \epsilon)}_\text{$\sigma_y^2$}
+$$
+
+Similar reasoning means the noise term will not contribute to the $K(X, X_{+}), K(X_{+}, X)$ or $K(X_{+}, X_{+})$ terms.
+</blockquote>
+
+##### Predictive equations: noisy case
+
+A similar conditioning argument leads to the predictive equations in the noisy case with 0 mean for a vector of predictions, $\mathbf{f_{+}}$:
+
+As in the noise free case we use the marginalization property of multivariate Gaussians to obtain a mean prediction and variance estimate for each test point in  $\mathbf{f_{+}}$.
+
+Next we move onto something more practical, actually fitting a GP for a noisy regression case!
+
+<div class="math">
+\begin{align*}
+
+p(\mathbf{f_{+}} | X_{+}, X, \mathbf{y}) &= \mathcal{N}\left(\mathbf{f_{+}} | \mu_{+}, \Sigma_{+}\right) \tag{8} \\[5pt]
+\mu_{\mathbf{f_{+}} | \mathbf{f}} &= K_{+}^{T} (K + \sigma_y^2 I)^{-1}\mathbf{y} \tag{9} \\[5pt]
+\Sigma_{\mathbf{f_{+}} | \mathbf{f}} &= K_{\\++} - K_{+}^{T} (K + \sigma_y^2 I)^{-1} K_{+} \tag{10}
+\end{align*}
+</div>
 
 <hr class="with-margin">
 <h4 class="header" id="small_example">Algorithm for GP regression</h4>
@@ -533,6 +587,11 @@ In order to get a firm grip on the basics of GPs I read many sources, most liste
 * Murphy K, [Machine Learning: A Probabilistic Perspective](https://www.amazon.co.uk/Machine-Learning-Probabilistic-Perspective-Computation/dp/0262018020)
   * Chapter 15 deals with GPs based on Rasmussen but with denser notation
 * Ebden M, [Gaussian Processes for Regression: A Quick Introduction](https://www.robots.ox.ac.uk/~mebden/reports/GPtutorial.pdf)
+* Chuong B. Do, [More on Multivariate Gaussians](http://cs229.stanford.edu/section/more_on_gaussians.pdf)
+  * Details on Gaussians including deriving conditioning and marginalization results
+* Chuong B. Do, [Gaussian processes](http://cs229.stanford.edu/section/cs229-gaussian_processes.pdf)
+* Snoek J, Larochelle H, Adams R P, [Practical Bayesian Optimization of MachineLearning Algorithms](http://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf)
+  * Further reading applying GPs to Bayesian optimization
 
 ###### Videos and/or presentation slides
 
@@ -545,7 +604,7 @@ In order to get a firm grip on the basics of GPs I read many sources, most liste
 * Murray I, [Introduction to Gaussian Processes](#https://www.cs.toronto.edu/~hinton/csc2515/notes/gp_slides_fall08.pdf)
   * High quality slides with a good overview and intuition
 * Williams D, [Gaussian Processes](http://people.ee.duke.edu/~lcarin/David1.27.06.pdf)
-  * Overview of GPs plus discussion on the classification case.
+  * Overview of GPs plus discussion on the classification case
 
 ###### Blogs and web articles
 
@@ -554,20 +613,4 @@ In order to get a firm grip on the basics of GPs I read many sources, most liste
 * Bailey K, [Gaussian Processes for Dummies](http://katbailey.github.io/post/gaussian-processes-for-dummies/)
   * Very accessible introduction based on Murphy's book
 
-<!--
-Details on joint Gaussians [here](http://cs229.stanford.edu/section/more_on_gaussians.pdf).
-
-http://etheses.whiterose.ac.uk/9968/1/Damianou_Thesis.pdf
-
-http://mlg.eng.cam.ac.uk/teaching/4f13/1819/gaussian%20process.pdf
-
-For more random internet links see [here](http://people.ee.duke.edu/~lcarin/David1.27.06.pdf), [here](https://www.linkedin.com/pulse/machine-learning-intuition-gaussian-processing-chen-yang) and [here](https://www.eurandom.tue.nl/events/workshops/2010/YESIV/Prog-Abstr_files/Ghahramani-lecture2.pdf).
-
-Preliminary reading [here](http://katbailey.github.io/post/gaussian-processes-for-dummies/), [here](http://platypusinnovation.blogspot.com/2016/05/a-simple-intro-to-gaussian-processes.html) and [here](http://keyonvafa.com/gp-tutorial/). There are also good lectures [here](https://www.youtube.com/watch?v=4vGiHC35j9s&list=PLE6Wd9FR--EdyJ5lbFl8UuGjecvVw66F6&t=0s&index=9) from none other than Nando de Freitas that cover Gaussian Processes a lot more thoroughly.
-
-Bay Opt
-
-http://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf
-
--->
 <hr class="with-margin">
