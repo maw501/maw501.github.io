@@ -1,0 +1,61 @@
+<!--
+---
+layout: post
+title: Resume/CV
+permalink: /resume/
+category: resume
+tags: [resume, CV]
+comments: false
+---
+
+<blockquote class="tip">
+Click
+<a class="reference external" href="{{ site.url }}/assets/CV/CV.pdf">here</a> for a PDF copy of my resume/CV.
+<br>
+<br>
+Last updated: March 2019
+<hr class="with-margin">
+Here is another type of CV in case you don't like mine.
+</blockquote>
+
+<p align="center">
+    <img src="/assets/img/kfold.jpg" alt="Image" width="600" height="400" />
+</p>
+<em class="figure">Plain k-fold cross-validation (many funkier CV schemes exist).</em>
+
+<hr class="with-margin">
+-->
+---
+layout: page
+permalink: /resume/
+category: resume
+---
+<div class="container">
+{% for post in site.categories.resume %}
+{% if post.foreign_url == null %}
+<div class="card post post-link" href="{{ post.url }}">
+{% else %}
+<div class="card post post-link" href="{{ post.foreign_url }}" foreign=true>
+{% endif %}
+    <div class="card-block">
+        <div class="row">
+            <div class="col-3">
+                <img class="img-fluid" width=250 src="../assets/img/{{ post.image }}">
+            </div>
+            <div class="col-9">
+                <h4 class="header">{{ post.title }}</h4>
+                <hr/>
+                <article class="text main">
+                    {{ post.excerpt }}
+                </article>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer text-muted">
+        <div class="timestamp">
+            Publication Date: {{ post.date | date_to_long_string }}
+        </div>
+    </div>
+</div>
+{% endfor %}
+</div>
