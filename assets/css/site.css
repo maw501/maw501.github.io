@@ -347,6 +347,16 @@ blockquote.algo li:not(:last-child) {
   padding-bottom: 0.5em;
 }
 
+blockquote.math {
+  background: #eef6e8;
+  padding-top: 0em;
+  padding-bottom: 0em;
+  padding-right: 2em;
+  border-color: black;
+}
+
+
+
 /* ------ */
 /* Images */
 /* ------ */
