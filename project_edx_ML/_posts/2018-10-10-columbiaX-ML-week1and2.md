@@ -5,12 +5,15 @@ date: 2018-10-10
 use_math: true
 image: "bivariategauss2.jpeg"
 comments: true
+tags: [ols, mle, ridge regression, map]
 ---
-We kick start the course by establishing a link between maximimum likelihood estimation (MLE) and ordinary least squares (OLS), before introducing Ridge Regression and showing its probabilistic interpretation. Along the way we discuss model complexity via the bias-variance tradeoff.
+We kick start the course by establishing a link between ordinary least squares (OLS) and maximimum likelihood estimation (MLE) for linear regression, before introducing ridge regression and showing its probabilistic interpretation. Along the way we discuss model complexity via the bias-variance tradeoff.
 
 <!--more-->
 <hr class="with-margin">
 For a course overview and guidance on these notes click [here](/../project_edx_ml/2019/05/16/columbiaX-ML-course-summary).
+
+All errors are my own and if you do spot any, however small, please don't hesitate to get in touch.
 
 <hr class="with-margin">
 <div class="list-of-contents">
@@ -53,7 +56,7 @@ The idea is that least squares has an insightful probabilistic interpretation th
 For linear regression we can state problem formulation as
 
 $$
-y_{i}=w_{0}+\sum_{j=1}^{d} x_{i j} w_{j}+\epsilon_{i}
+y_{i}=w_{0}+\sum_{j=1}^{d} x_{i j} w_{j}+\epsilon_{i}  \tag{0}
 $$
 
 where $\epsilon \sim \mathcal{N}(0, \sigma_i^2)$ is an additive independent identically distributed Gaussian noise.
@@ -126,7 +129,7 @@ There are a few equivalent ways of stating the assumption we make about the data
 * $y_i \stackrel{ind}{\sim} \mathcal{N}(\mathbf{x_i}^T \mathbf{w}, \sigma^2)$ for $i=1,...n$
 * $\mathbf{y} \sim \mathcal{N}(X \mathbf{w}, \sigma^2 I)$ and so $p(\mathbf{y} \| \mathbf{w}, X) = \mathcal{N}(X \mathbf{w}, \sigma^2 I)$
 
-Note this doesn't mean that our target $\mathbf{y}$ itself is normally distributed but that given a mean prediction of $X\mathbf{w}$ the residuals follow a Gaussian distribution assumed to have constant variance.
+Note this doesn't mean that the target $\mathbf{y}$ itself is normally distributed but that given a mean prediction of $X\mathbf{w}$ the residuals follow a Gaussian distribution assumed to have constant variance.
 
 Having now set up the maximum likelihood model we move on to derive the optimal weights, $\mathbf{w}_{ML}$, for linear regression under MLE with a Gaussian likelihood.
 
@@ -154,7 +157,7 @@ We can thus conclude that $\mathbf{w}\_{LS} = \mathbf{w}\_{ML}$ and see that lea
 <h4 class="header" id="rr_map">Connecting ridge regression and MAP</h4>
 
 <blockquote class="tip">
-<strong>Summary:</strong> Ridge regression maximizes the posterior, least squares maximizes the likelihood.
+<strong>Summary:</strong> ridge regression maximizes the posterior, least squares maximizes the likelihood.
 <br>
 <br>
 We will prove that $\mathbf{w}_{RR} = \mathbf{w}_{MAP}$.
@@ -180,7 +183,7 @@ $$
 leading to the solution for ridge regression:
 
 $$
-\mathbf{w}_{RR} = \left(\lambda I+X^{T} X\right)^{-1} X^{T} \mathbf{y}.
+\mathbf{w}_{RR} = \left(\lambda I+X^{T} X\right)^{-1} X^{T} \mathbf{y}. \tag{5}
 $$
 
 As with OLS we didn't explicitly make any probabilistic assumptions, we just defined a loss function with a regularization term and calculated the optimal set of weights for it.
@@ -243,7 +246,7 @@ $$
 which results in the MAP solution for ridge regression as:
 
 $$
-\mathbf{w}_{MAP} = \left(\lambda \sigma^{2} I+X^{T} X\right)^{-1} X^{T} \mathbf{y}.
+\mathbf{w}_{MAP} = \left(\lambda \sigma^{2} I+X^{T} X\right)^{-1} X^{T} \mathbf{y}. \tag{6}
 $$
 
 This solution is the same as $\mathbf{w}\_{RR}$ (after redefining the constant $\lambda$) and so we have shown that $\mathbf{w}\_{RR} = \mathbf{w}\_{MAP}$.
@@ -256,7 +259,7 @@ This solution is the same as $\mathbf{w}\_{RR}$ (after redefining the constant $
 
 It is possible to extend the above analysis in many ways, in particular it becomes easy to make the link to lasso regression. A similar analysis to the above shows that adding a regularization term that sums the absolute values of $\mathbf{w}$ is equivalent to placing a [Laplace distribution](https://en.wikipedia.org/wiki/Laplace_distribution) over the model's weights from a Bayesian perspective.
 
-The regularization term added in the ridge regression objective term is [sometimes called](https://en.wikipedia.org/wiki/Taxicab_geometry) a $L_2$ penalty and for lasso it's often called a $L_1$ penalty.
+The regularization term added in the ridge regression objective term is [sometimes called](https://en.wikipedia.org/wiki/Norm_(mathematics)#p-norm) a $l_2$ penalty and for lasso it's often called a $l_1$ penalty.
 
 <a name="analysis_ols_rr"></a>
 <hr class="with-margin">
@@ -326,7 +329,7 @@ To analyse which of these is preferable we note that ultimately the true thing w
 
 We can calculate the expected squared error of this prediction as:
 
-$$\mathbb{E}[(y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 | X,\mathbf{x}_0] = \int_{\mathbb{R}}^{} \int_{\mathbb{R^n}}^{} (y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 \, \underbrace{p(\mathbf{y} | X, \mathbf{w})}_\text{$ \mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right) $} \, \underbrace{p(y_0 | \mathbf{x}_0, \mathbf{w})}_\text{$ y_0 \sim \mathcal{N}\left(\mathbf{x}_0^T \mathbf{w}, \sigma^{2} \right)$} \, d\mathbf{y} \, dy_0 \tag{6}
+$$\mathbb{E}[(y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 | X,\mathbf{x}_0] = \int_{\mathbb{R}}^{} \int_{\mathbb{R^n}}^{} (y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 \, \underbrace{p(\mathbf{y} | X, \mathbf{w})}_\text{$ \mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right) $} \, \underbrace{p(y_0 | \mathbf{x}_0, \mathbf{w})}_\text{$ y_0 \sim \mathcal{N}\left(\mathbf{x}_0^T \mathbf{w}, \sigma^{2} \right)$} \, d\mathbf{y} \, dy_0 \tag{7}
 $$
 
 where $\mathbf{\hat{w}}$ is either $\mathbf{w}\_{LS}$ or $\mathbf{w}\_{RR}$.
@@ -352,7 +355,7 @@ which is just some function of the random variable $Y_0$. The probability distri
 $$
 p_{Y_0 | A}(y_0) = \overbrace{\int_{\mathbb{R^n}}^{} \underbrace{p(y_0 | \mathbf{y} , \mathbf{x}_0, \mathbf{w})}_\text{$ = \, p(y_0 | \mathbf{x}_0, \mathbf{w})$} \, p(\mathbf{y} | X, \mathbf{w}) \, d \mathbf{y}}^\text{$ = \, p(y_0 | \mathbf{x}_0, \mathbf{w})$}
 $$
-and so we could rewrite $(6)$ initially as:
+and so we could rewrite $(7)$ initially as:
 
 $$
 \mathbb{E}[(y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 | X, \mathbf{x}_0] = \int_{\mathbb{R}}^{} (y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 \, p(y_0 | \mathbf{x}_0, \mathbf{w}) \, dy_0
@@ -372,7 +375,7 @@ The above is essentially saying:
 
 </blockquote>
 
-The LHS of $(6)$ can be calculated as:
+The LHS of $(7)$ can be calculated as:
 
 <div class="math">
 \begin{align*}
@@ -395,7 +398,7 @@ We have thus decomposed the prediction error into 3 main components:
 
 1. Measurement noise – we can’t control this given the model
 2. Model bias – how close to the solution we expect to be on average
-3. Model variance – how sensitive our solution is to the data
+3. Model variance – how sensitive the solution is to the data
 
 The above analysis is more general (see [ESL](#esl) [7.3]) than the linear regression case though it's usually not possible to get nice equations for the tradeoff.
 
@@ -403,7 +406,7 @@ In the case of OLS and RR we have expressions for $\mathbb{E}[\mathbf{\hat{w}}]$
 
 When building machine learning predictive models understanding whether you have a bias or a variance problem is critical for deciding what action you should take.
 
-In [week 3](/../project_edx_ml/2018/10/13/columbiaX-ML-week3) we will see how the fully Bayesian treatment of linear regression helps combat overfitting and also has to practical ways to address model complexity.
+In [week 3](/../project_edx_ml/2018/10/13/columbiaX-ML-week3) we will see how the fully Bayesian treatment of linear regression helps combat overfitting and also offers practical ways to address model complexity. We will also compare lasso and ridge regression and analyse what to do when $d \gg n$.
 
 <a name="math_details_sec"></a>
 <hr class="with-margin">
@@ -432,7 +435,7 @@ $$
 \frac{\partial \operatorname{trace} \left(A X^{-1} B \right) } {\partial X} = -\left(X^{-1} B A X^{-1}\right)^{T} \tag{MC 63}
 $$
 
-and in our use case we can assume $A = I = B$ to obtain
+and in the use case we have we can assume $A = I = B$ to obtain
 
 
 $$
@@ -595,7 +598,7 @@ $$
 where the goal is the find the optimal values of the parameters $\theta$ that maximize the joint likelihood. That is:
 
 $$
-\hat{\theta}_{\mathrm{ML}} :=\arg\max_{\theta} p\left(\mathbf{x_1}, \ldots, \mathbf{x_n}| \theta\right).
+\hat{\theta}_{ML} :=\arg\max_{\theta} p\left(\mathbf{x_1}, \ldots, \mathbf{x_n}| \theta\right).
 $$
 
 The joint likelihood is the product of many terms all less than one (they are probabilities) and this can be complicated to compute. We thus take logs to turn multiplication into addition and note this is still maximizing the same set of parameters. This is now the joint log-likelihood and we solve for $\theta$ which amounts to solving:
@@ -617,7 +620,7 @@ $$
 &= \nabla_{\boldsymbol{\mu}} \sum_{i=1}^{n}-\frac{1}{2} \ln (2 \pi)^{d}|\Sigma|-\frac{1}{2}\left(\mathbf{x_i}-\boldsymbol{\mu}\right)^{T} \Sigma^{-1}\left(\mathbf{x_i}-\boldsymbol{\mu}\right) &\text{(by log rules)} \\[5pt]
 &= -\frac{1}{2} \sum_{i=1}^{n} \nabla_{\boldsymbol{\mu}}\left(\mathbf{x_i}^{T} \Sigma^{-1} \mathbf{x_i}-2 \boldsymbol{\mu}^{T} \Sigma^{-1}\mathbf{x_i}+\boldsymbol{\mu}^{T} \Sigma^{-1} \boldsymbol{\mu}\right) &\text{(expanding brackets)} \\[5pt]
 &= -\Sigma^{-1} \sum_{i=1}^{n}\left(\mathbf{x_i}-\boldsymbol{\mu}\right)  &\text{(diff. w.r.t $\boldsymbol{\mu}$)} \\[5pt]
-\Rightarrow \hat{\boldsymbol{\mu}}_{\mathrm{ML}} &= \frac{1}{n} \sum_{i=1}^{n} \mathbf{x_i} \hspace{1cm} &\text{($\Sigma$ is PD)}
+\Rightarrow \hat{\boldsymbol{\mu}}_{ML} &= \frac{1}{n} \sum_{i=1}^{n} \mathbf{x_i} \hspace{1cm} &\text{($\Sigma$ is PD)}
 
 \end{alignat*}
 </div>
@@ -634,7 +637,7 @@ $$
 0 &= \nabla_{\Sigma} \sum_{i=1}^{n}-\frac{1}{2} \ln (2 \pi)^{d}|\Sigma|-\frac{1}{2}\left(\mathbf{x_i}-\boldsymbol{\mu}\right)^{T} \Sigma^{-1}\left(\mathbf{x_i}-\boldsymbol{\mu}\right) \hspace{1cm} &\text{(by log rules)} \\[5pt]
 &= -\frac{n}{2} \nabla_{\Sigma} \ln |\Sigma|-\frac{1}{2} \nabla_{\Sigma} \operatorname{trace}\left(\Sigma^{-1} \sum_{i=1}^{n}\left(\mathbf{x_i}-\boldsymbol{\mu}\right)\left(\mathbf{x_i}-\boldsymbol{\mu}\right)^{T}\right) \hspace{1cm} &\text{(by trace trick)} \\[5pt]
 &= -\frac{n}{2} \Sigma^{-1}+\frac{1}{2} \Sigma^{-2} \sum_{i=1}^{n}\left(\mathbf{x_i}-\boldsymbol{\mu}\right)\left(\mathbf{x_i}-\boldsymbol{\mu}\right)^{T} &\text{(diff. w.r.t $\Sigma$)} \\[5pt]
-\Rightarrow \hat{\Sigma}_{\mathrm{ML}}&=\frac{1}{n} \sum_{i=1}^{n}\left(\mathbf{x_i}-\hat{\boldsymbol{\mu}}_{\mathrm{ML}}\right)\left(\mathbf{x_i}-\hat{\boldsymbol{\mu}}_{\mathrm{ML}}\right)^{T} \hspace{1cm} &\text{($\Sigma$ is PD)}
+\Rightarrow \hat{\Sigma}_{ML}&=\frac{1}{n} \sum_{i=1}^{n}\left(\mathbf{x_i}-\hat{\boldsymbol{\mu}}_{ML}\right)\left(\mathbf{x_i}-\hat{\boldsymbol{\mu}}_{ML}\right)^{T} \hspace{1cm} &\text{($\Sigma$ is PD)}
 
 \end{alignat*}
 </div>

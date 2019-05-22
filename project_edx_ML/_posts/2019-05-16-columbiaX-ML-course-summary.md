@@ -22,7 +22,7 @@ Please read for an overview of course notes written based on the [edX ColumbiaX 
 <blockquote class="math">
 <strong>Update</strong>
 <br>
-The course notes are in the process of being updated to make stand-alone.
+The course notes are in the process of being updated to make stand-alone. As such all old posts have been taken down and will be republished once they are updated.
 <br>
 <br>
 Target completion date: mid-June 2019

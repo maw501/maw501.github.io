@@ -15,7 +15,7 @@ body {
     position: relative;
     min-height: 100%;
     padding-bottom: 6rem;
-    background: whitesmoke;
+    background: white; /* whitesmoke */
     line-height: 175%;
     font-size:15px;
     width: 750px;
@@ -160,7 +160,7 @@ p
 
 .nav a {
     display: block;
-    color: whitesmoke;
+    color: white;
 }
 
 .nav a:hover,
@@ -194,7 +194,7 @@ p
     text-align: center;
     padding: 1rem;
     background-color: #3c3c3c;
-    color: whitesmoke;
+    color: white;
 }
 
 /* --------------- */
@@ -332,7 +332,7 @@ blockquote.warning {
 
 blockquote.tip {
     background: ghostwhite;
-    border-color: dodgerblue;
+    border-color: #0505aa;  /* dodgerblue */
 }
 
 blockquote.algo {
