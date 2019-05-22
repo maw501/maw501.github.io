@@ -3,7 +3,7 @@ layout: post
 title: Grokking Gaussian processes
 date: 2019-05-08
 use_math: true
-tags: ['gaussian_processes', 'probabilistic_modelling', 'kernels']
+tags: ['gaussian processes', 'probabilistic modelling', 'kernels', 'bayesian']
 image: "gp_main.png"
 comments: true
 ---
@@ -19,30 +19,17 @@ In this article we give a thorough introduction to GP regression collating many 
 </div>
 
 <hr class="with-margin">
-<h4 class="header" id="notation">Notation summary</h4>
-This post combines many [sources](#references) and so we will try the best we can to be consistent in notation.
+<h4 class="header" id="introduction">Introduction</h4>
 
-In general, capital letters are matrices, bold font represents vectors and lower-case letters are scalars. We will also try to introduce new references to notation appropriately to ease reading.
+<blockquote class="tip">
+<strong>TLDR:</strong> loosely speaking GPs give a way to express a view on functions. In particular they allow us to specify how smooth we expect a function to be rather than how many parameters we expect it to have. The key idea they rely on is that data points that are close in input space are expected to be similar in output space, i.e. if $\mathbf{x}_{i}$ and $\mathbf{x}_{j}$ are similar then $f(\mathbf{x}_{i})$ and $f(\mathbf{x}_{j})$ will be close in value too.
+</blockquote>
 
-* $X$: $n \times d$ data matrix with each row an observation
-* $X_{+}$: test data matrix we wish to predict the target variable for, $n_{+} \times d$
-* $\mathbf{x}\_{i}$: $i$th observation of data with $d$ elements
-* $\mathbf{x}\_{+}$: single test point with $d$ elements
-* $\mathcal{D}$: some data containing both features and target variable, i.e. $\\{X, \mathbf{y}\\}$
-* $\mathbf{f}$: vector representing the Gaussian process mean for each data point, $\mathbf{f} = (f(\mathbf{x}\_{1}), ..., f(\mathbf{x}\_{n}))$
-* $\mathbf{f}\_{+}$: predictions for the target variable for new data, $X_{+}$
-* $f_i$: shorthand for $f(\mathbf{x}_i)$, the function evaluated for the $i$th observation
-* $f_{+}$: shorthand for the prediction for a single test point, $\mathbf{x}\_{+}$
-* $\kappa(\mathbf{x}\_{1}, \mathbf{x}\_{2})$: kernel function evaluated at two points - returns a scalar
-* $\kappa(A, B)$: kernel function evaluated for two matrices $A$ and $B$ - returns a matrix with dimensions $m \times p$ for $A$ with dimensions $m \times d$ and $B$ with dimensions $p \times d$
-* $K$: $\kappa(X, X)$, a $n \times n$ matrix, where the $i , j$ th entry is $\kappa(\mathbf{x}\_{i}, \mathbf{x}\_{j})$
-* $K_{+}$: $\kappa(X, X_{+})$, a $n \times n_{+}$ matrix
-* $K_{\++}$: $\kappa(X_{+}, X_{+})$, a $n_{+} \times n_{+}$ matrix
-* $\mu(\mathbf{x}\_{i})$ or $\mu(X)$: $\mu$ is some function that models the mean of an observation, often set to be $\mu(\mathbf{x}\_{i}) = 0$ for $i = 1, ..., n$, discussed [here](#mean_modelling)
-* $\boldsymbol{\mu}$ or $\mu(X)$: is $(\mu(\mathbf{x}\_{1}), \mu(\mathbf{x}\_{2}), ..., \mu(\mathbf{x}\_{n}))$ a vector of length $n$
-* $\mu_{+}$: mean for a single test point
-* $\mu_{f_{+} \| \mathbf{f}}$: mean vector for predicted data after conditioning on observed data
-* $\Sigma_{f_{+} \| \mathbf{f}}$: covariance matrix for predicted data after conditioning on observed data
+Gaussian processes are Bayesian alternatives to kernel methods and allow us to infer a _distribution over functions_, which sounds a little crazy but is actually both an intuitive thing to desire as well as being analytically tractable in certain cases.
+
+Typically in machine learning we have some features $X$ with labels $\mathbf{y}$ and we assume that $\mathbf{y} = f(X)$ for some function $f$. When making this assumption we are typically fixing the parameterisation capacity of the model we wish to use, for example, in linear regression we are assuming there are slope and intercept terms and so the total amount of parameters is fixed given the data.
+
+What if, instead, we wished to think about all possible functional forms for $f$ without pre-specifying how many parameters are involved? It turns out this is what Gaussian Processes allow us to do. In return we must find a way to specify a prior over the type of functions we wish to see.
 
 <hr class="with-margin">
 <h4 class="header" id="outline">Outline</h4>
@@ -51,7 +38,7 @@ We start with a few preliminaries which cover some key prerequisite concepts suc
 
 We then walk through the predictive equations for GP regression for the noise-free and noisy case. Next we move onto showing the code and plots for the noisy case which is a simple extension.
 
-Towards the end we detail some helpful mathematical results before a Q and A section which lists some common questions that arose for me whilst developing my understanding of Gaussian processes.
+Towards the end we detail some helpful mathematical results before a small Q and A section in the appendix which lists some common questions that arose for me whilst developing my understanding of Gaussian processes.
 <br>
 <br>
 <p align="center">
@@ -62,19 +49,7 @@ Towards the end we detail some helpful mathematical results before a Q and A sec
 <hr class="with-margin">
 <h4 class="header" id="intro_gp">Gaussian process preliminaries</h4>
 
-<blockquote class="tip">
-<strong>TLDR:</strong> GPs give a way to express a view on functions. In particular they allow us to specify how smooth we expect a function to be rather than how many parameters we expect it to have. The key idea they rely on is that data points that are close in input space are expected to be similar in output space, i.e. if $\mathbf{x}_{i}$ and $\mathbf{x}_{j}$ are similar then $f(\mathbf{x}_{i})$ and $f(\mathbf{x}_{j})$ will be close in value too.
-</blockquote>
-
-##### Introduction
-
-Gaussian processes are Bayesian alternatives to kernel methods and allow us to infer a _distribution over functions_, which sounds a little crazy but is actually both an intuitive thing to desire as well as being analytically tractable in certain cases.
-
-Typically in machine learning we have some features $X$ with labels $\mathbf{y}$ and we assume that $\mathbf{y} = f(X)$ for some function $f$. When making this assumption we are typically fixing the parameterisation capacity of the model we wish to use, for example, in linear regression we are assuming there are slope and intercept terms and so the total amount of parameters is fixed given the data.
-
-What if, instead, we wished to think about all possible functional forms for $f$ without pre-specifying how many parameters are involved? It turns this is what Gaussian Processes allow us to do. In return we must find a way to specify a prior over the type of functions we wish to see.
-
-Before defining Gaussian processes it is worth briefly explaining a few concepts which we do here. However a key prerequisite for understanding GPs is familiarity with some of the key properties of multivariate Gaussians and introductory concepts from probability theory such as conditioning and marginalization of variables. Whilst these [key](#mult_rvs) results are given in the mathematical results section we do not explain them further and from now on they will be taken for granted.
+Before defining Gaussian processes it is worth briefly explaining a few concepts which we do here. However a key prerequisite for understanding GPs is familiarity with some of the key properties of multivariate Gaussians and introductory concepts from probability theory such as conditioning and marginalization of variables. These [key](#mult_rvs) results are given in the mathematical results section.
 
 ##### Kernel functions
 
@@ -104,7 +79,7 @@ Kernel functions are also sometimes referred to as covariance functions.
 ##### Functions as vectors
 Loosely speaking a function can be viewed as an infinitely long vector. We could imagine discretizing the input space with a huge grid of values containing every possible combination of floating point numbers for each dimension of our data matrix $X$. Theoretically (but not practically) we could then evaluate $\mathbf{f} = (f(\mathbf{x}\_{1}), ..., f(\mathbf{x}\_{n}))$ for this huge $n$ and thus $\mathbf{f}$ would be an enormous vector containing the function's values for the domain of interest.
 
-Alas, we can’t store such a vector containing the function values for every possible input combination (recall each $\mathbf{x_i}$ is $d$ dimensional), though it is possible to define a multivariate Gaussian prior on it. Given (potentially) noisy observations of some of the elements of this vector, it will turn out that we can infer other elements of the vector without explicitly having to represent the whole object.
+Alas, we can’t store such a vector containing the function values for every possible input combination (recall each $\mathbf{x_i}$ is $d$ dimensional), though GPS allow us to define a multivariate Gaussian prior on it. Given (potentially) noisy observations of some of the elements of this vector, it will turn out that we can infer other elements of the vector without explicitly having to represent the whole object.
 
 The miraculous thing about GPs is that they provide a rigorous, elegant and tractable way to deal with the above problem.
 
@@ -127,9 +102,11 @@ $$
 p(\mathbf{y} | \Sigma) \propto \exp \left(-\frac{1}{2} \mathbf{y}^{\top} \Sigma^{-1} \mathbf{y}\right)
 $$
 
-Using this idea it is then possible to visualize what the 2-dimensional Gaussian looks like and draw samples from it. Notice that the covariance between function values is fully specified by the corresponding input values, and not in any way by the actual values of the function; this is a property of Gaussian processes.
+Using this idea it is then possible to visualize what the 2-dimensional Gaussian looks like and draw samples from it. Notice that the covariance between the function values is fully specified by the corresponding input values, and not in any way by the function values; this is a property of Gaussian processes.
 
-The left hand plots in the below image show contour/density plots for a 2-dimensional Gaussian with a given correlation coefficient (in reality this will be calculated by the kernel function) and zero mean vector. The red points shown in the left hand plots are samples from this 2-dimensional Gaussian.
+The left hand plots in the below image show contour/density plots for a 2-dimensional Gaussian with a given correlation coefficient (in reality this will be calculated by the kernel function) and zero mean vector.
+
+The red dots shown in the left hand plots are samples from this 2-dimensional Gaussian.
 
 <p align="center">
     <img src="/assets/img/gp_contours.png" alt="Image" width="650" height="500" />
@@ -144,7 +121,6 @@ Following this method we could calculate the covariance matrix between 5 observa
     <img src="/assets/img/gp_many_dims_single.png" alt="Image" width="500" height="350" />
 </p>
 <em class="figure">A single sample from a multi-dimensional Gaussian</em>
-
 
 <a name="prelim_plot"></a>
 ###### Hold on, what's the x-axis for the above plot?
@@ -167,13 +143,13 @@ Before we start with the equations for GPs we draw a link to traditional modelli
 <div class="math">
 \begin{align*}
 
-\underbrace{p\left(\mathbf{f_{+}} | X_{+}, X, \mathbf{y}\right)}_\text{posterior predictive} &= \int \underbrace{p\left(\mathbf{f_{+}} | \mathbf{f}, X_{+}\right)}_\text{likelihood} \, \underbrace{p(\mathbf{f} | X, \mathbf{y})}_\text{posterior} \, df \tag{1} \\[5pt]
-&= \int p\left(\mathbf{f_{+}} , \mathbf{f}| X, X_{+}, \mathbf{y}\right) \, df
+\underbrace{p\left(\mathbf{y_{+}} | X_{+}, X, \mathbf{y}\right)}_\text{posterior predictive} &= \int \underbrace{p\left(\mathbf{y_{+}} | f, X_{+}\right)}_\text{likelihood} \, \underbrace{p(f | X, \mathbf{y})}_\text{posterior} \, df \tag{1} \\[5pt]
+&= \int p\left(\mathbf{y_{+}} , f| X, X_{+}, \mathbf{y}\right) \, df
 
 \end{align*}
 </div>
 
-and so for each new test point in $X_{+}$ we obtain a probability distribution for the corresponding prediction in $\mathbf{f_{+}} $. It turns out for the regression case that the above can be done in closed form using known statistical and linear algebra results.
+and so for each new test point in $X_{+}$ we obtain a probability distribution for the corresponding prediction in $\mathbf{y_{+}} $. It turns out for the regression case that the above can be done in closed form using known statistical and linear algebra results.
 
 Whilst the above formulation is useful in linking Gaussian processes into the wider Bayesian framework (by showing a likelihood and a prior) it's not typically the most intuitive place to start when explaining GPs. For that, it's much more natural to start by actually defining a Gaussian process and then to rely upon some key properties of the multivariate Gaussian distribution. These are given [below](#mult_rvs) and assumed from now on though we will make reference to them as they're used.
 
@@ -190,7 +166,7 @@ A Gaussian process is a <a class="reference external" href="{{page.url}}#col_rvs
 <strong>Note:</strong> a Gaussian process is completely specified by its mean function and covariance function.
 </blockquote>
 
-Thinking of a GP as a Gaussian distribution with an infinitely long mean vector and an infinite by infinite covariance matrix may seem impractical but luckily we are saved by the [marginalization property](#mult_rvs) of Gaussians. That is, the whole thing is tractable as long as we only ever ask finite dimensional questions about functions - these finite points are where we have data or wish to predict. The rest of the unseen data is simple integrated out (note we don't actually need to perform this integration!).
+Thinking of a GP as a Gaussian distribution with an infinitely long mean vector and an infinite by infinite covariance matrix may seem impractical but luckily we are saved by the [marginalization property](#mult_rvs) of Gaussians. That is, the whole thing is tractable as long as we only ever ask finite dimensional questions about functions - these finite points are where we have data or wish to predict. The rest of the unseen data is simply integrated out (note we don't actually need to perform this integration!).
 
 It is also worth reiterating that in the case of Gaussian processes each data point is a random variable and thus the multivariate Gaussian has the same number of dimensions as the number of data-points: for the training data it is a $n$-dimensional Gaussian. Once we add test data for which to predict the multivariate Gaussian will have $n + n_{+}$ dimensions.
 
@@ -202,7 +178,7 @@ We now move onto the predictive equations for the noise-free regression case.
 We will walk through an example with a small amount of data but the below approach holds for data of any size in theory.
 
 ##### Problem set-up
-We start by assuming we are given 3 training data-points $\mathcal{D} = \\{ (\mathbf{x_1}, f_1), (\mathbf{x_2}, f_2), (\mathbf{x_3}, f_3)\\}$ and a new test point $\mathbf{x_{+}}$ for which we wish to predict $f_{+}$. We assume that the training data has no noise and contains samples from the true unknown function, that is, $f_i = y_i$ for all $i$.
+We start by assuming we are given 3 training data-points $\mathcal{D} = \\{ (\mathbf{x_1}, f_1), (\mathbf{x_2}, f_2), (\mathbf{x_3}, f_3)\\}$ and a new test point $\mathbf{x_{+}}$ for which we wish to predict $f_{+}$. We assume that the training data has no noise and contains samples from the true unknown function, that is, $\mathbf{f} = \mathbf{y}$ or $f_i = y_i$ for all $i$.
 
 By the definition of a GP it is assumed that any set of random variables, which are the output function values for the data-points, are distributed as a multivariate Gaussian. Given this assumption we can write the joint distribution between our observed training data and the predicted output as:
 
@@ -246,7 +222,7 @@ The above generalizes to many data points and in general $K$ has dimensions $n \
 
 ##### Prediction: condition then marginalize
 
-Using the [properties](#mult_rvs) of multivariate Gaussians we are able to quickly write down the predictive equations for GPs. Note that in contrast to other Bayesian analysis we do not need to trouble ourselves with computing a posterior explicitly, nor do we need to perform any integration.
+Using the [properties](#mult_rvs) of multivariate Gaussians we are able to write down the predictive equations for GPs. Note that in contrast to other Bayesian analysis we do not need to trouble ourselves with computing a posterior explicitly, nor do we need to perform any integration.
 
 Instead we condition on the observed training data, $\mathbf{f}$, to obtain the posterior predictive (conditional) distribution for $f_{+}$. Using the result for the [conditioning](#mult_rvs) of Gaussians we have, for a single test point:
 
@@ -354,7 +330,7 @@ As in the noise free case we use the marginalization property of multivariate Ga
 \begin{align*}
 
 p(\mathbf{f_{+}} | X_{+}, X, \mathbf{y}) &= \mathcal{N}\left(\mathbf{f_{+}} | \mathbf{\mu_{+}}, \Sigma_{+}\right) \tag{8} \\[5pt]
-\mathbf{\mu}_{\mathbf{f_{+}} | \mathbf{f}} &= K_{+}^{T} (K + \sigma_y^2 I)^{-1}\mathbf{y} \tag{9} \\[5pt]
+\boldsymbol{\mu}_{\mathbf{f}_{+} | \mathbf{f}} &= K_{+}^{T} (K + \sigma_y^2 I)^{-1}\mathbf{y} \tag{9} \\[5pt]
 \Sigma_{\mathbf{f_{+}} | \mathbf{f}} &= K_{\\++} - K_{+}^{T} (K + \sigma_y^2 I)^{-1} K_{+} \tag{10}
 \end{align*}
 </div>
@@ -363,7 +339,7 @@ Next we move onto something more practical, actually fitting a GP for a noisy re
 
 <hr class="with-margin">
 <h4 class="header" id="small_example">Algorithm for GP regression</h4>
-We now walk through an example with Python code detailing how to actually fit a Gaussian process for regression with noise. We start by defining the general algorithmic steps before supplying code and charts.
+We now walk through an example with Python code detailing how to actually fit a Gaussian process for regression with noise. We start by defining the algorithm before supplying code and charts.
 
 <blockquote class="algo">
 <hr class="small-margin">
@@ -381,9 +357,10 @@ We now walk through an example with Python code detailing how to actually fit a 
 <br>
 </blockquote>
 
-Note the solution for $A\mathbf{x} = B$ is often denoted as $A \backslash B$.
+Note the solution to $A\mathbf{x} = \mathbf{b}$ is often denoted as $A \backslash \mathbf{b}$.
 
-For why we use the Cholesky decomposition see the Q and A section [below](#cholesky)
+The Cholesky decomposition provides a more numerically stable alternate to directly inverting $K$. For more on the use of the Cholesky decomposition see the Q and A section [below](#cholesky).
+
 <hr class="with-margin">
 
 ##### Problem set-up
@@ -464,7 +441,7 @@ be jointly distributed Gaussian random variables:
 
 $$
 p(X, Y) = \mathcal{N} \Bigg(
-\left[ \begin{array}{c}{\mu_X} \\ {\mu_Y}\end{array}\right] \, , \,
+\left[ \begin{array}{c}{\boldsymbol{\mu}_X} \\ {\boldsymbol{\mu}_Y}\end{array}\right] \, , \,
 
 \left[ \begin{array}{cc}{\Sigma_{XX}} & {\Sigma_{XY}} \\ {\Sigma_{YX}} & {\Sigma_{YY}} \end{array}\right]
 \Bigg)
@@ -476,7 +453,7 @@ then the marginal distribution is Gaussian
 \begin{align*}
 
 p(X) &= \int p(X, Y) \, dY \\[5pt]
-&= \mathcal{N}(\mu_X , \Sigma_{XX})
+&= \mathcal{N}(\boldsymbol{\mu}_X , \Sigma_{XX})
 \end{align*}
 </div>
 
@@ -484,7 +461,7 @@ p(X) &= \int p(X, Y) \, dY \\[5pt]
 <br>
 It is also the case that:
 
-$$X | Y \sim \mathcal{N}\left(\mu_{X}+\Sigma_{X Y} \Sigma_{YY}^{-1}\left(Y - \mu_{Y}\right), \Sigma_{X X}-\Sigma_{X Y} \Sigma_{YY}^{-1} \Sigma_{Y X}\right) $$
+$$X | Y \sim \mathcal{N}\left(\boldsymbol{\mu}_{X}+\Sigma_{X Y} \Sigma_{YY}^{-1}\left(Y - \boldsymbol{\mu}_{Y}\right), \Sigma_{X X}-\Sigma_{X Y} \Sigma_{YY}^{-1} \Sigma_{Y X}\right) $$
 
 and so conditioning also gives us a Gaussian.
 <br>
@@ -519,9 +496,80 @@ Note that the product of two Gaussian random variables (not densities) is not ne
 
 </blockquote>
 
+<a name="notation"></a>
+<hr class="with-margin">
+<h4 class="header" id="notation">Notation summary</h4>
+This post combines many [sources](#references) and so we will try the best we can to be consistent in notation.
+
+In general, capital letters are matrices, bold font represents vectors and lower-case letters are scalars. Functions such as $f$, $\mu$ and $\kappa$ are lower-case in non-bold font without. Function letters with subscripts are generally shorthand to indicate the function evaluated for some data, for example, $f_i$ is shorthand for $f(\mathbf{x}_i)$.
+
+We will also try to introduce new references to notation appropriately to ease reading.
+
+* $X$: $n \times d$ data matrix with each row an observation
+* $X_{+}$: test data matrix we wish to predict the target variable for, $n_{+} \times d$
+* $\mathbf{x}\_{i}$: $i$th observation of data with $d$ elements
+* $\mathbf{x}\_{+}$: single test point with $d$ elements
+* $\mathcal{D}$: some data containing both features and target variable, i.e. $\\{X, \mathbf{y}\\}$
+* $f$: a function modelling the target variable
+* $\mathbf{f}$: vector representing the Gaussian process mean prediction for each data point in $X$, $\mathbf{f} = (f(\mathbf{x}\_{1}), ..., f(\mathbf{x}\_{n}))$
+* $\mathbf{f}\_{+}$: predictions for the target variable, $f(X_{+})$
+* $f_i$: shorthand for $f(\mathbf{x}_i)$, the function evaluated for the $i$th observation
+* $f_{+}$: shorthand for the prediction for a single test point, $f(\mathbf{x}\_{+})$
+* $\kappa(\mathbf{x}\_{1}, \mathbf{x}\_{2})$: kernel function evaluated at two points - returns a scalar
+* $\kappa(A, B)$: kernel function evaluated for two matrices $A$ and $B$ - returns a matrix with dimensions $m \times p$ for $A$ with dimensions $m \times d$ and $B$ with dimensions $p \times d$
+* $K$: $\kappa(X, X)$, a $n \times n$ matrix, where the $i , j$ th entry is $\kappa(\mathbf{x}\_{i}, \mathbf{x}\_{j})$
+* $K_{+}$: $\kappa(X, X_{+})$, a $n \times n_{+}$ matrix
+* $K_{\++}$: $\kappa(X_{+}, X_{+})$, a $n_{+} \times n_{+}$ matrix
+* $\boldsymbol{\mu}$, $\mu(X)$, $(\mu(\mathbf{x}\_{1}), \mu(\mathbf{x}\_{2}), ..., \mu(\mathbf{x}\_{n}))$: a vector of length $n$ with the mean for each observation as modelled by some function $\mu$
+* $\mu_{+}$: mean function evaluated for a single test point, $\mathbf{x}\_{+}$
+* $\boldsymbol{\mu}\_{\mathbf{f}_{+} \| \mathbf{f}}$: mean vector for predicted data after conditioning on observed data
+* $\Sigma_{\mathbf{f}\_{+} \| \mathbf{f}}$: covariance matrix for predicted data after conditioning on observed data
+
+<a name="references"></a>
+<hr class="with-margin">
+<h4 class="header" id="further">References</h4>
+
+In order to get a firm grip on the basics of GPs I read many sources, most listed below.
+
+###### Books and papers
+
+* Rasmussen and Williams, [Gaussian Processes for Machine Learning](http://www.gaussianprocess.org/gpml/chapters/RW.pdf)
+  * This is the canonical text for Gaussian processes
+* Murphy K, [Machine Learning: A Probabilistic Perspective](https://www.amazon.co.uk/Machine-Learning-Probabilistic-Perspective-Computation/dp/0262018020)
+  * Chapter 15 deals with GPs based on Rasmussen but with denser notation
+* Ebden M, [Gaussian Processes for Regression: A Quick Introduction](https://www.robots.ox.ac.uk/~mebden/reports/GPtutorial.pdf)
+* Chuong B. Do, [More on Multivariate Gaussians](http://cs229.stanford.edu/section/more_on_gaussians.pdf)
+  * Details on Gaussians including deriving conditioning and marginalization results
+* Chuong B. Do, [Gaussian processes](http://cs229.stanford.edu/section/cs229-gaussian_processes.pdf)
+* Snoek J, Larochelle H, Adams R P, [Practical Bayesian Optimization of MachineLearning Algorithms](http://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf)
+  * Further reading applying GPs to Bayesian optimization
+
+###### Videos and/or presentation slides
+
+* Turner R, [ML Tutorial: Gaussian Processes](https://www.youtube.com/watch?v=92-98SYOdlY)
+  * First hour explains the view of multivariate Gaussians particularly well
+* de Freitas N, [Machine learning - Introduction to Gaussian processes](https://www.youtube.com/watch?v=4vGiHC35j9s)
+  * Probably the best detailed start with derivation from definition of Gaussians
+* de Freitas N, [Machine learning - Gaussian processes](https://www.youtube.com/watch?v=MfHKW5z-OOA)
+  * Follow on lecture including discussing links to Ridge regression
+* Murray I, [Introduction to Gaussian Processes](#https://www.cs.toronto.edu/~hinton/csc2515/notes/gp_slides_fall08.pdf)
+  * High quality slides with a good overview and intuition
+* Williams D, [Gaussian Processes](http://people.ee.duke.edu/~lcarin/David1.27.06.pdf)
+  * Overview of GPs plus discussion on the classification case
+
+###### Blogs and web articles
+
+* Görtler J, [A Visual Exploration of Gaussian Processes](https://www.jgoertler.com/visual-exploration-gaussian-processes/)
+  * A quite stunning explanation of GPs at a very accessible level
+* Bailey K, [Gaussian Processes for Dummies](http://katbailey.github.io/post/gaussian-processes-for-dummies/)
+  * Very accessible introduction based on Murphy's book
+
 These results will play a key role in Gaussian processes and the use of them will be highlighted when they are encountered.
 <hr class="with-margin">
-<h4 class="header" id="appendix">Q and A</h4>
+<h4 class="header" id="appendix">Appendix Q and A</h4>
+
+This section contains some questions and answers that may arise whilst learning about GPs for the first time.
+
 <a name="col_rvs"></a>
 ##### What is a collection of random variables?
 
@@ -610,11 +658,11 @@ Sampling from an arbitrary distribution usually involves computing the CDF of th
 
 Broadly speaking it will be much more efficient if we can relate everything to a standard Gaussian. In 1-dimension we can use the fact that $x \sim \mathcal{N}(\mu, \sigma^2)$ can be written as $x \sim \mu + \sigma \mathcal{N}(0, 1)$ and use this fact to sample from a Gaussian with arbitrary mean and variance by sampling from $\mathcal{N}(0, 1)$ instead.
 
-To generalize this idea to sample from multi-dimensional correlated random variables $X \sim \mathcal{N}(\mu, \Sigma)$ we would like to be able to sample from $X \sim \mu + L \, \mathcal{N}(0, I)$ for some $L$. This $L$ needs to be computable and the equivalent to the 'square-root' of the covariance matrix, i.e. a matrix $L$ such that $LL^T = \Sigma$.
+To generalize this idea to sample from multi-dimensional correlated random variables $X \sim \mathcal{N}(\boldsymbol{\mu}, \Sigma)$ we would like to be able to sample from $X \sim \boldsymbol{\mu} + L \, \mathcal{N}(0, I)$ for some $L$. This $L$ needs to be computable and the equivalent to the 'square-root' of the covariance matrix, i.e. a matrix $L$ such that $LL^T = \Sigma$.
 
 $L$ is exactly what the [Cholesky decomposition](https://en.wikipedia.org/wiki/Cholesky_decomposition) gives us.
 
-In this way we can sample from $X \sim \mathcal{N}(\mu, \Sigma)$ using $X \sim \mu + L \, \mathcal{N}(0, I)$.
+In this way we can sample from $X \sim \mathcal{N}(\boldsymbol{\mu}, \Sigma)$ using $X \sim \boldsymbol{\mu} + L \, \mathcal{N}(0, I)$.
 
 This is a standard result but discussion is provided in [Rasmussen](http://www.gaussianprocess.org/gpml/chapters/RW.pdf) [A.2].
 
@@ -667,44 +715,5 @@ GPs are non-parametric models and technically have an infinite number of paramet
 As we add more data the flexibility and capacity of the model will adjust to fit the data: we would see the mean function adjust itself to pass close to these points, and the posterior uncertainty would reduce close to the observations.
 
 In this way we do not have to worry about whether it is possible for the model to fit the data.
-
-<a name="references"></a>
-<hr class="with-margin">
-<h4 class="header" id="further">References</h4>
-
-In order to get a firm grip on the basics of GPs I read many sources, most listed below.
-
-###### Books and papers
-
-* Rasmussen and Williams, [Gaussian Processes for Machine Learning](http://www.gaussianprocess.org/gpml/chapters/RW.pdf)
-  * This is the canonical text for Gaussian processes
-* Murphy K, [Machine Learning: A Probabilistic Perspective](https://www.amazon.co.uk/Machine-Learning-Probabilistic-Perspective-Computation/dp/0262018020)
-  * Chapter 15 deals with GPs based on Rasmussen but with denser notation
-* Ebden M, [Gaussian Processes for Regression: A Quick Introduction](https://www.robots.ox.ac.uk/~mebden/reports/GPtutorial.pdf)
-* Chuong B. Do, [More on Multivariate Gaussians](http://cs229.stanford.edu/section/more_on_gaussians.pdf)
-  * Details on Gaussians including deriving conditioning and marginalization results
-* Chuong B. Do, [Gaussian processes](http://cs229.stanford.edu/section/cs229-gaussian_processes.pdf)
-* Snoek J, Larochelle H, Adams R P, [Practical Bayesian Optimization of MachineLearning Algorithms](http://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf)
-  * Further reading applying GPs to Bayesian optimization
-
-###### Videos and/or presentation slides
-
-* Turner R, [ML Tutorial: Gaussian Processes](https://www.youtube.com/watch?v=92-98SYOdlY)
-  * First hour explains the view of multivariate Gaussians particularly well
-* de Freitas N, [Machine learning - Introduction to Gaussian processes](https://www.youtube.com/watch?v=4vGiHC35j9s)
-  * Probably the best detailed start with derivation from definition of Gaussians
-* de Freitas N, [Machine learning - Gaussian processes](https://www.youtube.com/watch?v=MfHKW5z-OOA)
-  * Follow on lecture including discussing links to Ridge regression
-* Murray I, [Introduction to Gaussian Processes](#https://www.cs.toronto.edu/~hinton/csc2515/notes/gp_slides_fall08.pdf)
-  * High quality slides with a good overview and intuition
-* Williams D, [Gaussian Processes](http://people.ee.duke.edu/~lcarin/David1.27.06.pdf)
-  * Overview of GPs plus discussion on the classification case
-
-###### Blogs and web articles
-
-* Görtler J, [A Visual Exploration of Gaussian Processes](https://www.jgoertler.com/visual-exploration-gaussian-processes/)
-  * A quite stunning explanation of GPs at a very accessible level
-* Bailey K, [Gaussian Processes for Dummies](http://katbailey.github.io/post/gaussian-processes-for-dummies/)
-  * Very accessible introduction based on Murphy's book
 
 <hr class="with-margin">
