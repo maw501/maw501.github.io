@@ -5,7 +5,7 @@ date: 2018-10-19
 use_math: true
 image: "kernel.png"
 comments: true
-tags: ['kernels', 'SVMs']
+tags: ['kernels', 'kernel trick', 'SVMs']
 ---
 The kernel trick allows us to implicitly perform a calculation in a high-dimensional feature space whilst only working in the original feature space. In this article we explain the kernel trick via a toy example which we follow through in detail to get to the heart of the trick.
 <!--more-->
@@ -164,7 +164,7 @@ The kernel trick is that we do not need to use the transformation $\phi$ and can
 The special functions for which it turns out allow us to stay in the original lower dimensional space but are equivalent to operating in a higher dimensional space are called kernel functions.
 
 <blockquote class="tip">
-<strong>Key takeaway:</strong> the kernel trick is applicable anywhere we are taking dot products between data-points. In order to apply the kernel trick and map the data to a non-linear high-dimensional space we simply replace the original dot product in the algorithm, $\textbf{a}^T \textbf{b}$ with a call to a kernel function, $\kappa( \textbf{a}, \textbf{b})$.
+<strong>Key takeaway:</strong> the kernel trick is applicable anywhere we are taking dot products between data-points. In order to apply the kernel trick and map the data to a non-linear high-dimensional space we simply replace the original dot product in the algorithm, $\textbf{a}^T \textbf{b}$ with a call to a kernel function, $\kappa( \textbf{a}, \textbf{b}).$
 </blockquote>
 
 <hr class="with-margin">
@@ -176,7 +176,9 @@ The discussion above doesn't tell us how to obtain functions $\kappa(\textbf{a},
 * $\kappa(\textbf{a},\textbf{b}) = \kappa_1(\textbf{a},\textbf{b}) \, + \, \kappa_2(\textbf{a},\textbf{b})$
 * $\kappa(\textbf{a},\textbf{b}) = \exp\\{\kappa_1(\textbf{a},\textbf{b})\\}$
 
-In other words we can multiply, add and take the exponential of any existing kernels and still end up with a valid kernel. In these cases we may end up not knowing what the equivalent $\phi$ is, but this doesn't matter as we don't actually need it. Below we introduce two of the most common kernels.
+In other words we can multiply, add and take the exponential of any existing kernels and still end up with a valid kernel. In these cases we may end up not knowing what the equivalent $\phi$ is, but this doesn't matter as we don't actually need it.
+
+Below we introduce two of the most common kernels.
 
 ##### General polynomial kernel
 
