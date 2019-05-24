@@ -7,9 +7,9 @@ tags: ['gaussian processes', 'probabilistic modelling', 'kernels', 'bayesian']
 image: "gp_main.png"
 comments: true
 ---
-Gaussian processes (GPs) can be thought of as a probabilistic yet non-parametric form of non-linear regression which sits within the Bayesian framework.
+Gaussian processes (GPs) can be thought of as a probabilistic yet non-parametric form of non-linear regression which sit within the Bayesian framework. They are a powerful but less well understood tool that can be used in both a regression and classification setting.
 
-In this article we give a thorough introduction to GP regression collating many of the excellent references on the topic.
+In this article we give a thorough introduction to Gaussian process regression collating many of the excellent references on the topic. We also provide Python code examples.
 <!--more-->
 <hr class="with-margin">
 

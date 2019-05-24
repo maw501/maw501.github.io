@@ -2,6 +2,10 @@
 layout: page
 category: blog
 ---
+<!--
+col-X
+numbers must add up to 12 (or less if not using full width)
+-->
 <div class="container">
 {% for post in site.categories.posts %}
 {% if post.foreign_url == null %}
@@ -11,10 +15,10 @@ category: blog
 {% endif %}
     <div class="card-block">
         <div class="row">
-            <div class="col-3">
+            <div class="col-4">
                 <img class="img-fluid" width=250 src="assets/img/{{ post.image }}">
             </div>
-            <div class="col-9">
+            <div class="col-8">
                 <h4 class="header">{{ post.title }}</h4>
                 <hr/>
                 <article class="text main">

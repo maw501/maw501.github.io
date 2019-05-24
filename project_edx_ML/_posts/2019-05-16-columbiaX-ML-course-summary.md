@@ -19,7 +19,7 @@ Please read for an overview of course notes written based on the [edX ColumbiaX 
 <hr class="with-margin">
 <h4 class="header" id="overview">Overview</h4>
 
-<blockquote class="math">
+<blockquote class="tip">
 <strong>Update</strong>
 <br>
 The course notes are in the process of being updated to make stand-alone. As such all old posts have been taken down and will be republished once they are updated.

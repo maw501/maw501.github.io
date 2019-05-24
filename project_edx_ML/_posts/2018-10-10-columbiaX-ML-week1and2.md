@@ -11,9 +11,12 @@ We kick start the course by establishing a link between ordinary least squares (
 
 <!--more-->
 <hr class="with-margin">
-For a course overview and guidance on these notes click [here](/../project_edx_ml/2019/05/16/columbiaX-ML-course-summary).
-
-All errors are my own and if you do spot any, however small, please don't hesitate to get in touch.
+<blockquote class="tip">
+<strong>Using these notes:</strong> for a course overview and guidance on these notes click <a class="reference external" href="/../project_edx_ml/2019/05/16/columbiaX-ML-course-summary">here</a>.
+<br>
+<br>
+<strong>Errata:</strong> all errors are mine and if you do spot anything, however small, please let me know.
+</blockquote>
 
 <hr class="with-margin">
 <div class="list-of-contents">

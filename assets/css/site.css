@@ -90,6 +90,11 @@ p
   font-weight:200
 }
 
+p.red
+{
+  color: red
+}
+
 /* ---------- */
 /* Top Header */
 /* ---------- */

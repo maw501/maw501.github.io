@@ -3,18 +3,17 @@ layout: post
 title: The how of attention for sentiment analysis (with PyTorch code)
 date: 2019-01-09
 use_math: true
-tags: ['attention', 'deep_learning']
+tags: ['attention', 'deep learning']
 image: "attention.png"
 comments: true
 ---
 We are going to take a look at the attention mechanism in relation to sentiment analysis focusing on the classic implementation from [Bahdanau 2015](https://arxiv.org/abs/1409.0473), *Neural Machine Translation by Jointly Learning to Align and Translate*.
-
-In particular we will focus on breaking down the calculation into several easier to understand steps.
-
 <!--more-->
 <hr class="with-margin">
 
 The aim of this post is not to explain in detail the 'what' or 'why' of attention but rather 'how' the calculation works. We will give a brief explanation of what attention tries to accomplish but if you want more details, see, for example, the excellent article [here](http://www.wildml.com/2016/01/attention-and-memory-in-deep-learning-and-nlp/) of which there are many more similar.
+
+In particular we will focus on breaking down the calculation into several easier to understand steps.
 
 If you just want to see the code you can jump to it by clicking the content page heading below - the below explanation is quite a detailed walk-through. There is also a section now with a few reminders of some of the mathematics based on feedback.
 
