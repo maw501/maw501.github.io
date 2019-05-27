@@ -29,17 +29,15 @@ This week introduces classification with the $k$-nearest neighbours algorithm be
 <hr class="with-margin">
 <h4 class="header" id="intro">Overview</h4>
 
-Lecture 7: We shift to the supervised learning problem of classification. We cover simple nearest neighbor approaches and discuss what an optimal classifier looks like. This motivates the generic Bayes classification approach, an approximation to the optimal classifier.
+This week starts with the supervised learning problem of classification.
 
-Lecture 8: We move to general linear classifiers. We discuss in detail the geometric understanding of the problem, which is crucial to appreciating what a linear classifier tries to do. We discuss the first linear classifier called the Perceptron. While this method has been improved upon, the Perceptron will provide us with our first occasion to discuss iterative algorithms for model learning.
+$k$-nearest neighbours is introduced as an intuitive and simple classifier before we break to talk about the theoretically optimal classifier, the [Bayes classifier](#bayes_class_app). Here, in particular, we spend time providing an example to illustrate why the Bayes classifier is optimal.
 
-Provide overview.
+However, whilst the Bayes classifier itself is not of any practical use, it provides a framework for an approach to approximating the optimal classifier. In this context we look at an example of a [generative classifier](#gen_classifier) which is then tied to both the [LDA and QDA](#lda_qda) models. The [naive Bayes classifier](#naive_bayes) is also introduced along the way.
 
-Explain classification.
+Both LDA and QDA have closed form solutions and so next we move to introduce general linear classifiers and the first such linear classifier we meet is the [perceptron](#perceptron) algorithm.
 
-Notational consistency $\mathcal{Y}, \mathcal{X}$, x bold or not???
-
-EQUATION NUMBERING
+The [appendix](#hyperplanes) provides some results and explanation of the geometry of hyperplanes for linear classifiers.
 
 <a name="approaches"></a>
 <hr class="with-margin">
@@ -365,9 +363,11 @@ whereby an instance is assigned to the class $y$ that maximizes (2).
 
 We will return to the discussion of the above classifier in the next section on LDA and QDA, however we segue briefly to introduce another popular classifier.
 
-##### Naive Bayes classifier
+<a name="naive_bayes"></a>
+<hr class="with-margin">
+<h4 class="header" id="naive_bayes">Naive Bayes classifier</h4>
 
-The naive Bayes classifier (NBC) makes the assumption that the covariates of $X$ are conditionally independent given $y$. In other words, there is no correlation between the features given the class. This allows us to write the class conditional densities as a product of one dimensional densities:
+We briefly introduce the naive Bayes classifier now which makes the assumption that the covariates of $X$ are conditionally independent given $y$. In other words, there is no correlation between the features given the class. This allows us to write the class conditional densities as a product of one dimensional densities:
 
 $$
 p(X=x | Y=y)=\prod_{j=1}^{d} p_{j}(x_j | Y=y) \tag{3}
