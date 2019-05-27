@@ -2,6 +2,7 @@
 layout: post
 title: ColumbiaX - ML - weeks 1 and 2
 date: 2018-10-10
+repub_date: 2019-05-20
 use_math: true
 image: "bivariategauss2.jpeg"
 comments: true
@@ -571,6 +572,9 @@ Variance is an error from sensitivity to small fluctuations in the training set.
 <a name="esl"></a>
 * Hastie, T., R. Tibshirani, and J. Friedman (2001). [The Elements of Statistical Learning](http://web.stanford.edu/~hastie/ElemStatLearn/)
   * Chapters: 1 - 2, 3.1 - 3.4, 7.1 - 7.3, 7.10
+  
+<a name="edx_ml"></a>
+* edX, ColumbiaX, [Machine Learning](https://www.edx.org/course/machine-learning-1)
 
 <hr class="with-margin">
 <h4 class="header" id="appendix">Appendix</h4>

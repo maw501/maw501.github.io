@@ -2,6 +2,7 @@
 layout: post
 title: ColumbiaX - ML - week 3
 date: 2018-10-13
+repub_date: 2019-05-22
 use_math: true
 image: "bayes_lr.png"
 comments: true
@@ -500,6 +501,9 @@ Similar reasoning allows $X^T \mathbf{y}$ to be updated in the same way.
 <a name="esl"></a>
 * Hastie, T., R. Tibshirani, and J. Friedman (2001). [The Elements of Statistical Learning](http://web.stanford.edu/~hastie/ElemStatLearn/)
   * Chapters: 3.3 - 3.8
+
+<a name="edx_ml"></a>
+* edX, ColumbiaX, [Machine Learning](https://www.edx.org/course/machine-learning-1)
 
 <hr class="with-margin">
 <h4 class="header" id="appendix">Appendix</h4>

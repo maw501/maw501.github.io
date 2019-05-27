@@ -2,6 +2,7 @@
 layout: page
 permalink: /projects/edx/
 category: project_edx_ML
+use_math: true
 ---
 <div class="container">
 {% for post in site.categories.project_edx_ML %}
@@ -28,6 +29,11 @@ category: project_edx_ML
         <div class="timestamp">
             Publication Date: {{ post.date | date_to_long_string }}
         </div>
+        {% if post.repub_date != null %}
+          <div class="timestamp">
+              Republication Date: {{ post.repub_date | date_to_long_string }}
+          </div>
+        {% endif %}
     </div>
 </div>
 {% endfor %}
