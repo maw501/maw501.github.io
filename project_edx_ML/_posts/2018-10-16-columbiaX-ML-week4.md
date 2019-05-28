@@ -8,7 +8,7 @@ image: "knn.jpg"
 comments: true
 tags: [classification, bayes classifier, kNN, perceptron]
 ---
-This week introduces classification with the $k$-nearest neighbours algorithm before introducing the Bayes classifier as the optimal classifier with LDA and QDA as approximations. We then move on to general linear classifiers by introducing the perceptron, an iterative algorithm and the precursor to modern neural networks.
+This week introduces classification with the $k$-nearest neighbours algorithm before introducing the Bayes classifier as the optimal classifier with LDA and QDA as approximations. We then move on to general linear classifiers by discussing the perceptron, an iterative algorithm and the precursor to modern neural networks.
 
 <!--more-->
 <hr class="with-margin">
@@ -31,7 +31,7 @@ This week introduces classification with the $k$-nearest neighbours algorithm be
 
 This week starts with the supervised learning problem of classification.
 
-$k$-nearest neighbours is introduced as an intuitive and simple classifier before we break to talk about the theoretically optimal classifier, the [Bayes classifier](#bayes_class_app). Here, in particular, we spend time providing an example to illustrate why the Bayes classifier is optimal.
+[$k$-nearest neighbours](#knn) is introduced as an intuitive and simple classifier before we break to talk about the theoretically optimal classifier, the [Bayes classifier](#bayes_class_app). Here, in particular, we spend time providing an example to illustrate why the Bayes classifier is optimal.
 
 However, whilst the Bayes classifier itself is not of any practical use, it provides a framework for an approach to approximating the optimal classifier. In this context we look at an example of a [generative classifier](#gen_classifier) which is then tied to both the [LDA and QDA](#lda_qda) models. The [naive Bayes classifier](#naive_bayes) is also introduced along the way.
 
@@ -43,7 +43,7 @@ The [appendix](#hyperplanes) provides some results and explanation of the geomet
 <hr class="with-margin">
 <h4 class="header" id="approaches">Approaches to classification</h4>
 
-Before we dive into any classification algorithms, it's important to see the lay of the land. As such we bring attention to a discussion in [PRML](#prml) which sets the scene and provides an overview of the main approaches to classification.
+Before we dive into classification algorithms, it's important to see the lay of the land. As such we bring attention to a discussion in [PRML](#prml) which sets the scene and provides an overview of the main approaches to classification.
 
 <a name="bayes_rule_class"></a>
 <blockquote class="tip">
@@ -89,14 +89,14 @@ Examples: SVMs, perceptron algorithm
 
 ##### A word of warning
 
-It is not particularly common to distinguish between approaches 2 and 3 above and most references simply bundle them together.
+It is not particularly common to distinguish between approaches 2 and 3 above and some references simply bundle them together.
 
-<a name="intro"></a>
+<a name="knn"></a>
 <hr class="with-margin">
 <h4 class="header" id="knn">k-nearest neighbors (k-NN)</h4>
 
 ##### Introduction
-The k-nearest neighbours classifier is one of the simplest and most intuitive places to start with classification algorithms. It is a non-parametric model as it doesn't make any assumptions about the underlying data distribution (i.e. it assumes it cannot be defined by a finite set of parameters). It is also what is called a 'lazy learning' method in that the generalization of the training data is deferred until the query for the test data-point is made - there is no explicit training stage.  
+The $k$-nearest neighbours classifier is one of the simplest and most intuitive places to start with classification algorithms. It is a non-parametric model which means it doesn't make any assumptions about the underlying data distribution, except in assuming it cannot be defined by a finite set of parameters. It is also what is called a 'lazy learning' method in that the generalization of the training data is deferred until the query for a test data-point is made. In this way there is no explicit training stage.  
 
 ##### $k$-nearest neighbours algorithm
 
@@ -104,13 +104,18 @@ The k-nearest neighbours classifier is one of the simplest and most intuitive pl
 <hr class="small-margin">
 <strong>Algorithm: $k$-nearest neighbours</strong>
 <hr class="small-margin">
-Given data $(\mathbf{x}_1, y_1), ..., (\mathbf{x}_n, y_n)$ with $\mathbf{x}_i \in \mathbb{R}^d$ and $y_i$ a class label. For a data-point $\mathbf{x}_0$ not in the training data:
+Given data $(\mathbf{x}_1, y_1), ..., (\mathbf{x}_n, y_n)$ with $\mathbf{x}_i \in \mathbb{R}^d$ and $y_i$ a class label.
+<br>
+<br>
+For a data-point $\mathbf{x}_0$ not in the training data:
 <br>
 <br>
 1. Find the $k$ nearest data-points in the training set to $\mathbf{x}_0$ based on a distance metric
 <br>
 2. Assign $\mathbf{x}_0$ the label of the most common class amongst its $k$ nearest neighbours
 </blockquote>
+
+And so in essence the point $\mathbf{x}_0$ will be assigned to the class based on a vote amongst the $k$ data-points it is most similar to.
 
 ##### Measuring distance
 
@@ -121,6 +126,7 @@ $$
 ||\mathbf{a} -\mathbf{b}||_{2} = \left(\sum_{j=1}^{d} \left(\mathbf{a}_j -\mathbf{b}_j \right)^{2} \right)^{\frac{1}{2}}
 $$
 
+However, whilst this is an intuitive and appealing metric to use it is not particularly suitable for high-dimensional data as we discuss briefly [shortly](#knn_high_dim).
 
 ##### How do we choose $k$?
 
@@ -137,11 +143,14 @@ The chart below (Model 3) shows how more complex decision boundaries can lead to
 <em class="figure">Varying model complexity from large $k$ (right) to small $k$ (left)
 <br> [Image credit](https://cambridgecoding.wordpress.com/2016/03/24/misleading-modelling-overfitting-cross-validation-and-the-bias-variance-trade-off/)</em>
 
+<a name="knn_high_dim"></a>
 ##### A note on $k$-NN with high-dimensional data
 
-It might be expected that given enough training data $k$-NN can perform well, even for data with many dimensions. However, this is not the case as the concept of 'local' breaks down when $d$ becomes large and algorithms reliant on concepts of distance suffer from the [curse of dimensionality](https://en.wikipedia.org/wiki/Curse_of_dimensionality#Distance_functions).
+It might be expected that given enough training data $k$-NN can perform well, even for data with many dimensions. However, this is not the case as the concept of locality and hence neighbours breaks down when $d$ becomes large and algorithms reliant on concepts of distance suffer from the [curse of dimensionality](https://en.wikipedia.org/wiki/Curse_of_dimensionality#Distance_functions).
 
 Further discussion of this phenemonem is provided in [ESL \[2.5\]](#esl).
+
+We now move onto discussing the theoretically best classifier, the Bayes classifier.
 
 <a name="bayes_class_app"></a>
 <hr class="with-margin">
@@ -157,7 +166,7 @@ $$
 It is the classifier that has the smallest expected prediction error amongst all classifiers, or equivalently, the best prediction accuracy.
 <br>
 <br>
-It also provides theoretical justification for an important, and intuitive, decision heuristic commonly used across machine learning: assigning an example to the class with highest posterior probability.
+It provides a framework for modelling classifiers as well as theoretical grounding for an important, and intuitive, decision heuristic commonly used across machine learning: assigning an example to the class with highest posterior probability.
 <br>
 <br>
 <strong>Remember:</strong> the take-home message is that if we had access to the true data distribution, forming an optimal classifier would be trivial.
@@ -165,13 +174,11 @@ It also provides theoretical justification for an important, and intuitive, deci
 
 ##### Introduction
 
-The Bayes classifier is a theoretical construct that permits examination of what an optimal classifier might look like. Perhaps unsurprisingly, for a theoretically optimal classifier, we practically cannot use it as the assumptions it makes (knowledge of $\mathcal{P}$) do not hold in reality.
+The Bayes classifier is a theoretical classifier that permits examination of what an optimal classifier might look like. Perhaps unsurprisingly, for a theoretically optimal classifier, we practically cannot use it as the assumptions it makes (knowledge of $\mathcal{P}$) do not hold in reality.
 
-Nevertheless, that the Bayes classifier shows that with knowledge of $\mathcal{P}$ the optimal decision to minimise the expected prediction error is to assign an example to the class with the highest posterior probability has important consequences.  
+Nevertheless, that the Bayes classifier shows that with knowledge of $\mathcal{P}$ the optimal decision to minimise the expected prediction error is to simply assign an example to the class with the highest posterior probability has important consequences. In particular, it provides justification for the effort in machine learning that is put into finding ways to estimate the class posterior probabilities in order to try to approximate this unattainable gold standard.
 
-The Bayes classifier is a very simple classifier that simply assigns each observation to the most likely class as given by the class posterior probability and produces the lowest possible test error rate, called the Bayes error rate.
-
-Consequently much effort in machine learning is put into finding ways to estimate the class posterior probabilities in order to try to approximate this unattainable gold standard.
+Given $\mathcal{P}$, the Bayes classifier is a very simple classifier that produces the lowest possible test error rate, called the Bayes error rate.
 
 ##### Statement of the Bayes classifier
 
@@ -192,13 +199,13 @@ We illustrate the above shortly with a concrete example.
 <strong>Note on terminology:</strong> by classifier we mean any function that takes in a particular assignment of $X$ (i.e. $X=x$ in the discrete case) and outputs a class label $y \in \mathcal{Y}$. Such a classifier could be any type of (potentially complicated) model. We will use the terms classifier and decision rule interchangeably in the discussion that follows.
 <br>
 <br>
-Note that the classifiers are deterministic and given the same $x$ will always output the same prediction for $y$.
+Note that the classifiers are deterministic and given the same input example $x$ will always output the same class prediction $y$.
 </blockquote>
 
 ##### Extension to plug-in classifiers
 In practice we don't know the true underlying data distribution, $\mathcal{P}$, and hence we don't know the prior, $p(Y=y)$, or the likelihood, $p(X=x \| Y=y)$. Instead all we have is some training data which is drawn from $\mathcal{P}$.
 
-The approach is thus to use this data to approximate both the prior and the likelihood. Doing this is sometimes called using a plug-in classifier, as per the [generative classifier](#gen_classifier) discussed in the next section.
+The approach used in practice is thus to use this data to approximate both the prior and the likelihood. Doing this is sometimes called using a plug-in classifier, as per the [generative classifier](#gen_classifier) discussed in the next section.
 
 Of course, once we use an approximation we know longer have an optimal classifier.
 
@@ -210,9 +217,9 @@ Suppose we have data from 2 classes with prior probabilities:
 
 $$p(y_1) = 0.7, \, \, \, p(y_2) = 0.3$$
 
-and $X \in \\{1,2,3,4,5 \\}$ is a discrete random variable.
+and $X \in \\{1,2,3,4,5 \\}$ is a discrete random variable, a particular instance of which is called $x$.
 
-Suppose we also know have the distribution of the likelihood, $p(X=x \| Y=y)$ as shown in Table 1 below:
+Suppose we also have the distribution of the likelihood, $p(X=x \| Y=y)$ as shown in Table 1 below:
 
 <p align="center">
     <img src="/assets/img/bayes_ex1.png" alt="Image" width="500" height="80" />
@@ -220,7 +227,7 @@ Suppose we also know have the distribution of the likelihood, $p(X=x \| Y=y)$ as
 <em class="figure">Table 1: data likelihood, $p(X=x \| Y=y)$, each row sums to 1</em>
 <hr class="small-margin">
 
-The blue cells in Tables 1 and 2 are the result of an arbitrary decision rule from a classifier and highlight the classification decision we made for each $x$. This amounts to selecting a row for each column in the table.
+The blue cells in Tables 1 and 2 are the result of an arbitrary decision rule from a classifier and highlight the classification decision the classifier would make for each $x$ - this is not random. Such a decision for every $x$ amounts to selecting a row for each column in the table.
 
 Given the class priors and data likelihood we can also formulate the joint probability using:
 
@@ -234,27 +241,31 @@ by multiplying the entries in each row by the prior class probability. This join
 <em class="figure">Table 2: joint probability distribution, $p(X=x, Y=y)$, sums to 1</em>
 <hr class="small-margin">
 
-Now, given the arbitrary classifier (per the blue predictions) we can think about the average error of this classifier. For 2 classes there are 2 sources of error:
+Now, given the arbitrary classifier (per the blue predictions) we can think about the average error of this classifier. In the case of 2 classes there are 2 sources of error:
 
 1. Choosing class $y_1$ when $y_2$ was the correct label, happens with probability equal to the sum of non-highlighted entries in $y_2$ row in Table 2
 1. Choosing class $y_2$ when $y_1$ was the correct label, happens with probability equal to the sum of non-highlighted entries in $y_1$ row in Table 2
 
-Thus, given some arbitrary classifier (as per the blue cells) the total error it will make on average depends on the underlying true probability distribution. For example, if every time the classifier encounters $x=1$ it predicts class label $y_2$ it will incur an error equal to:
+To see the above, consider that if every time the classifier encounters $x=1$ it predicts class label $y_2$ it will incur an error equal to:
 
 $$p(x=1 | y=1)p(y = 1) = p(x=1, y=1).
 $$
 
-Where it helps to recall that $p(Y \| X)$ is [random](#whats_random).
+Looking at Table 2 this means that the classifier will be wrong 14% of time from the fact that when $x=1$ it always predicts $y=2$ and we know from the true underlying joint distribution (this is what Table 2 is, this is what knowledge of $\mathcal{P}$ allows us to calculate!) that the pair $(x=1, y=1)$ will occur in 14% of the cases.
 
-The expected prediction error based on classifier predictions per the blue cells is the sum of all non-highlighted cells in Table 2: $0.37$.
+This is the same for $(x=2, y=2)$ which happens with probability ~3% and similarly for all non-highlighted cells in Table 2.
+
+The total error is thus the sum of the joint probability for every data pair that the classifier predicts doesn't happen, this is a sum over both $x$ and $y$ given by the the non-highlighted cells in Table 2. The expected prediction error based on the classifier's predictions per the blue cells is $0.37$.
+
+Thus, given some arbitrary classifier (as per the blue cells) the total error it will make on average depends on the true underlying probability distribution. This error happens in part because $p(Y \| X)$ is [random](#whats_random).
 
 ##### Enter the Bayes classifier
 
 What is the optimal classifier/decision rule to apply?
 
-Well it turns out the expected prediction error is minimised when we choose to assign each $x$ to the class with highest joint probability (which is proportional to the posterior probability) in Table 2.
+Well it turns out the expected prediction error is minimised when we choose to assign each $x$ to the class with highest joint probability (this is proportional to the posterior probability) in Table 2. This follows instinctively from the above discussion about the total error being the sum of the joint probability for every data pair that the classifier predicts doesn't happen. In other words, we simply make a prediction to minimize the sum of the non-highlighted cells, this happens when we predict for each $x$ the label with the highest joint probability of occurring.
 
-This is the idea behind the Bayes classifier and is shown in Table 3.
+This is the idea behind the Bayes classifier and the decision based on this is shown in Table 3.
 
 <p align="center">
     <img src="/assets/img/bayes_ex3.png" alt="Image" width="500" height="80" />
@@ -262,7 +273,7 @@ This is the idea behind the Bayes classifier and is shown in Table 3.
 <em class="figure">Decision using highest joint probability</em>
 <hr class="small-margin">
 
-This gives an expected prediction error of $0.25$, and no other classifier can beat this (though it might not be unique). Of course, we don't usually ever know $\mathcal{P}$ and so we approximate the prior and likelihood in practice - this leads to sub-optimal classifiers.
+This gives an expected prediction error of $0.25$, and no other classifier can beat this Bayes classifier, although it isn't guaranteed to be unique. Of course, we don't usually ever know $\mathcal{P}$ and so we approximate the prior and likelihood in practice - this leads to sub-optimal classifiers.
 
 <a name="whats_random"></a>
 <blockquote class="tip">
@@ -281,17 +292,17 @@ The Bayes optimal classifier is the best classifier (smallest expected predictio
 
 However optimal Bayes classification is sometimes introduced differently, without assuming knowledge of $\mathcal{P}$ from which the data $\mathcal{D}$ was generated.
 
-We call $\mathcal{F}$ represents the set of all classifiers and in this case the best classification decision to make given data, $\mathcal{D}$, is:
+We call $\mathcal{F}$ the set of all possible classifiers and in this case the best classification decision to make given data, $\mathcal{D}$, is:
 
 $$
 \underset{y \in \mathcal{Y}}{\arg \max } \color{red}{\sum_{f_{i} \in \mathcal{F}}} \color{blue}{p\left(y | f_{i}\right)} \color{green}{ p\left(f_{i} | \mathcal{D}\right)}.
 $$
 
-In other words, we assign the label based on the highest probability as computed by the <span style="color:blue">prediction from a classifier</span> weighted by the <span style="color:green">posterior probability of the classifier given the data</span> <span style="color:red">summing over all possible classifiers</span>.
+In other words, we assign the label based on the highest probability as computed by the <span style="color:blue">prediction from a given classifier</span> weighted by the <span style="color:green">posterior probability of that classifier given the data</span> <span style="color:red">summing over all possible classifiers</span>.
 
-Given all the possible classifiers are things like decision trees, NNs etc... this is clearly infeasible practically but is theoretically optimal given infinite compute power.
+Given that classifiers are things like decision trees, NNs etc... this is clearly infeasible practically but is theoretically optimal given infinite compute power.
 
-This is a little confusing terminology wise as the above is not a single classifier and so is more correctly called Bayes optimal classification.
+This is a little confusing terminology wise as the above is now not a single classifier and so is more appropriately referred to as the Bayes optimal classification.
 
 Further discussion can be found [here](https://www.youtube.com/watch?v=mjdJSReJ4e4&list=PLTPQEx-31JXillYa8apaBkuXLWKzOKzY8&index=6).
 
@@ -300,31 +311,31 @@ Further discussion can be found [here](https://www.youtube.com/watch?v=mjdJSReJ4
 <h4 class="header" id="gen_classifier">Example: a generative classifier</h4>
 
 ##### Introduction
-We now consider an example of a plug-in [generative classifier](#approaches) where we approximate both the prior and likelihood. Here, $X \in \mathbb{R}^d$ is now a continuous random variable with binary target $Y$ such that $Y \in \\{0,1\\} = \mathcal{Y} $.
+We now consider an example of a plug-in [generative classifier](#approaches) where we approximate both the prior and likelihood. Here, $X \in \mathbb{R}^d$ is now a continuous random variable with binary target $Y$ such that $Y \in \\{0,1\\} = \mathcal{Y} $ and an instance of $X$ is a vector $\mathbf{x} \in \mathbb{R}^d$.
 
 Per the justification provided by the [Bayes classifier](#bayes_class_app) we assign an instance to the class which maximizes the numerator in Bayes' rule:
 
 <a name="gen_classifier_opt"></a>
 
 $$
-\arg \max_{y \in \mathcal{Y}} \underbrace{p(Y=y)}_{\text {class prior}} \, \underbrace{p(X=x | Y=y)}_{\text { data likelihood } | \text {class}} \tag{0}
+\arg \max_{y \in \mathcal{Y}} \underbrace{p(Y=y)}_{\text {class prior}} \, \underbrace{p(\mathbf{x}| Y=y).}_{\text { data likelihood } | \text {class}} \tag{0}
 $$
 
-where in the case of binary classification, $\mathcal{Y} = \\{0, 1 \\}$. In this case we are not obtaining a full posterior but simply using the fact that:
+In this case we are not obtaining a full posterior but simply using the fact that:
 
 $$
-\arg \max_{y \in \mathcal{Y}} \underbrace{p(Y=y | X = x)}_\text{class posterior} = \arg \max_{y \in \mathcal{Y}} \underbrace{p(Y=y)}_{\text {class prior}} \, \underbrace{p(X=x | Y=y).}_{\text { data likelihood } | \text {class}} \tag{1}
+\arg \max_{y \in \mathcal{Y}} \underbrace{p(Y=y | \mathbf{x})}_\text{class posterior} = \arg \max_{y \in \mathcal{Y}} \underbrace{p(Y=y)}_{\text {class prior}} \, \underbrace{p(\mathbf{x}| Y=y)}_{\text { data likelihood } | \text {class}} \tag{1}
 $$
 
-The above is valid as the denominator in [Bayes' rule](#bayes_rule_class) does not depend on $y$.
+and the above is valid as the denominator in [Bayes' rule](#bayes_rule_class) does not depend on $y$.
 
 ##### Gaussian class conditional densities
 
 <blockquote class="tip">
-<strong>TLDR:</strong> model the data in each class as a multivariate Gaussian distribution with parameters estimated from the data.
+<strong>TLDR:</strong> model the data from each class as a multivariate Gaussian distribution with parameters estimated from the data.
 </blockquote>
 
-We approximate the prior, $p(Y = y)$, and the likelihood, $p(X=\mathbf{x} \| Y=y)$ as:
+We approximate the prior, $p(Y = y)$, and the likelihood, $p(\mathbf{x} \| Y=y)$ as:
 
 <div class="math">
 \begin{alignat*}{1}
@@ -333,7 +344,7 @@ p(\mathbf{x} | Y=y) &= \underbrace{\mathcal{N} \left(\mathbf{x} | \boldsymbol{\m
 \end{alignat*}
 </div>
 
-where the maximum likelihood estimates for $\boldsymbol{\mu}, \Sigma_{y}$ are given by:
+where the maximum likelihood estimates for $\boldsymbol{\mu}\_y, \Sigma_{y}$ are given by:
 
 <div class="math">
 \begin{alignat*}{1}
@@ -367,7 +378,7 @@ We will return to the discussion of the above classifier in the next section on 
 <hr class="with-margin">
 <h4 class="header" id="naive_bayes">Naive Bayes classifier</h4>
 
-We briefly introduce the naive Bayes classifier now which makes the assumption that the covariates of $X$ are conditionally independent given $y$. In other words, there is no correlation between the features given the class. This allows us to write the class conditional densities as a product of one dimensional densities:
+We very briefly mention the naive Bayes classifier now which makes the assumption that the covariates of $X$ are conditionally independent given $y$. In other words, there is no correlation between the features given the class. This allows us to write the class conditional densities as a product of one dimensional densities:
 
 $$
 p(X=x | Y=y)=\prod_{j=1}^{d} p_{j}(x_j | Y=y) \tag{3}
@@ -384,7 +395,7 @@ The classic example of NBC performing well is in the context of [spam filtering]
 <h4 class="header" id="linear_class">LDA and QDA</h4>
 
 <blockquote class="tip">
-<strong>TLDR:</strong> LDA assumes that the data for each class come from a Gaussian distribution with a class-specific mean vector and a shared covariance matrix, whereas QDA computes a per class covariance matrix.
+<strong>TLDR:</strong> LDA assumes that the data for each class come from a Gaussian distribution with a class-specific mean vector and a shared covariance matrix across all classes, whereas QDA computes a per class covariance matrix.
 </blockquote>
 
 ##### Introduction
@@ -394,31 +405,34 @@ In this section we look at two common algorithms for classification called linea
 * if we instead use the same covariance matrix across all classes the resulting decision boundary is linear and this model is called linear discriminant analysis (LDA).
 * estimating a covariance matrix per class gives a decision boundary that is quadratic and the model is called quadratic discriminant analysis (QDA).
 
-##### Analysing the binary classification decision: log odds
-
-Recall that for the generative classifier we assigned an instance to the class with the highest posterior probability where the justification for this came from the Bayes classifier. In the case of binary classification this is equivalent to declaring an observation to be in class 1 if:
+<blockquote class="tip">
+<strong>Sidebar on log odds for classification:</strong> recall that for the generative classifier we assigned an instance to the class with the highest posterior probability where the justification for this came from the Bayes classifier.
+<br>
+<br>
+In the case of binary classification this is equivalent to declaring an observation to be in class 1 if:
 
 <div class="math">
 \begin{alignat*}{1}
 \frac{p(\mathbf{x} | y=1) p(y=1)}{p(\mathbf{x} | y=0) p(y=0)} &> 1 \iff \\[5pt]
 \underbrace{\ln \frac{p(\mathbf{x} | y=1) p(y=1)}{p(\mathbf{x} | y=0) p(y=0)}}_\text{log odds} &> 0. \tag{4}
-
 \end{alignat*}
 </div>
 
-An advantage of using log odds to make a decision rule is that the denominator in Bayes' rule cancels as it would appear on both the top and bottom of (4).
+An advantage of using log odds to make a decision rule is that the denominator in Bayes’ rule cancels as it would appear on both the top and bottom of (4).
+
+</blockquote>
 
 ##### Arriving at LDA
 
-For the case where we have a shared covariance matrix across both classes, by the Gaussian likelihood assumption we made, (4) this leads to:
+For the case where we have a shared covariance matrix across both classes, by the Gaussian likelihood assumption we made, calculating the log odds per equation (4) leads to:
 
 $$
-\begin{array}{l}{\underbrace{\ln \frac{\pi_{1}}{\pi_{0}}-\frac{1}{2}\left(\boldsymbol{\mu}_{1}+\boldsymbol{\mu}_{0}\right)^{T} \Sigma^{-1}\left(\boldsymbol{\mu}_{1}-\boldsymbol{\mu}_{0}\right)}_{\text { a constant }, \text {call } w_{0}}} {+\mathbf{x}^{T} \underbrace{\Sigma^{-1}\left(\boldsymbol{\mu}_{1}-\boldsymbol{\mu}_{0}\right)}_{\text { a vector, call } \mathbf{w}}}\end{array} \tag{5}
+\begin{array}{l}{\underbrace{\ln \frac{\pi_{1}}{\pi_{0}}-\frac{1}{2}\left(\boldsymbol{\mu}_{1}+\boldsymbol{\mu}_{0}\right)^{T} \Sigma^{-1}\left(\boldsymbol{\mu}_{1}-\boldsymbol{\mu}_{0}\right)}_{\text{ a constant, call $w_0$}}} {+\mathbf{x}^{T} \underbrace{\Sigma^{-1}\left(\boldsymbol{\mu}_{1}-\boldsymbol{\mu}_{0}\right)}_{\text { a vector, call } \mathbf{w}}}\end{array} \tag{5}
 $$
 
 which we can write in shorthand as $w_0 + \mathbf{x}^T\mathbf{w}$.
 
-Based on (4) we can thus write the classifier as:
+Based on equation (4) we can thus write the classification decision as:
 
 $$
 f(\mathbf{x}) = \operatorname{sign} (w_0 + \mathbf{x}^T\mathbf{w})
@@ -432,7 +446,7 @@ This is called linear discriminant analysis (LDA) and it has a linear decision b
 
 Getting to QDA from LDA is by changing the assumption we make about $\Sigma$. If we now calculate a covariance per class for the likelihood, we have, $p(\mathbf{x} \| y) = \mathcal{N}\left(x \| \boldsymbol{\mu}\_y, \Sigma_{y} \right).$
 
-By similar analysis as for LDA, working out (4) gives:
+By similar analysis as for LDA, working out the log odds from equation (4) gives:
 
 <div class="math">
 \begin{alignat*}{1}
@@ -491,9 +505,9 @@ $$
 f(\mathbf{x}) = \operatorname{sign} (w_0 + \mathbf{x}^T\mathbf{w})
 $$
 
-where $w_0$ and $\mathbf{w}$ where given by explicit formula. This can be too restrictive an assumption in general and so we now introduce a way to learn both $w_0$ and $\mathbf{w}$.
+where $w_0$ and $\mathbf{w}$ are given by explicit formulae. This can be too restrictive an assumption in general and so we now introduce a way to learn both $w_0$ and $\mathbf{w}$.
 
-Learning $w_0$ and $\mathbf{w}$ amounts to learning a hyperplane between the classes in the data. Details and intuition about hyperplanes are included in the [appendix](#hyperplanes) and the reader is encouraged to read this first.
+Learning $w_0$ and $\mathbf{w}$ amounts to learning a [hyperplane](https://en.wikipedia.org/wiki/Hyperplane) between the classes in the data. Details and intuition about hyperplanes are included in the [appendix](#hyperplanes) and the reader is encouraged to read this first.
 
 The perceptron algorithm solves the binary classification problem by learning a hyperplane that separates the data and in order to do so it requires that the classes in the data be [linearly separable](https://en.wikipedia.org/wiki/Linear_separability). The loss function for the perceptron cannot be solved analytically and so gradient descent is used instead to learn $w_0$ and $\mathbf{w}$.
 
@@ -508,10 +522,10 @@ The perceptron is perhaps more (famously and) recently known as a core building 
 The above notational change means we can write a general linear classifier as:
 
 $$
-y=f(\mathbf{x})=\operatorname{sign}\left(\mathbf{x}^{T}\mathbf{w}\right)
+f(\mathbf{x}) = \operatorname{sign}\left(\mathbf{x}^{T}\mathbf{w}\right)
 $$
 
-and so we are predicting $y$ to be the sign of the dot product $\mathbf{x}^{T}\mathbf{w}$.
+and so we are predicting each example to be the sign of the dot product $\mathbf{x}_i^T\mathbf{w}$, with true label $y_i$.
 
 Given the perceptron algorithm assumes the data is linearly separable, it tries to find a hyperplane that classifies every instance of the training data correctly. Such a loss function can be formulated as:
 
