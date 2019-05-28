@@ -7,7 +7,7 @@ tags: ['gaussian processes', 'probabilistic modelling', 'kernels', 'bayesian']
 image: "gp_main.png"
 comments: true
 ---
-Gaussian processes (GPs) can be thought of as a probabilistic yet non-parametric form of non-linear regression which sit within the Bayesian framework. They are a powerful but less well understood tool that can be used in both a regression and classification setting.
+Loosely speaking, Gaussian processes (GPs) can be thought of as a probabilistic yet non-parametric form of non-linear regression which sit within the Bayesian framework. They are a powerful but less well understood tool that can be used in both a regression and classification setting.
 
 In this article we give a thorough introduction to Gaussian process regression collating many of the excellent references on the topic. We also provide Python code examples.
 <!--more-->
@@ -22,7 +22,7 @@ In this article we give a thorough introduction to Gaussian process regression c
 <h4 class="header" id="introduction">Introduction</h4>
 
 <blockquote class="tip">
-<strong>TLDR:</strong> loosely speaking GPs give a way to express a view on functions. In particular they allow us to specify how smooth we expect a function to be rather than how many parameters we expect it to have. The key idea they rely on is that data points that are close in input space are expected to be similar in output space, i.e. if $\mathbf{x}_{i}$ and $\mathbf{x}_{j}$ are similar then $f(\mathbf{x}_{i})$ and $f(\mathbf{x}_{j})$ will be close in value too.
+<strong>TLDR:</strong> loosely speaking GPs give a way to express a view on functions. In particular they allow us to specify how smooth we expect a function to be rather than how many parameters we expect it to have. The key idea they rely on is that data-points that are close in input space are expected to be similar in output space, i.e. if $\mathbf{x}_{i}$ and $\mathbf{x}_{j}$ are similar then $f(\mathbf{x}_{i})$ and $f(\mathbf{x}_{j})$ will be close in value too.
 </blockquote>
 
 Gaussian processes are Bayesian alternatives to kernel methods and allow us to infer a _distribution over functions_, which sounds a little crazy but is actually both an intuitive thing to desire as well as being analytically tractable in certain cases.
@@ -217,7 +217,7 @@ where each entry $K_{ij} = \kappa(\mathbf{x_i}, \mathbf{x_j})$ is the evaluation
 Similarly $K_{+}$ is a $3 \times 1$ vector which contains the evaluation of the similarity between each training data-point and the test point $\mathbf{x_{+}}$. $K_{\\++}$ in this case is a scalar with the similarity between the test point to itself.
 <br>
 <br>
-The above generalizes to many data points and in general $K$ has dimensions $n \times n$, $K_{+}$ has dimensions $n \times n_{+}$ and $K_{\\++}$ has dimensions $n_{+} \times n_{+}$.
+The above generalizes to many data-points and in general $K$ has dimensions $n \times n$, $K_{+}$ has dimensions $n \times n_{+}$ and $K_{\\++}$ has dimensions $n_{+} \times n_{+}$.
 </blockquote>
 
 ##### Prediction: condition then marginalize
@@ -243,7 +243,7 @@ In this way the prediction is not just an estimate for that point, but also has 
 
 ##### Adding more data
 
-In the above we have 3 observed data points and made a prediction for a single new test point. If we wish to predict for more test data we can simply repeat the above steps and thus we are able to get probabilistic predictions for any number of test points. In a similar spirit if we observe new training data we can add this in to $X$ and recalculate the predictions for the test points. (Note this ignores computational considerations to keep things simple.)
+In the above we have 3 observed data-points and made a prediction for a single new test point. If we wish to predict for more test data we can simply repeat the above steps and thus we are able to get probabilistic predictions for any number of test points. In a similar spirit if we observe new training data we can add this in to $X$ and recalculate the predictions for the test points. (Note this ignores computational considerations to keep things simple.)
 
 ##### Walking through an example with plots
 We now give an example to illustrate the above discussion.
@@ -365,7 +365,7 @@ The Cholesky decomposition provides a more numerically stable alternate to direc
 
 ##### Problem set-up
 
-Given 10 noisy observations from a sine wave over the domain $(-5, 5)$, predict the function for an evenly spaced set of 50 points over the same domain. The red crosses are the training data points and the blue curve shows the true unknown function for illustrative purposes. In plot 3 the red dashed line is the mean prediction for the 50 test points.
+Given 10 noisy observations from a sine wave over the domain $(-5, 5)$, predict the function for an evenly spaced set of 50 points over the same domain. The red crosses are the training data-points and the blue curve shows the true unknown function for illustrative purposes. In plot 3 the red dashed line is the mean prediction for the 50 test points.
 
 <p align="center">
     <img src="/assets/img/gp_noise_example.png" alt="Image" width="700" height="575" />
