@@ -551,24 +551,24 @@ In words this is as follows:
 If we classify a negative class example correctly then $\mathbf{x}_i^T \mathbf{w} < 0$ and $y_i$ is negative and so $y_i=\operatorname{sign}\left(\mathbf{x}_i^T \mathbf{w}\right)$. This means $(y_i \cdot \mathbf{x}_i^T \mathbf{w})$ is positive. Similarly, if we classify a positive class example correctly then $\mathbf{x}_i^T \mathbf{w} > 0$ and $y_i$ is positive and so $y_i = \operatorname{sign}\left(\mathbf{x}_i^T \mathbf{w}\right)$. This means $(y_i \cdot \mathbf{x}_i^T \mathbf{w})$ is positive.
 <br>
 <br>
-So in both the cases where the perceptron is correct the term $(y_{i} \cdot \mathbf{x}_i^T)$ is positive.
+So in both the cases where the perceptron is correct the term $(y_{i} \cdot \mathbf{x}_i^T \mathbf{w})$ is positive.
 <br>
 <br>
-Similar analysis shows that when the perceptron is incorrect the term $(y_{i} \cdot \mathbf{x}_i^T)$ is always negative. Thus, due to the indicator function, we sum over $(y_{i} \cdot \mathbf{x}_i^T)$ only for every misclassified example. This sum of negatives is negative. We then negate the whole sum to make it positive and try to minimise it.
+Similar analysis shows that when the perceptron is incorrect the term $(y_{i} \cdot \mathbf{x}_i^T \mathbf{w})$ is always negative. Thus, due to the indicator function, we sum over $(y_{i} \cdot \mathbf{x}_i^T \mathbf{w})$ only for every misclassified example. This sum of a bunch of negative terms is negative. We then negate the whole sum to make it positive and try to minimise it.
 <br>
 <br>
-For more on hyperplanes and why $|\mathbf{x}_{i}^{T} \mathbf{w}|$ is measure of distance from the hyperplane see the <a class="reference external" href="{{page.url}}#hyperplanes">appendix.</a>
+For more on hyperplanes and why $\mathbf{x}_{i}^{T} \mathbf{w}$ is measure of distance from the hyperplane see the <a class="reference external" href="{{page.url}}#hyperplanes">appendix.</a>
 </blockquote>
 
 ##### The perceptron algorithm
 
-Whilst we cannot solve the loss function analytically, we can differentiate it. The derivative for misclassified observations, $\mathcal{M}_{t}$ is:
+Whilst we cannot solve the loss function analytically, we can differentiate it. The derivative for a misclassified observation is:
 
 $$
 \nabla_{\mathbf{w}} \mathcal{L}=-\sum_{i \in \mathcal{M}_{t}} y_{i} \mathbf{x}_{i}
 $$
 
-and so the derivative for a single observation is $- y_{i} \mathbf{x}_{i}$. This is then used in the gradient descent update step.
+where $\mathcal{M}\_t$ is the set of misclassified instances. Thus the derivative for a single observation is $- y_{i} \mathbf{x}_{i}$. This is then used in the gradient descent update step.
 
 Below is an example of the perceptron algorithm:
 
@@ -643,9 +643,7 @@ $$
 
 ###### Inference vs. decision making
 
-We aren't bound to assign an instance to the class with the highest posterior probability and we now draw a distinction. We call the inference stage the estimation of posterior probabilities.
-
-We could in fact, after modelling the posterior probabilities, choose to implement a different decision rule to decide how to assign an observation to a class - this is the realm of decision theory and we only briefly mention here to highlight the difference between inference and decision making.
+We aren't bound to assign an instance to the class with the highest posterior probability and we now draw a distinction. It is more precise definitionally to call the inference stage the estimation of posterior probabilities and we could, in fact, after modelling the posterior probabilities, choose to implement a different decision rule to decide how to assign an observation to a class. This is the realm of decision theory and we only briefly mention here to highlight the difference between inference and decision making.
 
 Fortunately and intuitively, in practice, the optimal decision step to minimize prediction error is generally as trivial as assigning an instance to the class with the highest posterior probability.
 
@@ -715,7 +713,7 @@ $$
 
 where $\color{green}{\frac{\mathbf{w}}{\\|\mathbf{w}\\|}}$ is the unit vector orthogonal to the hyperplane.
 
-In words: any point $\mathbf{x}$ can be rewritten as <span style="color:red">a point on the hyperplane</span> plus <span style="color:blue">moving a distance</span> <span style="color:green">away from the plane</span> assuming. Recall here we define the point $\mathbf{x}_{\perp}$ such that to get to $\mathbf{x}$ we travel perpendicular to the hyperplane.
+In words: any point $\mathbf{x}$ can be rewritten as <span style="color:red">a point on the hyperplane</span> plus <span style="color:blue">moving a distance</span> <span style="color:green">away from the plane</span>. Recall here we define the point $\mathbf{x}_{\perp}$ such that to get to $\mathbf{x}$ we travel perpendicular from the hyperplane.
 
 To prove $r = \frac{y(\mathbf{x})}{\\|\mathbf{w}\\|}$ we multiply both sides of (A5) by $\mathbf{w}^T$ and add $w_0$:
 
@@ -746,10 +744,10 @@ for some scalar $\alpha$ which may be positive or negative. Then because $\mathb
 
 <div class="math">
 \begin{alignat*}{1}
-\mathbf{w}^T \mathbf{x'} + w_0 &= 0 \\[5pt]
+\mathbf{w}^T \mathbf{x'} + w_0 &= 0 &\text{this is just $y(\mathbf{x'}) = 0$} \\[5pt]
 \mathbf{w}^T \alpha \mathbf{w} + w_0 &= 0 \hspace{2cm} &\text{by defn of $\mathbf{x'}$} \\[5pt]
 \Rightarrow \alpha &= -\frac{w_0}{ \mathbf{w}^T \mathbf{w}} \hspace{2cm} &\text{rearranging} \\[5pt]
-&= -\frac{w_0}{ \|\mathbf{w}\|^2} \hspace{2cm} &\text{by defn of dot product} \\[5pt]
+\alpha &= -\frac{w_0}{ \|\mathbf{w}\|^2} \hspace{2cm} &\text{by defn of dot product} \\[5pt]
 \end{alignat*}
 </div>
 
@@ -761,7 +759,7 @@ Now, the distance of interest is:
 \begin{alignat*}{1}
 \|\mathbf{x'}\| &= \| \alpha \mathbf{w} \| \\[5pt]
 &= \alpha \| \mathbf{w} \| \\[5pt]
-&= -\frac{w_0}{ \|\mathbf{w}\|^2} \| \mathbf{w} \| \hspace{2cm} &\text{by defn of $\alpha$} \\[5pt]
+&= -\frac{w_0}{ \|\mathbf{w}\|^2} \| \mathbf{w} \| \hspace{2cm} &\text{plugging in value of $\alpha$} \\[5pt]
 &= -\frac{w_0}{ \|\mathbf{w}\|}
 \end{alignat*}
 </div>
