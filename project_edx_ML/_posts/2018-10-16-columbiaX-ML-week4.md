@@ -425,7 +425,7 @@ An advantage of using log odds to make a decision rule is that the denominator i
 ##### Arriving at LDA
 
 For the case where we have a shared covariance matrix across both classes, by the Gaussian likelihood assumption we made, calculating the log odds per equation (4) leads to:
-
+<a name="lda_equation"></a>
 $$
 \begin{array}{l}{\underbrace{\ln \frac{\pi_{1}}{\pi_{0}}-\frac{1}{2}\left(\boldsymbol{\mu}_{1}+\boldsymbol{\mu}_{0}\right)^{T} \Sigma^{-1}\left(\boldsymbol{\mu}_{1}-\boldsymbol{\mu}_{0}\right)}_{\text{ a constant, call $w_0$}}} {+\mathbf{x}^{T} \underbrace{\Sigma^{-1}\left(\boldsymbol{\mu}_{1}-\boldsymbol{\mu}_{0}\right)}_{\text { a vector, call } \mathbf{w}}}\end{array} \tag{5}
 $$
@@ -571,7 +571,7 @@ $$
 where $\mathcal{M}\_t$ is the set of misclassified instances. Thus the derivative for a single observation is $- y_{i} \mathbf{x}_{i}$. This is then used in the gradient descent update step.
 
 Below is an example of the perceptron algorithm:
-
+<a name="perceptron_algo"></a>
 <blockquote class="algo">
 <hr class="small-margin">
 <strong>Algorithm: perceptron</strong>
@@ -579,7 +579,7 @@ Below is an example of the perceptron algorithm:
 <strong>Input:</strong> training data $(\mathbf{x}_1, y_1), ..., (\mathbf{x}_n, y_n)$ and step size $\eta$.
 <br>
 <br>
-1. <strong>Initialise:</strong> $\mathbf{w}^{(0)}$ zero vector
+1. <strong>Initialise:</strong> $\mathbf{w}^{(0)}$ to the zero vector
 <br>
 2. <strong>For step </strong>1, 2, ..., <strong>do:</strong>
 <br>
@@ -615,11 +615,9 @@ We will later meet support vector machines, which is one such algorithm that add
 <a name="prml"></a>
 * Bishop, C. (2006). [Pattern Recognition and Machine Learning](https://www.springer.com/gb/book/9780387310732)
   * Chapters: 4.1
-
 <a name="esl"></a>
 * Hastie, T., R. Tibshirani, and J. Friedman (2001). [The Elements of Statistical Learning](http://web.stanford.edu/~hastie/ElemStatLearn/)
   * Chapters: 2.3, 2.5, 4.5, 13.3 - 13.5
-
 <a name="edx_ml"></a>
 * edX, ColumbiaX, [Machine Learning](https://www.edx.org/course/machine-learning-1)
 

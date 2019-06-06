@@ -34,6 +34,11 @@ use_math: true
               Republication Date: {{ post.repub_date | date_to_long_string }}
           </div>
         {% endif %}
+        {% if post.github_repo != null %}
+        <div class="timestamp_code">
+          <a href="{{ post.github_repo }}" style="color:#272ded" >GitHub</a>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endfor %}

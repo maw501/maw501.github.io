@@ -153,15 +153,26 @@ Lecture 23: In the last week we shift gears to two problems that are very differ
 
 Lecture 24: In this final lecture we discuss model selection. We have made many modeling choices throughout this course without knowing exactly which is the best. This lecture discusses two basic techniques for choosing the final complexity of a model.
 
+<a name="notation"></a>
+<hr class="with-margin">
+<h4 class="header" id="notation">Notation</h4>
+##### A brief note on notation
+
+In general, capital letters are matrices, bold font represents vectors and lower-case letters are scalars. Functions are generally italicised though should be clear from the context.
+
+We will strive to introduce new notation appropriately as it arises ease understanding.
+
 <hr class="with-margin">
 <h4 class="header" id="references">References</h4>
 
+The core references for the course are given below however we will make wider use of what's available online and these will be referenced in the notes for that week as appropriate.
+
+##### Core references
+
 <a name="prml"></a>
 * Bishop, C. (2006). [Pattern Recognition and Machine Learning](https://www.springer.com/gb/book/9780387310732)
-
 <a name="esl"></a>
 * Hastie, T., R. Tibshirani, and J. Friedman (2001). [The Elements of Statistical Learning](http://web.stanford.edu/~hastie/ElemStatLearn/)
-
 <a name="edx_ml"></a>
 * edX, ColumbiaX, [Machine Learning](https://www.edx.org/course/machine-learning-1)
 

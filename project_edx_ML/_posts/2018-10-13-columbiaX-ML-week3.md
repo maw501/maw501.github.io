@@ -497,11 +497,9 @@ Similar reasoning allows $X^T \mathbf{y}$ to be updated in the same way.
 <a name="prml"></a>
 * Bishop, C. (2006). [Pattern Recognition and Machine Learning](https://www.springer.com/gb/book/9780387310732)
   * Chapters: 3.3 - 3.5
-
 <a name="esl"></a>
 * Hastie, T., R. Tibshirani, and J. Friedman (2001). [The Elements of Statistical Learning](http://web.stanford.edu/~hastie/ElemStatLearn/)
   * Chapters: 3.3 - 3.8
-
 <a name="edx_ml"></a>
 * edX, ColumbiaX, [Machine Learning](https://www.edx.org/course/machine-learning-1)
 

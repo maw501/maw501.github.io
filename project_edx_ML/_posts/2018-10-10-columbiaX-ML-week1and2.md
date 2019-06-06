@@ -568,11 +568,9 @@ Variance is an error from sensitivity to small fluctuations in the training set.
 <a name="prml"></a>
 * Bishop, C. (2006). [Pattern Recognition and Machine Learning](https://www.springer.com/gb/book/9780387310732)
   * Chapters: 1.1, 2.1 - 2.3, 3.1 - 3.2
-
 <a name="esl"></a>
 * Hastie, T., R. Tibshirani, and J. Friedman (2001). [The Elements of Statistical Learning](http://web.stanford.edu/~hastie/ElemStatLearn/)
-  * Chapters: 1 - 2, 3.1 - 3.4, 7.1 - 7.3, 7.10
-  
+  * Chapters: 1 - 2, 3.1 - 3.4, 7.1 - 7.3, 7.10  
 <a name="edx_ml"></a>
 * edX, ColumbiaX, [Machine Learning](https://www.edx.org/course/machine-learning-1)
 

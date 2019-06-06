@@ -31,6 +31,11 @@ numbers must add up to 12 (or less if not using full width)
         <div class="timestamp">
             Publication Date: {{ post.date | date_to_long_string }}
         </div>
+        {% if post.github_repo != null %}
+        <div class="timestamp_code">
+          <a href="{{ post.github_repo }}" style="color:#272ded" >GitHub</a>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endfor %}

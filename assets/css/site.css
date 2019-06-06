@@ -235,6 +235,14 @@ p.red
     color: #ad270d;
 }
 
+.post .timestamp_code {
+    font-size: 0.9em;
+    font-family: "Space Mono", monospace;
+    text-align: right;
+    color: #272ded ;
+    font-weight: bold;
+}
+
 .post .text {
     font-family: "Roboto", monospace;
     text-align: justify;
@@ -360,7 +368,10 @@ blockquote.math {
   border-color: black;
 }
 
-
+blockquote.comment {
+    background: ghostwhite;
+    border-color: #06a006;
+}
 
 /* ------ */
 /* Images */

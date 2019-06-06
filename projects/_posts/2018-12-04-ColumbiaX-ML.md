@@ -8,10 +8,11 @@ image: "ML_proj_cropped.png"
 comments: true
 category: projects
 foreign_url: /projects/edx/
+# github_repo: https://github.com/maw501?tab=repositories
 ---
 Week by week take on the course notes for the ColumbiaX Machine Learning graduate-level course offered through edX as part of their [Artificial Intelligence MicroMasters](https://www.edx.org/micromasters/columbiax-artificial-intelligence). This is a comprehensive and theoretical course covering a wide range of the topics in statistical machine learning.
 
-By mid-June 2019: will be updated to become more stand-alone and provide code where appropriate.
+By end-June 2019: will be updated to become more stand-alone and provide code where appropriate.
 
 <!--
 <hr class="with-margin">
