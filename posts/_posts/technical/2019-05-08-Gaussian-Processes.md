@@ -231,7 +231,7 @@ Instead we condition on the observed training data, $\mathbf{f}$, to obtain the 
 
 p(f_{+} | X_{+}, X, \mathbf{f}) &= \mathcal{N}\left(f_{+} | \mu_{+}, \Sigma_{+}\right) \tag{3} \\[5pt]
 \underbrace{\mathbf{\mu}_{f_{+} | \mathbf{f}}}_\text{predictive mean} &= \underbrace{\mu\left(\mathbf{x_{+}}\right) + K_{+}^{T} K^{-1}(\mathbf{f} - \mu(X))}_\text{linear in $\mathbf{f}$} \tag{4} \\[5pt]
-\underbrace{\Sigma_{f_{+} | \mathbf{f}}}_\text{predictive uncertainty} &= \underbrace{K_{\\++}}_\text{prior uncertainty} - \underbrace{K_{+}^{T} K^{-1} K_{+}}_\text{reduction in uncertainty} \tag{5}
+\underbrace{\Sigma_{f_{+} | \mathbf{f}}}_\text{predictive uncertainty} &= \underbrace{K_{\\++}}_\text{prior uncertainty} - \overbrace{\underbrace{K_{+}^{T} K^{-1} K_{+}}_\text{reduction in uncertainty}}^\text{$\geq \, 0$} \tag{5}
 \end{align*}
 </div>
 
@@ -240,6 +240,38 @@ The above conditioning reduces a 4-dimensional Gaussian down to a 1-dimensional 
 To then obtain the marginal distribution of each test point we use the marginalization property of multivariate Gaussians to obtain the mean prediction and variance estimate for each point (in this case there is no need to as we are left with a 1-dimensional distribution for our single test point).
 
 In this way the prediction is not just an estimate for that point, but also has uncertainty information - for understanding why estimating uncertainty is important see the Q and A [below](#know_uncertainty).
+
+<blockquote class="tip">
+<strong>Sidebar on interpreting the predictive equations</strong>
+<br>
+
+Equation (4) above for the predictive mean was given as:
+
+<div class="math">
+\begin{align*}
+\mathbf{\mu}_{f_{+} | \mathbf{f}} &= \color{red}{\mu\left(\mathbf{x_{+}}\right)} + \color{blue}{K_{+}^{T}} \color{green}{K^{-1}}\color{orange}{(\mathbf{f} - \mu(X)) }
+\end{align*}
+</div>
+
+which can be intepreted as
+<span style="color:red">the prior guess we had for the mean of the test point before seeing any data</span> plus
+<span style="color:orange">the surprise/difference in the observed data from what we expected</span>
+<span style="color:green">normalized by the training data's variance</span> which is then
+<span style="color:blue">weighted by how similar the training and test data are</span>.
+<br>
+<br>
+Similarly for equation (5) and the predictive variance:
+<div class="math">
+\begin{align*}
+\Sigma_{f_{+} | \mathbf{f}} &= \color{red}{K_{\\++}}- \color{blue}{K_{+}^{T}} \color{green}{K^{-1}} \color{blue}{K_{+}}
+\end{align*}
+</div>
+can be interpreted as
+<span style="color:red">the prior guess we had for the variance of the test data before seeing any data</span> minus a reduction in uncertainty based on 
+<span style="color:blue">how similar the training and test data are</span>
+<span style="color:green">normalized by the training data's variance</span>.
+
+</blockquote>
 
 ##### Adding more data
 
