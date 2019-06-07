@@ -6,7 +6,7 @@ use_math: true
 ---
 <br>
 <a name="resume_link"></a>
-<h1 align="left"> Resume/CV</h1>
+<h1 align="left"> Summary</h1>
 <div class="container">
 {% for post in site.categories.resume %}
 {% if post.tags contains "resume" %}
@@ -30,9 +30,9 @@ use_math: true
         </div>
     </div>
     <div class="card-footer text-muted">
-        <div class="timestamp">
-            Publication Date: {{ post.date | date_to_long_string }}
-        </div>
+      <div class="timestamp_code">
+        <a href="{{ post.github_repo }}" style="color:#272ded"> PDF copy of CV </a>
+      </div>
     </div>
 </div>
 {% endif %}
@@ -64,11 +64,6 @@ use_math: true
             </div>
         </div>
     </div>
-    <div class="card-footer text-muted">
-        <div class="timestamp">
-            Publication Date: {{ post.date | date_to_long_string }}
-        </div>
-    </div>
 </div>
 {% endif %}
 {% endfor %}
@@ -97,11 +92,6 @@ use_math: true
                     {{ post.excerpt }}
                 </article>
             </div>
-        </div>
-    </div>
-    <div class="card-footer text-muted">
-        <div class="timestamp">
-            Publication Date: {{ post.date | date_to_long_string }}
         </div>
     </div>
 </div>

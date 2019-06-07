@@ -7,7 +7,7 @@ image: "ml_main_cropped.png"
 comments: true
 tags: [summary]
 ---
-Please read this page for an overview of course notes written based on the ColumbiaX Machine Learning course [hosted on edX](https://www.edx.org/course/machine-learning-columbiax-csmm-102x-4). The notes represent my take on the content and were a fun way to explore the material deeper than the course allowed.
+Please read this page for an overview of course notes written based on the ColumbiaX Machine Learning course [hosted on edX](https://www.edx.org/course/machine-learning-columbiax-csmm-102x-4). The notes represent my take on the content and have been a fun way for me to explore the material much deeper than the course allowed.
 
 <!--more-->
 <hr class="with-margin">
@@ -25,7 +25,7 @@ Please read this page for an overview of course notes written based on the Colum
 The course notes are in the process of being updated to make stand-alone. All old posts have been taken down and are being republished once they are updated.
 <br>
 <br>
-Target completion date: end-June 2019
+Target completion date: September 2019 (next course start date)
 </blockquote>
 
 ##### Summary

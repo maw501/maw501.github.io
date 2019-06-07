@@ -12,7 +12,7 @@ foreign_url: /projects/edx/
 ---
 Week by week take on the course notes for the ColumbiaX Machine Learning graduate-level course offered through edX as part of their [Artificial Intelligence MicroMasters](https://www.edx.org/micromasters/columbiax-artificial-intelligence). This is a comprehensive and theoretical course covering a wide range of the topics in statistical machine learning.
 
-By end-June 2019: will be updated to become more stand-alone and provide code where appropriate.
+By September 2019: will be updated to become more stand-alone and provide code where appropriate in time for next iteration of course.
 
 <!--
 <hr class="with-margin">
