@@ -267,7 +267,7 @@ Similarly for equation (5) and the predictive variance:
 \end{align*}
 </div>
 can be interpreted as
-<span style="color:red">the prior guess we had for the variance of the test data before seeing any data</span> minus a reduction in uncertainty based on 
+<span style="color:red">the prior guess we had for the variance of the test data before seeing any data</span> minus a reduction in uncertainty based on
 <span style="color:blue">how similar the training and test data are</span>
 <span style="color:green">normalized by the training data's variance</span>.
 
@@ -596,7 +596,6 @@ In order to get a firm grip on the basics of GPs I read many sources, most liste
 * Bailey K, [Gaussian Processes for Dummies](http://katbailey.github.io/post/gaussian-processes-for-dummies/)
   * Very accessible introduction based on Murphy's book
 
-These results will play a key role in Gaussian processes and the use of them will be highlighted when they are encountered.
 <hr class="with-margin">
 <h4 class="header" id="appendix">Appendix Q and A</h4>
 
