@@ -65,7 +65,7 @@ $$
 
 where $\epsilon \sim \mathcal{N}(0, \sigma_i^2)$ is an additive independent identically distributed Gaussian noise.
 
-It is possible and more compact to restate this in matrix form by absorbing the intercept, $w_0$ into the vector $\mathbf{w}$ and adding a column of 1s to $X$ to more compactly write as:
+It is possible and more compact to restate this in matrix form by absorbing the intercept, $w_0$ into the vector $\mathbf{w}$ and adding a column of 1s to $X$ to write as:
 
 $$
 \mathbf{y}= X \mathbf{w} + \mathbf{\epsilon}
@@ -271,7 +271,7 @@ The regularization term added in the ridge regression objective term is [sometim
 
 ##### Introduction
 
-So far in the above we have proceeded somewhat mechanically in order to link OLS to MLE and then RR to MAP without really analysing what we are doing. In this section we provide some analysis of the various solutions to linear regression bef context andore proceeding to the bias-variance tradeoff in the next section.
+So far in the above we have proceeded somewhat mechanically in order to link OLS to MLE and then RR to MAP without really analysing what we are doing. In this section we provide some analysis of the various solutions to linear regression before proceeding to the bias-variance tradeoff in the next section.
 
 ##### Motivating RR
 
