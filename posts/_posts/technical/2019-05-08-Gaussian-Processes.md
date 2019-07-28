@@ -29,7 +29,7 @@ Gaussian processes are Bayesian alternatives to kernel methods and allow us to i
 
 Typically in machine learning we have some features $X$ with labels $\mathbf{y}$ and we assume that $\mathbf{y} = f(X)$ for some function $f$. When making this assumption we are typically fixing the parameterisation capacity of the model we wish to use, for example, in linear regression we are assuming there are slope and intercept terms and so the total amount of parameters is fixed given the data.
 
-What if, instead, we wished to think about all possible functional forms for $f$ without pre-specifying how many parameters are involved? It turns out this is what Gaussian Processes allow us to do. In return we must find a way to specify a prior over the type of functions we wish to see.
+What if, instead, we wished to think about all possible functional forms for $f$ without pre-specifying how many parameters are involved? It turns out this is what Gaussian processes allow us to do. In return we must find a way to specify a prior over the type of functions we wish to see.
 
 <hr class="with-margin">
 <h4 class="header" id="outline">Outline</h4>
@@ -49,13 +49,13 @@ Towards the end we detail some helpful mathematical results before a small Q and
 <hr class="with-margin">
 <h4 class="header" id="intro_gp">Gaussian process preliminaries</h4>
 
-Before defining Gaussian processes it is worth briefly explaining a few concepts which we do here. However a key prerequisite for understanding GPs is familiarity with some of the key properties of multivariate Gaussians and introductory concepts from probability theory such as conditioning and marginalization of variables. These [key](#mult_rvs) results are given in the mathematical results section.
+Before defining Gaussian processes it is worth briefly explaining a few concepts, which we now take the time to do here. It is also important to be familiar with some of the key properties of multivariate Gaussians and introductory concepts from probability theory such as conditioning and marginalization of variables. These [key](#mult_rvs) results are given in the mathematical results section.
 
 ##### Kernel functions
 
-In the context of Gaussian processes a kernel function is a function that takes in two vectors (observations in $\mathbb{R}^ d$) and outputs a similarity scalar between them. As covariance matrices must be positive semi-definite valid kernels are those that satisfy this requirement. For GPs we evaluate the kernel function for each pairwise combination of data-points to retrieve the covariance matrix. The covariance matrix will end up not only describing the shape of our learned distribution, but ultimately determines the characteristics of the function that we want to predict.
+In the context of Gaussian processes a kernel function is a function that takes in two vectors (observations in $\mathbb{R}^ d$) and outputs a similarity scalar between them. As covariance matrices must be positive semi-definite valid kernels are those that satisfy this requirement. For GPs we evaluate the kernel function for each pairwise combination of data-points to retrieve the covariance matrix. The covariance matrix will end up not only describing the shape of the learned distribution, but ultimately determines the characteristics of the function that we want to predict.
 
-We can go further and say that the problem of learning for Gaussian processes is exactly the problem of learning the hyperparameters of the kernel function. Once we have chosen the kernel these is nothing much else to do apart from turn the model fitting handle. However, how to learn the kernel hyperparameters is not the subject of this post but is mentioned briefly in the Q and A section [here](#kernel_hyper).
+We can go further and say that the problem of learning for Gaussian processes is exactly the problem of learning the hyperparameters of the kernel function and that once we have chosen the kernel there is nothing else to do except turn the model fitting handle. How to actually learn the kernel hyperparameters is a separate topic and not the subject of this post, though is mentioned briefly in the Q and A section [here](#kernel_hyper).
 
 There are many kernels that can describe different classes of functions, including to encode properties such as periodicity. In this post we will restrict ourselves to the most common kernel, the [radial basis function (or Gaussian) kernel](https://en.wikipedia.org/wiki/Radial_basis_function_kernel):
 
@@ -63,7 +63,7 @@ $$
 \kappa(\mathbf{x_i}, \mathbf{x_j}) = \sigma^{2} \exp (-\frac{ \| \mathbf{x_i} - \mathbf{x_j} \|^{2}}{2 l^{2}})
 $$
 
-with hyperparameters $\sigma$ and $l$. The variance $\sigma^2$ determines the magnitude of fluctuation of values away from the mean and $l^2$ determines the reach of neighbouring data-points (small $l$ will give wiggly functions, increasing $l$ gives smoother functions). See the plot below for the effect of different values of the hyperparameters.
+with hyperparameters $\sigma$ and $l$. The variance $\sigma^2$ determines the magnitude of fluctuation of values away from the mean and the length $l^2$ determines the reach of neighbouring data-points (small $l$ will give wiggly functions, increasing $l$ gives smoother functions). See the plot below for the effect of different values of the hyperparameters.
 
 <p align="center">
     <img src="/assets/img/gp_kernel_params.png" alt="Image" width="600" height="400" />
@@ -77,7 +77,7 @@ Kernel functions are also sometimes referred to as covariance functions.
 </blockquote>
 
 ##### Functions as vectors
-Loosely speaking a function can be viewed as an infinitely long vector. We could imagine discretizing the input space with a huge grid of values containing every possible combination of floating point numbers for each dimension of our data matrix $X$. Theoretically (but not practically) we could then evaluate $\mathbf{f} = (f(\mathbf{x}\_{1}), ..., f(\mathbf{x}\_{n}))$ for this huge $n$ and thus $\mathbf{f}$ would be an enormous vector containing the function's values for the domain of interest.
+Loosely speaking a function can be viewed as an infinitely long vector. We could imagine discretizing the input space with a huge grid of values containing every possible combination of floating point numbers for each dimension of the data matrix $X$. Theoretically (but not practically) we could then evaluate $\mathbf{f} = (f(\mathbf{x}\_{1}), ..., f(\mathbf{x}\_{n}))$ for this huge $n$ and thus $\mathbf{f}$ would be an enormous vector containing the function's values for the domain of interest.
 
 Alas, we can’t store such a vector containing the function values for every possible input combination (recall each $\mathbf{x_i}$ is $d$ dimensional), though GPS allow us to define a multivariate Gaussian prior on it. Given (potentially) noisy observations of some of the elements of this vector, it will turn out that we can infer other elements of the vector without explicitly having to represent the whole object.
 
@@ -87,9 +87,9 @@ Note that whilst talk of functions as vectors can seem a little hand-wavy it can
 
 ##### A different way to view multivariate distributions
 
-In order to aid the discussion on large dimensional Gaussians it's crucial to switch to a different way to visualize them. We start by thinking of each data-point $\mathbf{x_i}$ having $d$-dimensions, so $X$ is $n \times d$ and $\mathbf{x_1}$ and $\mathbf{x_2}$ refer to 2 observations from our data where $\mathbf{y} = \\{y_1, y_2\\}$ is the function value for each data-point.
+In order to aid the discussion on large dimensional Gaussians it's crucial to switch to a different way to visualize them. We start by thinking of each data-point $\mathbf{x_i}$ having $d$-dimensions, so $X$ is $n \times d$ and $\mathbf{x_1}$ and $\mathbf{x_2}$ refer to 2 observations from the data where $\mathbf{y} = \\{y_1, y_2\\}$ is the function value for each data-point.
 
-Using the kernel function we can calculate the covariance matrix, $\Sigma$, between these 2 points (using $X$ only), for example:
+Using the kernel function we can calculate the covariance matrix, $\Sigma$, between these 2 points (using $X$ only, not $\mathbf{y}$), for example:
 
 $$
 \Sigma = \left[\begin{array}{ll}{\kappa(\mathbf{x_1}, \mathbf{x_1})} & {\kappa(\mathbf{x_1}, \mathbf{x_2})} \\ {\kappa(\mathbf{x_2}, \mathbf{x_1})} & {\kappa(\mathbf{x_2}, \mathbf{x_2})}\end{array}\right]
@@ -180,7 +180,7 @@ We will walk through an example with a small amount of data but the below approa
 ##### Problem set-up
 We start by assuming we are given 3 training data-points $\mathcal{D} = \\{ (\mathbf{x_1}, f_1), (\mathbf{x_2}, f_2), (\mathbf{x_3}, f_3)\\}$ and a new test point $\mathbf{x_{+}}$ for which we wish to predict $f_{+}$. We assume that the training data has no noise and contains samples from the true unknown function, that is, $\mathbf{f} = \mathbf{y}$ or $f_i = y_i$ for all $i$.
 
-By the definition of a GP it is assumed that any set of random variables, which are the output function values for the data-points, are distributed as a multivariate Gaussian. Given this assumption we can write the joint distribution between our observed training data and the predicted output as:
+By the definition of a GP it is assumed that any set of random variables, which are the output function values for the data-points, are distributed as a multivariate Gaussian. Given this assumption we can write the joint distribution between the observed training data and the predicted output as:
 
 $$
 \left[ \begin{array}{l}{\mathbf{f}} \\ {f_{+}}\end{array}\right]
@@ -237,7 +237,7 @@ p(f_{+} | X_{+}, X, \mathbf{f}) &= \mathcal{N}\left(f_{+} | \mu_{+}, \Sigma_{+}\
 
 The above conditioning reduces a 4-dimensional Gaussian down to a 1-dimensional Gaussian - we can thus think of the conditioning as cutting 3 slices in the 4-dimensional space to leave us with a 1-dimensional distribution. In general, once we have conditioned on the observed data we will be left with a multivariate Gaussian with dimensionality equal to the number of test points we wish to predict for.
 
-To then obtain the marginal distribution of each test point we use the marginalization property of multivariate Gaussians to obtain the mean prediction and variance estimate for each point (in this case there is no need to as we are left with a 1-dimensional distribution for our single test point).
+To then obtain the marginal distribution of each test point we use the marginalization property of multivariate Gaussians to obtain the mean prediction and variance estimate for each point (in this case there is no need to as we are left with a 1-dimensional distribution for the single test point).
 
 In this way the prediction is not just an estimate for that point, but also has uncertainty information - for understanding why estimating uncertainty is important see the Q and A [below](#know_uncertainty).
 
@@ -294,7 +294,7 @@ The below chart visualizes parts of the GP fit process and is explained below:
 Without a model and by visually inspecting the 3 training data-points we might guess that $f_{+} \approx 0$ and we might also perhaps expect it to lie in some range around this point. This is an informal way of thinking about the key idea behind GPs - that we expect points that are close in input space to also be close in output space.
 
 ###### Subplot 2: sampling from the prior
-By defining the kernel function, and before observing any training data, we are specifying a view on how smooth/wiggly we expect the estimated functions to be. Sampling from the prior amounts to having to specify some domain of interest (here we use -5 to 5) and discretizing it into many points. This is what we loosely mean by saying a function is just a vector of values. This subplot essentially shows a 50-dimensional Gaussian as this is the number of points used along the x-axis - note this creates realistic plots and is a key point. We rarely ever care about every single value our input data can take but just a subset where we have training data or wish to predict.
+By defining the kernel function, and before observing any training data, we are specifying a view on how smooth/wiggly we expect the estimated functions to be. Sampling from the prior amounts to having to specify some domain of interest (here we use -5 to 5) and discretizing it into many points. This is what we loosely mean by saying a function is just a vector of values. This subplot essentially shows a 50-dimensional Gaussian as this is the number of points used along the x-axis - note this creates realistic plots and is a key point. We rarely ever care about every single value the input data can take but just a subset where we have training data or wish to predict.
 
 The data for this subplot is not part of the training data and we just show these samples for illustration. This 'distribution of functions' will become constrained once we observe some data.
 
@@ -310,9 +310,9 @@ Recall that we can represent a function as a big vector where we assume this unk
 <hr class="with-margin">
 <h4 class="header" id="gp_reg_noisy">GP regression (noisy)</h4>
 
-Having walked through the noise-free case the extension to the noisy case is straightforward. We now assume that the observed data is a noisy version of the true underlying function and instead we now observe training data $\mathcal{D} = \\{X, \mathbf{y} \\}$ where
+Having walked through the noise-free case the extension to the noisy case is straightforward. We now assume that the observed data is a noisy version of the true underlying function and instead we now observe training data $\mathcal{D} = \\{X, \mathbf{y} \\}$ where, for a single point $i$, we have
 
-$$\mathbf{y} = f(\mathbf{x_i}) + \epsilon \tag{6} $$
+$$y_i = f(\mathbf{x_i}) + \epsilon \tag{6} $$
 
 and $\epsilon$ is additive independent identically distributed Gaussian noise such that $\epsilon \sim \mathcal{N}(0, \sigma_y^2)$.
 
@@ -411,7 +411,7 @@ Given 10 noisy observations from a sine wave over the domain $(-5, 5)$, predict 
 * All the prior functions are different but come from the same distribution whose covariance (dictated by the choice of kernel and its hyperparameters) controls the smoothness of the functions.
 * The prior is over the test points as it's the prior belief for functions before seeing any data.
 * Conditioning on data reduces the set of posterior samples to be close to the observed data. As we are observing noisy values of the function the samples will not pass exactly through these points but must come close.
-* The uncertainty bands are wide when we have little observed data - this makes sense. This is a function of the kernel hyperparameters and indicates our prior is perhaps too 'wiggly' for the true unknown function. We briefly discuss how to set the kernel hyperparameters [here](kernel_hyper).
+* The uncertainty bands are wide when we have little observed data - this makes sense. This is a function of the kernel hyperparameters and indicates the prior is perhaps too 'wiggly' for the true unknown function. We briefly discuss how to set the kernel hyperparameters [here](kernel_hyper).
 
 ##### Python code
 
@@ -631,7 +631,7 @@ The kernel hyperparameters control the type of functions GPs can produce and yet
 
 The [empirical Bayes](https://en.wikipedia.org/wiki/Empirical_Bayes_method) approach is a popular method for choosing how to set the prior that involves estimating it from the data. In this way some Bayesians philosophically disagree with the use of empirical Bayes methods as the prior will no longer represent the view we have about functions before seeing the data.
 
-For GPs the problem is how best to choose the hyperparameters of the kernel function, or even the kernel type itself, but we do not discuss this.
+For GPs the problem is how best to choose the hyperparameters of the kernel function which we discuss next. There is also a choice to be made as to which is the appropriate choice of kernel, though we do not discuss this topic in this post.
 
 In order to perform empirical Bayes for GP regression we maximize the marginal likelihood, or equivalently marginal log-likelihood, of the data which is given by:
 
