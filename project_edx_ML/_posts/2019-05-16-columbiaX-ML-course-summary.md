@@ -19,14 +19,6 @@ Please read this page for an overview of course notes written based on the Colum
 <hr class="with-margin">
 <h4 class="header" id="overview">Overview</h4>
 
-<blockquote class="tip">
-<strong>Update</strong>
-<br>
-The course notes are currently on-hold and only complete up to week 5.
-<br>
-<br>
-</blockquote>
-
 ##### Summary
 
 The story we will follow will be the core direction of the ColumbiaX Machine Learning course but we will deviate in many parts, particularly in the exposition. The journey to understanding is a deeply personal one and when forced to write about a topic the presentation of material will naturally be a function of that understanding.
