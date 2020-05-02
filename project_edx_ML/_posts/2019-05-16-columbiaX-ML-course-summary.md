@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Machine Learning - course overview (read first)
+title: Machine Learning - course overview
 date: 2019-05-16
 use_math: true
 image: "ml_main_cropped.png"
@@ -22,10 +22,9 @@ Please read this page for an overview of course notes written based on the Colum
 <blockquote class="tip">
 <strong>Update</strong>
 <br>
-The course notes are in the process of being updated to make stand-alone. All old posts have been taken down and are being republished once they are updated.
+The course notes are currently on-hold and only complete up to week 5.
 <br>
 <br>
-Target completion date: September 2019 (next course start date)
 </blockquote>
 
 ##### Summary
