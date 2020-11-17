@@ -91,10 +91,8 @@ In order to aid the discussion on large dimensional Gaussians it's crucial to sw
 
 Using the kernel function we can calculate the covariance matrix, $\Sigma$, between these 2 points (using $X$ only, not $\mathbf{y}$), for example:
 
-$$
-\Sigma = \left[\begin{array}{ll}{\kappa(\mathbf{x_1}, \mathbf{x_1})} & {\kappa(\mathbf{x_1}, \mathbf{x_2})} \\ {\kappa(\mathbf{x_2}, \mathbf{x_1})} & {\kappa(\mathbf{x_2}, \mathbf{x_2})}\end{array}\right]
-=  \left[ \begin{array}{ll}{1} & {.7} \\ {.7} & {1}\end{array}\right]
-$$
+$$\Sigma = \left[\begin{array}{ll}{\kappa(\mathbf{x_1}, \mathbf{x_1})} & {\kappa(\mathbf{x_1}, \mathbf{x_2})} \\ {\kappa(\mathbf{x_2}, \mathbf{x_1})} & {\kappa(\mathbf{x_2}, \mathbf{x_2})}\end{array}\right]
+=  \left[ \begin{array}{ll}{1} & {.7} \\ {.7} & {1}\end{array}\right]$$
 
 and by the assumption we make for GPs (see [below](#gp_defn)) we assume the output function values are jointly distributed according to a Gaussian:
 
