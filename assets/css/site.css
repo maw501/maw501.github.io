@@ -15,7 +15,7 @@ body {
     position: relative;
     min-height: 100%;
     padding-bottom: 6rem;
-    background: white; /* whitesmoke */
+    background: #282c34; /* whitesmoke */
     line-height: 175%;
     font-size:15px;
     width: 750px;
@@ -26,27 +26,27 @@ h1,h2,h3,h4,h5,h6
 {
   /*font-family:"Helvetica Neue", helvetica, "Open Sans", sans-serif; */
   font-family: 'Droid Sans Mono', monospace;
-  color:#3373ff;
+  color:#e06c75;
   line-height: 150%
 }
 
 h1
 {
   font-weight:700;
-  color:#04277E;
+  color:#e06c75;
   font-size:1.55em;
 }
 
 h2
 {
   font-size: 1.45em;
-  color: #494a78;
+  color: #98c379;
 }
 
 h3
 {
   font-size: 1.35em;
-  color: #040466;
+  color: #e06c75;
 }
 
 /* Makes font heavier
@@ -58,13 +58,13 @@ h2,h3
 
 h1 a,h2 a,h3 a,h4 a
 {
-  color:#04277E;
+  color:#e06c75;
 }
 
 h4
 {
   font-size: 1.25em;
-  color: #0505aa;
+  color: #98c379;
 }
 
 h5
@@ -75,19 +75,20 @@ h5
 
 h6
 {
-  color:  #02538a;
+  color:  #61afef;
   font-size: 1em;
 }
 
 h1 a:hover,h2 a:hover,h3 a:hover,h4 a:hover
 {
-  color:#04277E
+  color:#c678dd
 }
 
 p
 {
   font-family:"Helvetica Neue", helvetica, "Open Sans", sans-serif;
-  font-weight:200
+  font-weight:200;
+  color: #abb2bf
 }
 
 p.red
