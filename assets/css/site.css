@@ -2,7 +2,7 @@ html {
     height: 100%;
     box-sizing: border-box;
     font-size: 18px;
-    font-family: "Helvetica Neue", sans-serif;
+    font-family: "Fira Sans" Fira Mono;
 }
 
 *,
@@ -15,7 +15,7 @@ body {
     position: relative;
     min-height: 100%;
     padding-bottom: 6rem;
-    background: #282c34; /* whitesmoke */
+    background: #282c34;
     line-height: 175%;
     font-size:15px;
     width: 750px;
@@ -25,7 +25,7 @@ body {
 h1,h2,h3,h4,h5,h6
 {
   /*font-family:"Helvetica Neue", helvetica, "Open Sans", sans-serif; */
-  font-family: 'Droid Sans Mono', monospace;
+  /*font-family: 'Droid Sans Mono', monospace;*/
   color:#e06c75;
   line-height: 150%
 }
@@ -40,7 +40,7 @@ h1
 h2
 {
   font-size: 1.45em;
-  color: #98c379;
+  color: #e06c75;
 }
 
 h3
@@ -64,7 +64,7 @@ h1 a,h2 a,h3 a,h4 a
 h4
 {
   font-size: 1.25em;
-  color: #98c379;
+  color: #e06c75;
 }
 
 h5
@@ -75,26 +75,54 @@ h5
 
 h6
 {
-  color:  #61afef;
+  color:  #e06c75;
   font-size: 1em;
 }
 
 h1 a:hover,h2 a:hover,h3 a:hover,h4 a:hover
 {
-  color:#c678dd
+  color:#e06c75
 }
 
 p
 {
-  font-family:"Helvetica Neue", helvetica, "Open Sans", sans-serif;
-  font-weight:200;
-  color: #abb2bf
+  /*font-family: 'Fira Sans' Fira Mono;*/
+  font-size: 1.1em;
+  font-weight: 500;
+  color: #cfd7e6;
 }
 
 p.red
 {
   color: red
 }
+
+.bullet {
+  color: #cfd7e6;
+}
+
+.math {
+  color: #cfd7e6;
+}
+ /* unvisited link */
+ a:link {
+  color: #98c379;
+}
+
+/* visited link */
+a:visited {
+  color: #98c379;
+}
+
+/* mouse over link */
+a:hover {
+  color: #98c379;
+}
+
+/* selected link */
+a:active {
+  color: #98c379;
+} 
 
 /* ---------- */
 /* Top Header */
@@ -149,7 +177,7 @@ p.red
     list-style: none;
     background: #44494d;
     display: block;
-    font-family: "Space Mono", monospace;
+    /*font-family: "Space Mono", monospace;*/
     width: 100%;
 }
 
@@ -160,7 +188,7 @@ p.red
     width: 120px;  /* navigation banner at top Blog Projects etc..*/
     line-height: 50px;
     font-size: 1.4em;
-    font-family: "Share", cursive;
+    /*font-family: "Share", cursive;*/
     margin-right: -4px;
 }
 
@@ -231,21 +259,21 @@ p.red
 
 .post .timestamp {
     font-size: 0.9em;
-    font-family: "Space Mono", monospace;
+    /*: "Space Mono", monospace;*/
     text-align: right;
     color: #ad270d;
 }
 
 .post .timestamp_code {
     font-size: 0.9em;
-    font-family: "Space Mono", monospace;
+    /*font-family: "Space Mono", monospace;*/
     text-align: right;
     color: #272ded ;
     font-weight: bold;
 }
 
 .post .text {
-    font-family: "Roboto", monospace;
+    /*font-family: "Roboto", monospace;*/
     text-align: justify;
 }
 
@@ -259,7 +287,8 @@ p.red
 }
 
 .list-of-contents h4 {
-    font-family: "Roboto", monospace;
+    /*font-family: "Roboto", monospace;*/
+    color: #e06c75;
 }
 
 hr {
@@ -277,7 +306,7 @@ hr.small-margin {
 
 .post .tags {
     text-align: right;
-    font-family: "Space Mono", monospace;
+    /*font-family: "Space Mono", monospace;*/
     font-size: 0.9em;
     margin-bottom: 1em;
 }
@@ -322,13 +351,15 @@ img.button-image {
 /* ----------------- */
 
 blockquote {
-  border-width: 1px 1px 1px 10px;
+  border-width: 2px 2px 2px 10px;
   border-style: solid;
   padding: 0.5em 0.5em;
+  border-color: #61afef;  /* dodgerblue */
+  color: #cfd7e6;
 }
 
 blockquote:before {
-  color: #ccc;
+  /*color: #ccc;*/
   font-size: 4em;
   line-height: 0.1em;
   margin-right: 0.25em;
@@ -340,21 +371,22 @@ blockquote p {
 }
 
 blockquote.warning {
-    background: antiquewhite;
-    border-color: darkorange;
+    /*background: antiquewhite;*/
+   /* border-color: darkorange;*/
 }
 
 blockquote.tip {
-    background: ghostwhite;
-    border-color: #0505aa;  /* dodgerblue */
+    /*background: #e5c07b;*/
+    border-color: #61afef;  /* dodgerblue */
+    color: #cfd7e6;
 }
 
 blockquote.algo {
-  background: white;
+  /*background: white;*/
   padding-top: 1em;
   padding-bottom: 0;
   padding-right: 2em;
-  border-color: #A90404;
+  /*border-color: #A90404;*/
 }
 
 blockquote.algo li:not(:last-child) {
@@ -362,7 +394,7 @@ blockquote.algo li:not(:last-child) {
 }
 
 blockquote.math {
-  background: #eef6e8;
+  /*background: #eef6e8;*/
   padding-top: 0em;
   padding-bottom: 0em;
   padding-right: 2em;
@@ -370,8 +402,8 @@ blockquote.math {
 }
 
 blockquote.comment {
-    background: ghostwhite;
-    border-color: #06a006;
+    /*background: ghostwhite;*/
+    /*border-color: #06a006;*/
 }
 
 /* ------ */
@@ -388,7 +420,7 @@ blockquote.comment {
 /* ----- */
 
 p.huge {
-  font-family: "Share";
+  /*font-family: "Share";*/
   font-weight: normal;
   font-size: 1.5em;
 }

@@ -39,12 +39,6 @@ We start with a few preliminaries which cover some key prerequisite concepts suc
 We then walk through the predictive equations for GP regression for the noise-free and noisy case. Next we move onto showing the code and plots for the noisy case which is a simple extension.
 
 Towards the end we detail some helpful mathematical results before a small Q and A section in the appendix which lists some common questions that arose for me whilst developing my understanding of Gaussian processes.
-<br>
-<br>
-<p align="center">
-    <img src="/assets/img/grok_gps.png" alt="Image" width="600" height="500" />
-</p>
-<em class="figure">Brief outline of post coverage</em>
 
 <hr class="with-margin">
 <h4 class="header" id="intro_gp">Gaussian process preliminaries</h4>
@@ -58,11 +52,11 @@ In the context of Gaussian processes a kernel function is a function that takes 
 We can go further and say that the problem of learning for Gaussian processes is exactly the problem of learning the hyperparameters of the kernel function and that once we have chosen the kernel there is nothing else to do except turn the model fitting handle. How to actually learn the kernel hyperparameters is a separate topic and not the subject of this post, though is mentioned briefly in the Q and A section [here](#kernel_hyper).
 
 There are many kernels that can describe different classes of functions, including to encode properties such as periodicity. In this post we will restrict ourselves to the most common kernel, the [radial basis function (or Gaussian) kernel](https://en.wikipedia.org/wiki/Radial_basis_function_kernel):
-
+<div class="math">
 $$
 \kappa(\mathbf{x_i}, \mathbf{x_j}) = \sigma^{2} \exp (-\frac{ \| \mathbf{x_i} - \mathbf{x_j} \|^{2}}{2 l^{2}})
 $$
-
+</div>
 with hyperparameters $\sigma$ and $l$. The variance $\sigma^2$ determines the magnitude of fluctuation of values away from the mean and the length $l^2$ determines the reach of neighbouring data-points (small $l$ will give wiggly functions, increasing $l$ gives smoother functions). See the plot below for the effect of different values of the hyperparameters.
 
 <p align="center">
@@ -224,6 +218,7 @@ Using the [properties](#mult_rvs) of multivariate Gaussians we are able to write
 
 Instead we condition on the observed training data, $\mathbf{f}$, to obtain the posterior predictive (conditional) distribution for $f_{+}$. Using the result for the [conditioning](#mult_rvs) of Gaussians we have, for a single test point:
 
+<div style="color: #cfd7e6">
 <div class="math">
 \begin{align*}
 
@@ -232,6 +227,7 @@ p(f_{+} | X_{+}, X, \mathbf{f}) &= \mathcal{N}\left(f_{+} | \mu_{+}, \Sigma_{+}\
 \underbrace{\Sigma_{f_{+} | \mathbf{f}}}_\text{predictive uncertainty} &= \underbrace{K_{\\++}}_\text{prior uncertainty} - \overbrace{\underbrace{K_{+}^{T} K^{-1} K_{+}}_\text{reduction in uncertainty}}^\text{$\geq \, 0$} \tag{5}
 \end{align*}
 </div>
+</div> 
 
 The above conditioning reduces a 4-dimensional Gaussian down to a 1-dimensional Gaussian - we can thus think of the conditioning as cutting 3 slices in the 4-dimensional space to leave us with a 1-dimensional distribution. In general, once we have conditioned on the observed data we will be left with a multivariate Gaussian with dimensionality equal to the number of test points we wish to predict for.
 
@@ -405,11 +401,14 @@ Given 10 noisy observations from a sine wave over the domain $(-5, 5)$, predict 
 <hr class="with-margin">
 
 ##### Comments on the above GP fit
-* We could technically compute each sample at finer and finer points in the $X$ domain instead of the 50 we did here.
-* All the prior functions are different but come from the same distribution whose covariance (dictated by the choice of kernel and its hyperparameters) controls the smoothness of the functions.
-* The prior is over the test points as it's the prior belief for functions before seeing any data.
-* Conditioning on data reduces the set of posterior samples to be close to the observed data. As we are observing noisy values of the function the samples will not pass exactly through these points but must come close.
-* The uncertainty bands are wide when we have little observed data - this makes sense. This is a function of the kernel hyperparameters and indicates the prior is perhaps too 'wiggly' for the true unknown function. We briefly discuss how to set the kernel hyperparameters [here](kernel_hyper).
+<div class="bullet"> 
+<li>We could technically compute each sample at finer and finer points in the $X$ domain instead of the 50 we did here.</li>
+<li>All the prior functions are different but come from the same distribution whose covariance (dictated by the choice of kernel and its hyperparameters) controls the smoothness of the functions.</li>
+<li>The prior is over the test points as it's the prior belief for functions before seeing any data.</li>
+<li>Conditioning on data reduces the set of posterior samples to be close to the observed data. As we are observing noisy values of the function the samples will not pass exactly through these points but must come close.</li>
+<li>The uncertainty bands are wide when we have little observed data - this makes sense. This is a function of the kernel hyperparameters and indicates the prior is perhaps too 'wiggly' for the true unknown function. We briefly discuss how to set the kernel hyperparameters 
+<a class="reference external" href="{{page.url}}#kernel_hyper">here.</a> </li> 
+</div>
 
 ##### Python code
 
@@ -535,25 +534,27 @@ In general, capital letters are matrices, bold font represents vectors and lower
 
 We will also try to introduce new references to notation appropriately to ease reading.
 
-* $X$: $n \times d$ data matrix with each row an observation
-* $X_{+}$: test data matrix we wish to predict the target variable for, $n_{+} \times d$
-* $\mathbf{x}\_{i}$: $i$th observation of data with $d$ elements
-* $\mathbf{x}\_{+}$: single test point with $d$ elements
-* $\mathcal{D}$: some data containing both features and target variable, i.e. $\\{X, \mathbf{y}\\}$
-* $f$: a function modelling the target variable
-* $\mathbf{f}$: vector representing the Gaussian process mean prediction for each data point in $X$, $\mathbf{f} = (f(\mathbf{x}\_{1}), ..., f(\mathbf{x}\_{n}))$
-* $\mathbf{f}\_{+}$: predictions for the target variable, $f(X_{+})$
-* $f_i$: shorthand for $f(\mathbf{x}_i)$, the function evaluated for the $i$th observation
-* $f_{+}$: shorthand for the prediction for a single test point, $f(\mathbf{x}\_{+})$
-* $\kappa(\mathbf{x}\_{1}, \mathbf{x}\_{2})$: kernel function evaluated at two points - returns a scalar
-* $\kappa(A, B)$: kernel function evaluated for two matrices $A$ and $B$ - returns a matrix with dimensions $m \times p$ for $A$ with dimensions $m \times d$ and $B$ with dimensions $p \times d$
-* $K$: $\kappa(X, X)$, a $n \times n$ matrix, where the $i , j$ th entry is $\kappa(\mathbf{x}\_{i}, \mathbf{x}\_{j})$
-* $K_{+}$: $\kappa(X, X_{+})$, a $n \times n_{+}$ matrix
-* $K_{\++}$: $\kappa(X_{+}, X_{+})$, a $n_{+} \times n_{+}$ matrix
-* $\boldsymbol{\mu}$, $\mu(X)$, $(\mu(\mathbf{x}\_{1}), \mu(\mathbf{x}\_{2}), ..., \mu(\mathbf{x}\_{n}))$: a vector of length $n$ with the mean for each observation as modelled by some function $\mu$
-* $\mu_{+}$: mean function evaluated for a single test point, $\mathbf{x}\_{+}$
-* $\boldsymbol{\mu}\_{\mathbf{f}_{+} \| \mathbf{f}}$: mean vector for predicted data after conditioning on observed data
-* $\Sigma_{\mathbf{f}\_{+} \| \mathbf{f}}$: covariance matrix for predicted data after conditioning on observed data
+<div class="bullet"> 
+<li>$X$: $n \times d$ data matrix with each row an observation </li>
+<li>$X_{+}$: test data matrix we wish to predict the target variable for, $n_{+} \times d$ </li>
+<li>$\mathbf{x}\_{i}$: $i$th observation of data with $d$ elements </li>
+<li>$\mathbf{x}\_{+}$: single test point with $d$ elements</li>
+<li>$\mathcal{D}$: some data containing both features and target variable, i.e. $\\{X, \mathbf{y}\\}$</li>
+<li>$f$: a function modelling the target variable</li>
+<li>$\mathbf{f}$: vector representing the Gaussian process mean prediction for each data point in $X$, $\mathbf{f} = (f(\mathbf{x}\_{1}), ..., f(\mathbf{x}\_{n}))$</li>
+<li>$\mathbf{f}\_{+}$: predictions for the target variable, $f(X_{+})$</li>
+<li>$f_i$: shorthand for $f(\mathbf{x}_i)$, the function evaluated for the $i$th observation</li>
+<li>$f_{+}$: shorthand for the prediction for a single test point, $f(\mathbf{x}\_{+})$</li>
+<li>$\kappa(\mathbf{x}\_{1}, \mathbf{x}\_{2})$: kernel function evaluated at two points - returns a scalar</li>
+<li>$\kappa(A, B)$: kernel function evaluated for two matrices $A$ and $B$ - returns a matrix with dimensions $m \times p$ for $A$ with dimensions $m \times d$ and $B$ with dimensions $p \times d$</li>
+<li>$K$: $\kappa(X, X)$, a $n \times n$ matrix, where the $i , j$ th entry is $\kappa(\mathbf{x}\_{i}, \mathbf{x}\_{j})$</li>
+<li>$K_{+}$: $\kappa(X, X_{+})$, a $n \times n_{+}$ matrix</li>
+<li>$K_{++}$: $\kappa(X_{+}, X_{+})$, a $n_{+} \times n_{+}$ matrix</li>
+<li>$\boldsymbol{\mu}$, $\mu(X)$, $(\mu(\mathbf{x}\_{1}), \mu(\mathbf{x}\_{2}), ..., \mu(\mathbf{x}\_{n}))$: a vector of length $n$ with the mean for each observation as modelled by some function $\mu$</li>
+<li>$\mu_{+}$: mean function evaluated for a single test point, $\mathbf{x}\_{+}$</li>
+<li>$\boldsymbol{\mu}\_{\mathbf{f}_{+} \| \mathbf{f}}$: mean vector for predicted data after conditioning on observed data</li>
+<li>$\Sigma_{\mathbf{f}\_{+} \| \mathbf{f}}$: covariance matrix for predicted data after conditioning on observed data</li>
+</div>
 
 <a name="references"></a>
 <hr class="with-margin">
