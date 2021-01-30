@@ -21,8 +21,8 @@ In this article we give a thorough introduction to Gaussian process regression c
 <hr class="with-margin">
 <h4 class="header" id="introduction">Introduction</h4>
 
-<blockquote class="tip">
-<strong>TLDR:</strong> loosely speaking GPs give a way to express a view on functions. In particular they allow us to specify how smooth we expect a function to be rather than how many parameters we expect it to have. The key idea they rely on is that data-points that are close in input space are expected to be similar in output space, i.e. if $\mathbf{x}_{i}$ and $\mathbf{x}_{j}$ are similar then $f(\mathbf{x}_{i})$ and $f(\mathbf{x}_{j})$ will be close in value too.
+<blockquote>
+<strong>TLDR:</strong> GPs give a way to express a view on functions. In particular they allow us to specify how smooth we expect a function to be rather than how many parameters we expect it to have. The key idea they rely on is that data-points that are close in input space are expected to be similar in output space, i.e. if $\mathbf{x}_{i}$ and $\mathbf{x}_{j}$ are similar then $f(\mathbf{x}_{i})$ and $f(\mathbf{x}_{j})$ will be close in value too.
 </blockquote>
 
 Gaussian processes are Bayesian alternatives to kernel methods and allow us to infer a _distribution over functions_, which sounds a little crazy but is actually both an intuitive thing to desire as well as being analytically tractable in certain cases.
@@ -243,27 +243,27 @@ Equation (4) above for the predictive mean was given as:
 
 <div class="math">
 \begin{align*}
-\mathbf{\mu}_{f_{+} | \mathbf{f}} &= \color{red}{\mu\left(\mathbf{x_{+}}\right)} + \color{blue}{K_{+}^{T}} \color{green}{K^{-1}}\color{orange}{(\mathbf{f} - \mu(X)) }
+\mathbf{\mu}_{f_{+} | \mathbf{f}} &= \color{#e5c07b}{\mu\left(\mathbf{x_{+}}\right)} + \color{#e06c75}{K_{+}^{T}} \color{#98c379}{K^{-1}}\color{#c678dd}{(\mathbf{f} - \mu(X)) }
 \end{align*}
 </div>
 
 which can be intepreted as
-<span style="color:red">the prior guess we had for the mean of the test point before seeing any data</span> plus
-<span style="color:orange">the surprise/difference in the observed data from what we expected</span>
-<span style="color:green">normalized by the training data's variance</span> which is then
-<span style="color:blue">weighted by how similar the training and test data are</span>.
+<span style="color:#e5c07b">the prior guess we had for the mean of the test point before seeing any data</span> plus
+<span style="color:#c678dd">the surprise/difference in the observed data from what we expected</span>
+<span style="color:#98c379">normalized by the training data's variance</span> which is then
+<span style="color:#e06c75">weighted by how similar the training and test data are</span>.
 <br>
 <br>
 Similarly for equation (5) and the predictive variance:
 <div class="math">
 \begin{align*}
-\Sigma_{f_{+} | \mathbf{f}} &= \color{red}{K_{\\++}}- \color{blue}{K_{+}^{T}} \color{green}{K^{-1}} \color{blue}{K_{+}}
+\Sigma_{f_{+} | \mathbf{f}} &= \color{#e5c07b}{K_{\\++}}- \color{#e06c75}{K_{+}^{T}} \color{#98c379}{K^{-1}} \color{#e06c75}{K_{+}}
 \end{align*}
 </div>
 can be interpreted as
-<span style="color:red">the prior guess we had for the variance of the test data before seeing any data</span> minus a reduction in uncertainty based on
-<span style="color:blue">how similar the training and test data are</span>
-<span style="color:green">normalized by the training data's variance</span>.
+<span style="color:#e5c07b">the prior guess we had for the variance of the test data before seeing any data</span> minus a reduction in uncertainty based on
+<span style="color:#e06c75">how similar the training and test data are</span>
+<span style="color:#98c379">normalized by the training data's variance</span>.
 
 </blockquote>
 
@@ -409,7 +409,7 @@ Given 10 noisy observations from a sine wave over the domain $(-5, 5)$, predict 
 <li>The uncertainty bands are wide when we have little observed data - this makes sense. This is a function of the kernel hyperparameters and indicates the prior is perhaps too 'wiggly' for the true unknown function. We briefly discuss how to set the kernel hyperparameters 
 <a class="reference external" href="{{page.url}}#kernel_hyper">here.</a> </li> 
 </div>
-
+<hr class="with-margin">
 ##### Python code
 
 Example python code of the GP example (excludes plotting code):
@@ -561,39 +561,39 @@ We will also try to introduce new references to notation appropriately to ease r
 <h4 class="header" id="further">References</h4>
 
 In order to get a firm grip on the basics of GPs I read many sources, most listed below.
-
+<a class="reference external" href="http://cs229.stanford.edu/section/more_on_gaussians.pdf">here</a>.
 ###### Books and papers
+<div class="bullet"> 
+<li> Rasmussen and Williams, <a class="reference external" href="http://www.gaussianprocess.org/gpml/chapters/RW.pdf">Gaussian Processes for Machine Learning</a>.
+</li>
+<li> Murphy K, <a class="reference external" href="https://www.amazon.co.uk/Machine-Learning-Probabilistic-Perspective-Computation/dp/0262018020">Machine Learning: A Probabilistic Perspective</a>.
+</li>
+<li> Ebden M, <a class="reference external" href="https://www.robots.ox.ac.uk/~mebden/reports/GPtutorial.pdf">Gaussian Processes for Regression: A Quick Introduction</a>.
+</li>
+<li> Chuong B. Do, <a class="reference external" href="http://cs229.stanford.edu/section/more_on_gaussians.pdf">More on Multivariate Gaussians</a>.
+</li>
+<li> Chuong B. Do, <a class="reference external" href="http://cs229.stanford.edu/section/cs229-gaussian_processes.pdf">Gaussian processes</a>.
+</li>
+<li> Snoek J, Larochelle H, Adams R P, <a class="reference external" href="http://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf">Practical Bayesian Optimization of MachineLearning Algorithms</a>.
+</li>
 
-* Rasmussen and Williams, [Gaussian Processes for Machine Learning](http://www.gaussianprocess.org/gpml/chapters/RW.pdf)
-  * This is the canonical text for Gaussian processes
-* Murphy K, [Machine Learning: A Probabilistic Perspective](https://www.amazon.co.uk/Machine-Learning-Probabilistic-Perspective-Computation/dp/0262018020)
-  * Chapter 15 deals with GPs based on Rasmussen but with denser notation
-* Ebden M, [Gaussian Processes for Regression: A Quick Introduction](https://www.robots.ox.ac.uk/~mebden/reports/GPtutorial.pdf)
-* Chuong B. Do, [More on Multivariate Gaussians](http://cs229.stanford.edu/section/more_on_gaussians.pdf)
-  * Details on Gaussians including deriving conditioning and marginalization results
-* Chuong B. Do, [Gaussian processes](http://cs229.stanford.edu/section/cs229-gaussian_processes.pdf)
-* Snoek J, Larochelle H, Adams R P, [Practical Bayesian Optimization of MachineLearning Algorithms](http://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf)
-  * Further reading applying GPs to Bayesian optimization
-
+<hr class="with-margin">
+</div>
 ###### Videos and/or presentation slides
+<div class="bullet"> 
+<li> Turner R, <a class="reference external" href="https://www.youtube.com/watch?v=92-98SYOdlY">ML Tutorial: Gaussian Processes</a>.</li>
+<li> de Freitas N, <a class="reference external" href="https://www.youtube.com/watch?v=4vGiHC35j9s">Machine learning - Introduction to Gaussian processes</a>.</li>
+<li> de Freitas N, <a class="reference external" href="https://www.youtube.com/watch?v=MfHKW5z-OOA">Machine learning - Gaussian processes</a>.</li>
+<li> Murray I, <a class="reference external" href="https://www.cs.toronto.edu/~hinton/csc2515/notes/gp_slides_fall08.pdf">Introduction to Gaussian Processes</a>.</li>
+<li> Williams D, <a class="reference external" href="http://people.ee.duke.edu/~lcarin/David1.27.06.pdf">Gaussian Processes</a>.</li>
+</div>
 
-* Turner R, [ML Tutorial: Gaussian Processes](https://www.youtube.com/watch?v=92-98SYOdlY)
-  * First hour explains the view of multivariate Gaussians particularly well
-* de Freitas N, [Machine learning - Introduction to Gaussian processes](https://www.youtube.com/watch?v=4vGiHC35j9s)
-  * Probably the best detailed start with derivation from definition of Gaussians
-* de Freitas N, [Machine learning - Gaussian processes](https://www.youtube.com/watch?v=MfHKW5z-OOA)
-  * Follow on lecture including discussing links to Ridge regression
-* Murray I, [Introduction to Gaussian Processes](#https://www.cs.toronto.edu/~hinton/csc2515/notes/gp_slides_fall08.pdf)
-  * High quality slides with a good overview and intuition
-* Williams D, [Gaussian Processes](http://people.ee.duke.edu/~lcarin/David1.27.06.pdf)
-  * Overview of GPs plus discussion on the classification case
-
+<hr class="with-margin">
 ###### Blogs and web articles
-
-* Görtler J, [A Visual Exploration of Gaussian Processes](https://www.jgoertler.com/visual-exploration-gaussian-processes/)
-  * A quite stunning explanation of GPs at a very accessible level
-* Bailey K, [Gaussian Processes for Dummies](http://katbailey.github.io/post/gaussian-processes-for-dummies/)
-  * Very accessible introduction based on Murphy's book
+<div class="bullet"> 
+<li> Görtler J, <a class="reference external" href="https://www.jgoertler.com/visual-exploration-gaussian-processes/">A Visual Exploration of Gaussian Processes</a>. </li>
+<li> Bailey K, <a class="reference external" href="http://katbailey.github.io/post/gaussian-processes-for-dummies/">Gaussian Processes for Dummies</a>.</li>
+</div>
 
 <hr class="with-margin">
 <h4 class="header" id="appendix">Appendix Q and A</h4>

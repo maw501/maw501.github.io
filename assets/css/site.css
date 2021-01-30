@@ -3,6 +3,7 @@ html {
     box-sizing: border-box;
     font-size: 18px;
     font-family: "Fira Sans" Fira Mono;
+    font-weight: 500;
 }
 
 *,
@@ -88,7 +89,7 @@ p
 {
   /*font-family: 'Fira Sans' Fira Mono;*/
   font-size: 1.1em;
-  font-weight: 500;
+  /*font-weight: 500;*/
   color: #cfd7e6;
 }
 
@@ -106,22 +107,22 @@ p.red
 }
  /* unvisited link */
  a:link {
-  color: #98c379;
+  color: #61afef;
 }
 
 /* visited link */
 a:visited {
-  color: #98c379;
+  color: #61afef;
 }
 
 /* mouse over link */
 a:hover {
-  color: #98c379;
+  color: #61afef;
 }
 
 /* selected link */
 a:active {
-  color: #98c379;
+  color: #61afef;
 } 
 
 /* ---------- */
@@ -354,14 +355,12 @@ blockquote {
   border-width: 2px 2px 2px 10px;
   border-style: solid;
   padding: 0.5em 0.5em;
-  border-color: #61afef;  /* dodgerblue */
+  border-color: #98c379;  /* dodgerblue */
   color: #cfd7e6;
+  font-weight: 500;
 }
 
 blockquote:before {
-  /*color: #ccc;*/
-  font-size: 4em;
-  line-height: 0.1em;
   margin-right: 0.25em;
   vertical-align: -0.4em;
 }
@@ -377,8 +376,8 @@ blockquote.warning {
 
 blockquote.tip {
     /*background: #e5c07b;*/
-    border-color: #61afef;  /* dodgerblue */
-    color: #cfd7e6;
+    /*border-color: #61afef;  /* dodgerblue */*/
+    /*color: #cfd7e6;*/
 }
 
 blockquote.algo {
