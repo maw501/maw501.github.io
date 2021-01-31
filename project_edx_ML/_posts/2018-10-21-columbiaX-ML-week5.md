@@ -323,25 +323,26 @@ with hyperparameters $\sigma$ and $l$.
 
 <hr class="with-margin">
 <h4 class="header" id="references">References</h4>
+<div class="bullet"> 
+<li>
 <a name="prml"></a>
-* Bishop, C. (2006). [Pattern Recognition and Machine Learning](https://www.springer.com/gb/book/9780387310732)
-  * Chapters: 4.3 - 4.5, 6
+Bishop, C. (2006). Chapters: 4.3 - 4.5, 6; <a class="reference external" href="https://www.springer.com/gb/book/9780387310732">Pattern Recognition and Machine Learning</a>.</li>
+<li>
 <a name="esl"></a>
-* Hastie, T., R. Tibshirani, and J. Friedman (2001). [The Elements of Statistical Learning](http://web.stanford.edu/~hastie/ElemStatLearn/)
-  * Chapters: 4.4, 6
+Hastie, T., R. Tibshirani, and J. Friedman (2001). Chapters: 4.4, 6;  <a class="reference external" href="http://web.stanford.edu/~hastie/ElemStatLearn/">The Elements of Statistical Learning</a>.</li>
+<li>
 <a name="edx_ml"></a>
-* edX, ColumbiaX, [Machine Learning](https://www.edx.org/course/machine-learning-1)
-
+edX, ColumbiaX, <a class="reference external" href="https://www.edx.org/course/machine-learning-1">Machine Learning</a>.</li>
+</div>
+<br>
 ##### Further reading
+<div class="bullet"> 
 <a name="ryan_adams"></a>
-* Adams, R, [COS 324: Introduction to Machine Learning](https://www.cs.princeton.edu/courses/archive/spring19/cos324/)
-  * Princeton University, Spring 2019, Lecture 9: Linear Classification II
-* Neal, R, M [CSC2541:Bayesian Methods for Machine Learning](http://www.cs.utoronto.ca/~radford/csc2541.S11/week10.pdf)
-  * Some discussion on the Laplace approximation
-* Murray, I, [Bayesian logistic regression and Laplace approximations](https://www.inf.ed.ac.uk/teaching/courses/mlpr/2016/notes/w8a_bayes_logistic_regression_laplace.pdf)
-  * Nice overview of Laplace approximation with charts
-* Murphy K, [Machine Learning: A Probabilistic Perspective](https://www.amazon.co.uk/Machine-Learning-Probabilistic-Perspective-Computation/dp/0262018020)
-  * Section 8.4 deals with Bayesian logistic regression
+<li> Adams, R, Princeton University, Spring 2019, Lecture 9: Linear Classification II <a class="reference external" href="https://www.cs.princeton.edu/courses/archive/spring19/cos324/">COS 324: Introduction to Machine Learning</a>.</li>
+<li> Neal, R, M <a class="reference external" href="http://www.cs.utoronto.ca/~radford/csc2541.S11/week10.pdf">CSC2541:Bayesian Methods for Machine Learning</a>.</li>
+<li> Murray, I, <a class="reference external" href="https://www.inf.ed.ac.uk/teaching/courses/mlpr/2016/notes/w8a_bayes_logistic_regression_laplace.pdf">Bayesian logistic regression and Laplace approximations</a>.</li>
+<li> Murphy K, Section 8.4, <a class="reference external" href="https://www.amazon.co.uk/Machine-Learning-Probabilistic-Perspective-Computation/dp/0262018020">Machine Learning: A Probabilistic Perspective</a>.</li>
+</div>
 
 <a name="appendix"></a>
 <hr class="with-margin">
@@ -454,12 +455,12 @@ The derivation of the below is pretty involved and a summary is provided below. 
 Given labeled data $(\mathbf{x}_1, y_1), ..., (\mathbf{x}_n, y_n) $ and the model:
 
 $$
-\color{red}{p\left(y_{i} | \mathbf{x}_i, \mathbf{w} \right)=\sigma\left(y_i \mathbf{x}_i^T \mathbf{w}\right)}, \quad
-\color{blue}{\mathbf{w} \sim \mathcal{N}\left(0, \lambda^{-1} I\right)}, \quad
-\color{green}{\sigma\left(y_i \mathbf{x}_i^T \mathbf{w}\right)=\frac{\exp\left\{y_{i} \mathbf{x}_i^T  \mathbf{w}\right\}}{1+\exp\left\{y_{i} \mathbf{x}_i^T  \mathbf{w}\right\}}}
+\color{#e06c75}{p\left(y_{i} | \mathbf{x}_i, \mathbf{w} \right)=\sigma\left(y_i \mathbf{x}_i^T \mathbf{w}\right)}, \quad
+\color{#61afef}{\mathbf{w} \sim \mathcal{N}\left(0, \lambda^{-1} I\right)}, \quad
+\color{#98c379}{\sigma\left(y_i \mathbf{x}_i^T \mathbf{w}\right)=\frac{\exp\left\{y_{i} \mathbf{x}_i^T  \mathbf{w}\right\}}{1+\exp\left\{y_{i} \mathbf{x}_i^T  \mathbf{w}\right\}}}
 $$
 
-where the above is defining <span style="color:red">the likelihood</span>, <span style="color:blue">the prior</span> and <span style="color:green">the definition of sigmoid</span>.
+where the above is defining <span style="color:#e06c75">the likelihood</span>, <span style="color:#61afef">the prior</span> and <span style="color:#98c379">the definition of sigmoid</span>.
 <br>
 <br>
 <strong>Step 1:</strong> find the MAP solution for the weights by solving the optimization problem given by the objective function of logistic regression:
@@ -493,25 +494,26 @@ Before starting we give some things to watch out for as we proceed.
 <blockquote class="math">
 <strong>Helpful things to bear in mind</strong>
 <br>
-* The denominator in Bayes' rule can be written as the numerator integrated over the parameter of interest, here $\mathbf{w}$.
+<li> The denominator in Bayes' rule can be written as the numerator integrated over the parameter of interest, here $\mathbf{w}$. </li>
 <br>
 <br>
-* Bayes' rule can be written just using the joint distribution:
+<li>Bayes' rule can be written just using the joint distribution:
 
 $$
 p(\mathbf{w} | \mathbf{y}, X) = \frac{p(\mathbf{y}, \mathbf{w} | X)}{\int p(\mathbf{y}, \mathbf{w} | X) \, d\mathbf{w}}.
 $$
+</li>
 <br>
-* Laplace approximation is based on <a class="reference external" href="https://en.wikipedia.org/wiki/Laplace%27s_method">Laplace's method</a> which approximates integrals of the form:
+<li>Laplace approximation is based on <a class="reference external" href="https://en.wikipedia.org/wiki/Laplace%27s_method">Laplace's method</a> which approximates integrals of the form:
 
 $$
 \int_{a}^{b} e^{M f(x)} d x
 $$
 
-for a large number $M$ and where $f(x)$ is a twice-differentiable function. Here we forget about $M$ and just rewrite the integral into the required form by exponentiating then taking logs (which cancels out).
+for a large number $M$ and where $f(x)$ is a twice-differentiable function. Here we forget about $M$ and just rewrite the integral into the required form by exponentiating then taking logs (which cancels out).</li>
 <br>
-<br>
-* The second order Taylor expansion for a function $f(\mathbf{w})$ with $\mathbf{w} \in \mathbb{R}^{d+1}$ at a point $z \in \mathbb{R}^{d+1}$ is:
+
+<li>The second order Taylor expansion for a function $f(\mathbf{w})$ with $\mathbf{w} \in \mathbb{R}^{d+1}$ at a point $z \in \mathbb{R}^{d+1}$ is:
 
 $$
 f(\mathbf{w}) \approx f(z)+(\mathbf{w}-z)^{T} \nabla f(z)+\frac{1}{2}(\mathbf{w}-z)^{T}\left(\nabla^{2} f(z)\right)(\mathbf{w}-z)
@@ -523,7 +525,7 @@ $$
 \nabla f(z) = \nabla_{\mathbf{w}} f(\mathbf{w})\mid_{z}
 $$
 
-is the derivative of the function $f$ w.r.t $\mathbf{w}$ evaluated at the point $z$.
+is the derivative of the function $f$ w.r.t $\mathbf{w}$ evaluated at the point $z$. </li>
 </blockquote>
 
 ###### Choosing the form of the posterior
@@ -573,13 +575,16 @@ p(\mathbf{w} | X, \mathbf{y}) &=\frac{\exp\left\{f(\mathbf{w})\right\}}{\int \ex
 </div>
 
 ###### Comments on the steps
-
-* $\text{(L0)}$: this is by definition $f(\mathbf{w})$
-* $\text{(L0)}$ to $\text{(L1)}$: this uses the second-order Taylor expansion for $f(\mathbf{w})$ around $z$.
-* $\text{(L1)}$ to $\text{(L2)}$: this uses 2 observations:
-  * $f(z)$ does not depend on $\mathbf{w}$ and so can be viewed as a constant in both the numerator and denominator which cancels out.
-  * $\nabla f(z) = 0$ when evaluated at $z = \mathbf{w}\_{MAP}$ by definition of $\mathbf{w}\_{MAP}$ being a maximum.
-
+<div class="bullet"> 
+<li> $\text{(L0)}$: this is by definition $f(\mathbf{w})$ </li>
+<li> $\text{(L0)}$ to $\text{(L1)}$: this uses the second-order Taylor expansion for $f(\mathbf{w})$ around $z$. </li>
+<li> $\text{(L1)}$ to $\text{(L2)}$: this uses 2 observations:</li>
+  <ul>
+  <li> $f(z)$ does not depend on $\mathbf{w}$ and so can be viewed as a constant in both the numerator and denominator which cancels out. </li>
+  <li> $\nabla f(z) = 0$ when evaluated at $z = \mathbf{w}\_{MAP}$ by definition of $\mathbf{w}\_{MAP}$ being a maximum. </li>
+  </ul>
+</div>
+<br>
 We are thus only left with the following term to worry about in the both the numerator and denominator:
 
 $$

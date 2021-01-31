@@ -437,11 +437,12 @@ Depending on the value of $p$ we obtain different shapes for the level sets of t
 ##### Impact of $p$ on computational tractability
 
 We note the following facts (using a sum of squares loss) as we vary $p$:
-
-* $p < 1$: we can only find approximate solutions to the optimization problem using iterative algorithms
-* $p \geq 1$, $p \neq 2$: convex optimization problem able to be solved exactly (includes lasso regression)
-* $p=2$: closed form solution (ridge regression)
-
+<div class="bullet"> 
+<li> $p < 1$: we can only find approximate solutions to the optimization problem using iterative algorithms </li>
+<li> $p \geq 1$, $p \neq 2$: convex optimization problem able to be solved exactly (includes lasso regression) </li>
+<li> $p=2$: closed form solution (ridge regression) </li>
+</div>
+<br>
 The loss of convexity in the optimization problem for $p < 1$ can be seen be noting that in the above chart we lose 'line of sight' between all points in the level sets of the penalty term.
 
 <a name="math_details_sec"></a>
@@ -494,14 +495,17 @@ Similar reasoning allows $X^T \mathbf{y}$ to be updated in the same way.
 <hr class="with-margin">
 <h4 class="header" id="references">References</h4>
 
+<div class="bullet"> 
+<li>
 <a name="prml"></a>
-* Bishop, C. (2006). [Pattern Recognition and Machine Learning](https://www.springer.com/gb/book/9780387310732)
-  * Chapters: 3.3 - 3.5
+Bishop, C. (2006). Chapters: 3.3 - 3.5; <a class="reference external" href="https://www.springer.com/gb/book/9780387310732">Pattern Recognition and Machine Learning</a>.</li>
+<li>
 <a name="esl"></a>
-* Hastie, T., R. Tibshirani, and J. Friedman (2001). [The Elements of Statistical Learning](http://web.stanford.edu/~hastie/ElemStatLearn/)
-  * Chapters: 3.3 - 3.8
+Hastie, T., R. Tibshirani, and J. Friedman (2001). Chapters: 3.3 - 3.8;  <a class="reference external" href="http://web.stanford.edu/~hastie/ElemStatLearn/">The Elements of Statistical Learning</a>.</li>
+<li>
 <a name="edx_ml"></a>
-* edX, ColumbiaX, [Machine Learning](https://www.edx.org/course/machine-learning-1)
+edX, ColumbiaX, <a class="reference external" href="https://www.edx.org/course/machine-learning-1">Machine Learning</a>.</li>
+</div>
 
 <hr class="with-margin">
 <h4 class="header" id="appendix">Appendix</h4>

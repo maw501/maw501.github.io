@@ -52,10 +52,10 @@ Before we dive into classification algorithms, it's important to see the lay of 
 It's worth recalling Bayes' rule for classification, where the goal is to assign each observation to one of $k$ classes:
 
 $$
-\color{orange}{p\left(c_{k} | \mathbf{x}\right)}=\frac{ \color{red}{p\left(\mathbf{x} | c_{k}\right)} \color{blue}{p\left(c_{k}\right)}}{\color{green}{p(\mathbf{x})}} \tag{BR}
+\color{#e5c07b}{p\left(c_{k} | \mathbf{x}\right)}=\frac{ \color{#e06c75}{p\left(\mathbf{x} | c_{k}\right)} \color{#61afef}{p\left(c_{k}\right)}}{\color{#98c379}{p(\mathbf{x})}} \tag{BR}
 $$
 
-with terms: <span style="color:orange">class posterior</span>, <span style="color:red">data likelihood given class</span>, <span style="color:blue">class prior</span> and <span style="color:green">evidence</span>.
+with terms: <span style="color:#e5c07b">class posterior</span>, <span style="color:#e06c75">data likelihood given class</span>, <span style="color:#61afef">class prior</span> and <span style="color:#98c379">evidence</span>.
 <br>
 <br>
 Note $p(\mathbf{x})$ can be found via:
@@ -242,10 +242,11 @@ by multiplying the entries in each row by the prior class probability. This join
 <hr class="small-margin">
 
 Now, given the arbitrary classifier (per the blue predictions) we can think about the average error of this classifier. In the case of 2 classes there are 2 sources of error:
-
-1. Choosing class $y_1$ when $y_2$ was the correct label, happens with probability equal to the sum of non-highlighted entries in $y_2$ row in Table 2
-1. Choosing class $y_2$ when $y_1$ was the correct label, happens with probability equal to the sum of non-highlighted entries in $y_1$ row in Table 2
-
+<div class="bullet"> 
+<ol> 1. Choosing class $y_1$ when $y_2$ was the correct label, happens with probability equal to the sum of non-highlighted entries in $y_2$ row in Table 2 </ol>
+<ol>2. Choosing class $y_2$ when $y_1$ was the correct label, happens with probability equal to the sum of non-highlighted entries in $y_1$ row in Table 2</ol>
+</div>
+<br>
 To see the above, consider that if every time the classifier encounters $x=1$ it predicts class label $y_2$ it will incur an error equal to:
 
 $$p(x=1 | y=1)p(y = 1) = p(x=1, y=1).
@@ -295,10 +296,10 @@ However optimal Bayes classification is sometimes introduced differently, withou
 We call $\mathcal{F}$ the set of all possible classifiers and in this case the best classification decision to make given data, $\mathcal{D}$, is:
 
 $$
-\underset{y \in \mathcal{Y}}{\arg \max } \color{red}{\sum_{f_{i} \in \mathcal{F}}} \color{blue}{p\left(y | f_{i}\right)} \color{green}{ p\left(f_{i} | \mathcal{D}\right)}.
+\underset{y \in \mathcal{Y}}{\arg \max } \color{#e06c75}{\sum_{f_{i} \in \mathcal{F}}} \color{#61afef}{p\left(y | f_{i}\right)} \color{#98c379}{ p\left(f_{i} | \mathcal{D}\right)}.
 $$
 
-In other words, we assign the label based on the highest probability as computed by the <span style="color:blue">prediction from a given classifier</span> weighted by the <span style="color:green">posterior probability of that classifier given the data</span> <span style="color:red">summing over all possible classifiers</span>.
+In other words, we assign the label based on the highest probability as computed by the <span style="color:#61afef">prediction from a given classifier</span> weighted by the <span style="color:#98c379">posterior probability of that classifier given the data</span> <span style="color:#e06c75">summing over all possible classifiers</span>.
 
 Given that classifiers are things like decision trees, NNs etc... this is clearly infeasible practically but is theoretically optimal given infinite compute power.
 
@@ -356,12 +357,13 @@ where the maximum likelihood estimates for $\boldsymbol{\mu}\_y, \Sigma_{y}$ are
 In other words for each class in the training data we calculate its mean and covariance and use those to estimate the class conditional Gaussians. The prior probability of a class is just set to be the fraction of training examples in each class. It's important to note that all calculations are able to be done in closed form in this case.
 
 Dimensions for reference with respect to the above:
-
-* $\mathbf{x}_i$: $d \times 1$
-* $(\mathbf{x}_i-\hat{\boldsymbol{\mu}}_y)$: $d \times 1$
-* $\hat{\boldsymbol{\mu}}_y$: $d \times 1$
-* $\hat{\Sigma}_y$: $d \times d$
-
+<div class="bullet"> 
+<li> $\mathbf{x}_i$: $d \times 1$ </li>
+<li> $(\mathbf{x}_i-\hat{\boldsymbol{\mu}}_y)$: $d \times 1$ </li>
+<li> $\hat{\boldsymbol{\mu}}_y$: $d \times 1$ </li>
+<li> $\hat{\Sigma}_y$: $d \times d$ </li>
+</div>
+<br>
 ##### Plug-in classifier decision
 
 Using the above assumptions and dropping any terms not dependent on $y$ we can write Gaussian class conditional decision as:
@@ -400,11 +402,14 @@ The classic example of NBC performing well is in the context of [spam filtering]
 
 ##### Introduction
 
-In this section we look at two common algorithms for classification called linear discriminant analysis (LDA) and quadratic discriminant analysis (QDA), both of which are generative classifiers. Recall that in the example of the [generative classifier](#gen_classifier) above, we assumed class conditional Gaussian distributions with mean and covariance matrices estimated from the data. In particular:
+In this section we look at two common algorithms for classification called linear discriminant analysis (LDA) and quadratic discriminant analysis (QDA), both of which are generative classifiers. Recall that in the example of the [generative classifier](#gen_classifier) above, we assumed class conditional Gaussian distributions with mean and covariance matrices estimated from the data. 
 
-* if we instead use the same covariance matrix across all classes the resulting decision boundary is linear and this model is called linear discriminant analysis (LDA).
-* estimating a covariance matrix per class gives a decision boundary that is quadratic and the model is called quadratic discriminant analysis (QDA).
-
+In particular:
+<div class="bullet"> 
+<li> if we instead use the same covariance matrix across all classes the resulting decision boundary is linear and this model is called linear discriminant analysis (LDA). </li>
+<li> estimating a covariance matrix per class gives a decision boundary that is quadratic and the model is called quadratic discriminant analysis (QDA).</li>
+</div>
+<br>
 <blockquote class="tip">
 <strong>Sidebar on log odds for classification:</strong> recall that for the generative classifier we assigned an instance to the class with the highest posterior probability where the justification for this came from the Bayes classifier.
 <br>
@@ -612,19 +617,19 @@ We will later meet support vector machines, which is one such algorithm that add
 <hr class="with-margin">
 <h4 class="header" id="references">References</h4>
 
+<div class="bullet"> 
+<li>
 <a name="prml"></a>
-* Bishop, C. (2006). [Pattern Recognition and Machine Learning](https://www.springer.com/gb/book/9780387310732)
-  * Chapters: 4.1
+Bishop, C. (2006). Chapters: 4.1; <a class="reference external" href="https://www.springer.com/gb/book/9780387310732">Pattern Recognition and Machine Learning</a>.</li>
+<li>
 <a name="esl"></a>
-* Hastie, T., R. Tibshirani, and J. Friedman (2001). [The Elements of Statistical Learning](http://web.stanford.edu/~hastie/ElemStatLearn/)
-  * Chapters: 2.3, 2.5, 4.5, 13.3 - 13.5
+Hastie, T., R. Tibshirani, and J. Friedman (2001). Chapters: 2.3, 2.5, 4.5, 13.3 - 13.5;  <a class="reference external" href="http://web.stanford.edu/~hastie/ElemStatLearn/">The Elements of Statistical Learning</a>.</li>
+<li>
 <a name="edx_ml"></a>
-* edX, ColumbiaX, [Machine Learning](https://www.edx.org/course/machine-learning-1)
-
-##### Further reading
-
-* Raschka, S, [Linear Discriminant Analysis](https://sebastianraschka.com/Articles/2014_python_lda.html)
-  * An thorough examination of LDA as a dimensionality reduction tool
+edX, ColumbiaX, <a class="reference external" href="https://www.edx.org/course/machine-learning-1">Machine Learning</a>.</li>
+<li>
+Raschka, S, <a class="reference external" href="https://sebastianraschka.com/Articles/2014_python_lda.html">Linear Discriminant Analysis</a>.</li>
+</div>
 
 <a name="appendix"></a>
 <hr class="with-margin">
@@ -706,12 +711,12 @@ Let's call $r$ the perpendicular distance of a point from the hyperplane and con
 Then we can state $\mathbf{x}$ as:
 
 $$
-\mathbf{x} = \color{red}{\mathbf{x}_{\perp}} + \color{blue}{r} \color{green}{\frac{\mathbf{w}}{\|\mathbf{w}\|}} \tag{A5}
+\mathbf{x} = \color{#e06c75}{\mathbf{x}_{\perp}} + \color{#61afef}{r} \color{#98c379}{\frac{\mathbf{w}}{\|\mathbf{w}\|}} \tag{A5}
 $$
 
-where $\color{green}{\frac{\mathbf{w}}{\\|\mathbf{w}\\|}}$ is the unit vector orthogonal to the hyperplane.
+where $\color{#98c379}{\frac{\mathbf{w}}{\\|\mathbf{w}\\|}}$ is the unit vector orthogonal to the hyperplane.
 
-In words: any point $\mathbf{x}$ can be rewritten as <span style="color:red">a point on the hyperplane</span> plus <span style="color:blue">moving a distance</span> <span style="color:green">away from the plane</span>. Recall here we define the point $\mathbf{x}_{\perp}$ such that to get to $\mathbf{x}$ we travel perpendicular from the hyperplane.
+In words: any point $\mathbf{x}$ can be rewritten as <span style="color:#e06c75">a point on the hyperplane</span> plus <span style="color:#61afef">moving a distance</span> <span style="color:#98c379">away from the plane</span>. Recall here we define the point $\mathbf{x}_{\perp}$ such that to get to $\mathbf{x}$ we travel perpendicular from the hyperplane.
 
 To prove $r = \frac{y(\mathbf{x})}{\\|\mathbf{w}\\|}$ we multiply both sides of (A5) by $\mathbf{w}^T$ and add $w_0$:
 
