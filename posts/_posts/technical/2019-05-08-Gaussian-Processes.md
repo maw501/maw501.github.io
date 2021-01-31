@@ -572,9 +572,8 @@ In order to get a firm grip on the basics of GPs I read many sources, most liste
 </li>
 <li> Chuong B. Do, <a class="reference external" href="http://cs229.stanford.edu/section/more_on_gaussians.pdf">More on Multivariate Gaussians</a>.
 </li>
-<li> Chuong B. Do, <a class="reference external" href="http://cs229.stanford.edu/section/cs229-gaussian_processes.pdf">Gaussian processes</a>.
-</li>
-<li> Snoek J, Larochelle H, Adams R P, <a class="reference external" href="http://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf">Practical Bayesian Optimization of MachineLearning Algorithms</a>.
+<li> Chuong B. Do, <a class="reference external" href="http://cs229.stanford.edu/section/cs229-gaussian_processes.pdf">Gaussian processes</a>.</li>
+<li> Snoek J, Larochelle H, Adams R P, <a class="reference external" href="http://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf">Practical Bayesian Optimization of Machine Learning Algorithms</a>.
 </li>
 
 <hr class="with-margin">

@@ -322,15 +322,18 @@ It is worth saying that the problems with maximum likelihood do not arise when w
 over parameters in a Bayesian setting, however this is not discussed in this post and the reader is referred to [PRML](#prml) [3.2].
 
 Recall that in linking OLS to MLE and RR to MAP we have that:
-
-* Least squares solution: unbiased, but potentially high variance
-* Ridge regression solution: biased, but lower variance than LS
-
+<div class="bullet"> 
+<li> Least squares solution: unbiased, but potentially high variance </li>
+<li> Ridge regression solution: biased, but lower variance than LS</li>
+</div>
+<br>
 To analyse which of these is preferable we note that ultimately the true thing we care about the generalization error on unseen data. In order to start this analysis we consider the prediction for a single new test prediction: $(\mathbf{x}_0, y_0)$.
 
-* Least squares predicts: $\mathbf{x}_0^T \mathbf{w}\_{LS}$
-* Ridge regression predicts: $\mathbf{x}_0^T \mathbf{w}\_{RR}$
-
+<div class="bullet"> 
+<li> Least squares predicts: $\mathbf{x}_0^T \mathbf{w}\_{LS}$ </li>
+<li> Ridge regression predicts: $\mathbf{x}_0^T \mathbf{w}\_{RR}$ </li>
+</div>
+<br>
 We can calculate the expected squared error of this prediction as:
 
 $$\mathbb{E}[(y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 | X,\mathbf{x}_0] = \int_{\mathbb{R}}^{} \int_{\mathbb{R^n}}^{} (y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 \, \underbrace{p(\mathbf{y} | X, \mathbf{w})}_\text{$ \mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right) $} \, \underbrace{p(y_0 | \mathbf{x}_0, \mathbf{w})}_\text{$ y_0 \sim \mathcal{N}\left(\mathbf{x}_0^T \mathbf{w}, \sigma^{2} \right)$} \, d\mathbf{y} \, dy_0 \tag{7}
@@ -391,19 +394,21 @@ The LHS of $(7)$ can be calculated as:
 </div>
 
 where the above is derived with the help of a few results:
-
-* $\mathbb{E}\left[y_{0} \mathbf{\hat{w}}\right]=\mathbb{E}\left[y_{0}\right] \mathbb{E}[\mathbf{\hat{w}}]$ by independence
-* $\mathbb{E}\left[y_{0}^{2}\right]=\sigma^{2}+(\mathbf{x}\_0^{T} \mathbf{w})^{2}$ by $y_{0} \sim N\left(\mathbf{x}\_0^{T} \mathbf{w}, \sigma^{2}\right)$ and [prob fact 1](#prob_fact1)
-* $\mathbb{E}\left[\mathbf{\hat{w}} \mathbf{\hat{w}}^{T}\right]=\operatorname{Var}[\mathbf{\hat{w}}]+\mathbb{E}[\mathbf{\hat{w}}] \mathbb{E}[\mathbf{\hat{w}}]^{T}$ from [prob fact 2](#prob_fact2)
-
+<div class="bullet"> 
+<li> $\mathbb{E}\left[y_{0} \mathbf{\hat{w}}\right]=\mathbb{E}\left[y_{0}\right] \mathbb{E}[\mathbf{\hat{w}}]$ by independence </li>
+<li> $\mathbb{E}\left[y_{0}^{2}\right]=\sigma^{2}+(\mathbf{x}\_0^{T} \mathbf{w})^{2}$ by $y_{0} \sim N\left(\mathbf{x}\_0^{T} \mathbf{w}, \sigma^{2}\right)$ and [prob fact 1](#prob_fact1) </li>
+<li> $\mathbb{E}\left[\mathbf{\hat{w}} \mathbf{\hat{w}}^{T}\right]=\operatorname{Var}[\mathbf{\hat{w}}]+\mathbb{E}[\mathbf{\hat{w}}] \mathbb{E}[\mathbf{\hat{w}}]^{T}$ from [prob fact 2](#prob_fact2) </li>
+</div>
+<br>
 ##### Comment
 
 We have thus decomposed the prediction error into 3 main components:
-
-1. Measurement noise – we can’t control this given the model
-2. Model bias – how close to the solution we expect to be on average
-3. Model variance – how sensitive the solution is to the data
-
+<div class="bullet"> 
+<li>1. Measurement noise – we can’t control this given the model </li>
+<li>2. Model bias – how close to the solution we expect to be on average</li>
+<li>3. Model variance – how sensitive the solution is to the data</li>
+</div>
+<br>
 The above analysis is more general (see [ESL](#esl) [7.3]) than the linear regression case though it's usually not possible to get nice equations for the tradeoff.
 
 In the case of OLS and RR we have expressions for $\mathbb{E}[\mathbf{\hat{w}}]$ and $\operatorname{Var}[\mathbf{\hat{w}}]$ and so in theory would be able to compare the generalization error if we knew the true $\mathbf{w}$. In reality we don't and so techniques such as cross-validation are used instead to estimate the generalization error.
@@ -535,13 +540,14 @@ When $X^T X$ is full rank. This loosely means that $X$, $n \times (d+1)$, has at
 ##### Notation
 
 In general, capital letters are matrices, bold font represents vectors and lower-case letters are scalars. We will also try to introduce new references to notation appropriately to ease reading.
-
-* $\mathbf{x_i}$: the $i$th observation $\in \mathbb{R}^{d}$ which we think of as a column vector, $d \times 1$
-* $X$: an $n \times d$ matrix with each row an observation and each column a different feature, this has $d+1$ columns if we model with an intercept
-* $\mathbf{y}$: target variable vector, $n \times 1$
-* $y_i$: target variable for the $i$th observation, $\in \mathbb{R}$
-* $\mathbf{w}$: $d$ dimensional weight vector ($d+1$ if we assume an intercept), $d \times 1$
-
+<div class="bullet"> 
+<li> $\mathbf{x_i}$: the $i$th observation $\in \mathbb{R}^{d}$ which we think of as a column vector, $d \times 1$ </li>
+<li> $X$: an $n \times d$ matrix with each row an observation and each column a different feature, this has $d+1$ columns if we model with an intercept </li>
+<li> $\mathbf{y}$: target variable vector, $n \times 1$ </li>
+<li> $y_i$: target variable for the $i$th observation, $\in \mathbb{R}$ </li>
+<li> $\mathbf{w}$: $d$ dimensional weight vector ($d+1$ if we assume an intercept), $d \times 1$ </li>
+</div>
+<br>
 ##### Terminology
 
 ###### Maximum-likelihood estimation (MLE)
@@ -565,14 +571,17 @@ Variance is an error from sensitivity to small fluctuations in the training set.
 <hr class="with-margin">
 <h4 class="header" id="references">References</h4>
 
+<div class="bullet"> 
+<li>
 <a name="prml"></a>
-* Bishop, C. (2006). [Pattern Recognition and Machine Learning](https://www.springer.com/gb/book/9780387310732)
-  * Chapters: 1.1, 2.1 - 2.3, 3.1 - 3.2
+Bishop, C. (2006). Chapters: 1.1, 2.1 - 2.3, 3.1 - 3.2; <a class="reference external" href="https://www.springer.com/gb/book/9780387310732">Pattern Recognition and Machine Learning</a>.</li>
+<li>
 <a name="esl"></a>
-* Hastie, T., R. Tibshirani, and J. Friedman (2001). [The Elements of Statistical Learning](http://web.stanford.edu/~hastie/ElemStatLearn/)
-  * Chapters: 1 - 2, 3.1 - 3.4, 7.1 - 7.3, 7.10  
+Hastie, T., R. Tibshirani, and J. Friedman (2001). Chapters: 1 - 2, 3.1 - 3.4, 7.1 - 7.3, 7.10;  <a class="reference external" href="http://web.stanford.edu/~hastie/ElemStatLearn/">The Elements of Statistical Learning</a>.</li>
+<li>
 <a name="edx_ml"></a>
-* edX, ColumbiaX, [Machine Learning](https://www.edx.org/course/machine-learning-1)
+edX, ColumbiaX, <a class="reference external" href="https://www.edx.org/course/machine-learning-1">Machine Learning</a>.</li>
+</div>
 
 <hr class="with-margin">
 <h4 class="header" id="appendix">Appendix</h4>
@@ -698,10 +707,12 @@ where $ Z=\left(I+\lambda\left(X^{T} X\right)^{-1}\right)^{-1}.$
 The solutions to least squares and ridge regression are very similar, and it is possible to use the [SVD](https://en.wikipedia.org/wiki/Singular_value_decomposition) to analyse the difference between $\mathbf{w}\_{LS}$ and $\mathbf{w}\_{RR}$.
 
 In particular we write the data matrix $X$ as $X = USV^T$ with:
-  * $U$: $n \times d$ with orthonormal columns
-  * $S$: $d \times d$ with non-negative diagonal entries
-  * $V$: $d \times d$ with orthonormal columns
-
+<div class="bullet"> 
+<li> $U$: $n \times d$ with orthonormal columns </li>
+<li> $S$: $d \times d$ with non-negative diagonal entries </li>
+<li> $V$: $d \times d$ with orthonormal columns</li>
+</div>
+<br>
 We give just a sketch summary of the result here and the reader is referred to [ESL](#esl) [3.4.1] for more details.
 
 The upshot is that the regularization term $\lambda$ in the ridge regression solution acts as a sort of protection to stop us dividing by really small values when calculating $\mathbf{w}\_{RR}$. This is loosely analogous to what we sometimes do to avoid division by 0 errors or blow-ups by adding a term, $\epsilon$, to the denominator $\frac{1}{x + \epsilon}$.
@@ -711,14 +722,15 @@ In particular it is shown that:
 $$\mathbf{w}_{RR} = VS_{\lambda}^{-1}U^T \mathbf{y}$$
 
 where:
-
-* $S$ is a matrix holding the singular values (i.e. the square roots of the eigenvalues) of $X$
-* $S_{\lambda}^{-1}$ refers to a diagonal matrix with each term of the form:
+<div class="bullet"> 
+<li> $S$ is a matrix holding the singular values (i.e. the square roots of the eigenvalues) of $X$ </li>
+<li> $S_{\lambda}^{-1}$ refers to a diagonal matrix with each term of the form:
 
 $$\dfrac{S_{ii}}{\lambda + S^2_{ii}}$$
-
-* $S$ is a $d$ by $d$ matrix
-
+</li>
+<li> $S$ is a $d$ by $d$ matrix </li>
+</div>
+<br>
 So we can see that $\lambda$ in the SVD view of $\mathbf{w}\_{RR}$ above stops us getting weights that are huge when we have small singular values in $X$ - no such protection exists for the OLS solution ($\lambda = 0$).
 
 <hr class="with-margin">

@@ -45,13 +45,15 @@ For notational simplicity let's call the column representing height $x_1$ and th
 ##### Feature engineering approach
 
 Now, a friend Bob pops over and suggests we might be able to solve the problem if we take some non-linear transformations of the data. In particular he suggests that we enhance the original dataset to create the following new columns:
-  * A column with all 1s in it
-  * A column equal to the original column for height, $x_1$, multiplied by $\sqrt{2}$, i.e. $\sqrt{2}x_1$
-  * A column equal to the original column for weight, $x_2$, multiplied by $\sqrt{2}$, i.e. $\sqrt{2}x_2$
-  * A column equal to $\sqrt{2}x_1x_2$
-  * A column equal to $x_1^2$
-  * A column equal to $x_2^2$
-
+<div class="bullet"> 
+<li> A column with all 1s in it </li>
+<li> A column equal to the original column for height, $x_1$, multiplied by $\sqrt{2}$, i.e. $\sqrt{2}x_1$ </li>
+<li> A column equal to the original column for weight, $x_2$, multiplied by $\sqrt{2}$, i.e. $\sqrt{2}x_2$ </li>
+<li> A column equal to $\sqrt{2}x_1x_2$ </li>
+<li> A column equal to $x_1^2$ </li>
+<li> A column equal to $x_2^2$ </li>
+</div>
+<br>
 Bob also tells us we can assess how similar two of the data points are (i.e. two rows of this new matrix) by element-wise multiplying the row vectors of the data together and summing the resultant numbers - this is computing the [dot product](https://en.wikipedia.org/wiki/Dot_product) between two points.
 
 <blockquote class="tip">
@@ -82,7 +84,7 @@ If we compute the dot product of these two new rows we get 144:
 16\\
 \end{array}
 \right)
-&= 144.
+&= 144
 \end{alignat*}
 </div>
 
@@ -151,9 +153,10 @@ for the transformation $\phi$, as defined in [(0)](#eq0), from the original feat
 ##### Which is easier to compute?
 
 Weighing up what we have done there are two choices:
-
-1. Start creating numerous columns as per Bob's suggestion to get $\phi(\textbf{a})^T$ and  $\phi(\textbf{b})^T$. This will create a large amount of extra columns if $d$ is large and we want a polynomial kernel of high order.
-2. Compute $(1 + \textbf{a}^T\textbf{b})^2 = \kappa(\textbf{a},\textbf{b})$ instead.
+<div class="bullet"> 
+<ol> 1. Start creating numerous columns as per Bob's suggestion to get $\phi(\textbf{a})^T$ and  $\phi(\textbf{b})^T$. This will create a large amount of extra columns if $d$ is large and we want a polynomial kernel of high order. </ol>
+<ol> 2. Compute $(1 + \textbf{a}^T\textbf{b})^2 = \kappa(\textbf{a},\textbf{b})$ instead. </ol>
+</div>
 
 We call $\kappa(\textbf{a},\textbf{b})$ the kernel between two observations/data-points and it is computationally much easier to work with the original data via option 2 than to start creating many new columns.
 
@@ -227,8 +230,10 @@ It is helpful to have an understanding of how certain transformations of the dat
 <hr class="with-margin">
 <h4 class="header" id="references">References</h4>
 
-<a name="prml"></a>
-* Bishop, C. (2006). [Pattern Recognition and Machine Learning](https://www.springer.com/gb/book/9780387310732), Chapter 6
+<div class="bullet"> 
+<li><a name="prml"></a>
+Bishop, C. (2006). <a class="reference external" href="https://www.springer.com/gb/book/9780387310732">Pattern Recognition and Machine Learning</a>.</li>
+</div>
 
 <hr class="with-margin">
 <h4 class="header" id="appendix">Appendix: Q and A</h4>

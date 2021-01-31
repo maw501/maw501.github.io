@@ -61,7 +61,7 @@ h4
 
 h5
 {
-  color:#f87e6f;
+  color:#e06c75;
   font-size: 1.1em;
 }
 
@@ -140,7 +140,7 @@ a:active {
     font-family: "Space", monospace;
     line-height: 1em;
     color: #e06c75;
-    font-weight: 500;
+    font-weight: 525;
 }
 
 .topmost .subtitle {
@@ -354,23 +354,10 @@ blockquote p {
   display: inline;
 }
 
-blockquote.warning {
-    /*background: antiquewhite;*/
-   /* border-color: darkorange;*/
-}
-
-blockquote.tip {
-    /*background: #e5c07b;*/
-    /*border-color: #61afef;  /* dodgerblue */*/
-    /*color: #cfd7e6;*/
-}
-
 blockquote.algo {
-  /*background: white;*/
   padding-top: 1em;
   padding-bottom: 0;
   padding-right: 2em;
-  /*border-color: #A90404;*/
 }
 
 blockquote.algo li:not(:last-child) {
@@ -378,16 +365,9 @@ blockquote.algo li:not(:last-child) {
 }
 
 blockquote.math {
-  /*background: #eef6e8;*/
   padding-top: 0em;
   padding-bottom: 0em;
   padding-right: 2em;
-  border-color: black;
-}
-
-blockquote.comment {
-    /*background: ghostwhite;*/
-    /*border-color: #06a006;*/
 }
 
 /* ------ */
