@@ -1,7 +1,7 @@
 html {
     height: 100%;
     box-sizing: border-box;
-    font-size: 18px;
+    font-size: 1.1em;
     font-family: "Fira Sans" Fira Mono;
     font-weight: 500;
 }
@@ -25,8 +25,6 @@ body {
 
 h1,h2,h3,h4,h5,h6
 {
-  /*font-family:"Helvetica Neue", helvetica, "Open Sans", sans-serif; */
-  /*font-family: 'Droid Sans Mono', monospace;*/
   color:#e06c75;
   line-height: 150%
 }
@@ -50,13 +48,6 @@ h3
   color: #e06c75;
 }
 
-/* Makes font heavier
-h2,h3
-{
-  font-weight:700
-}extended
-*/
-
 h1 a,h2 a,h3 a,h4 a
 {
   color:#e06c75;
@@ -70,7 +61,7 @@ h4
 
 h5
 {
-  color:#f87e6f;/*# 3535f5*/
+  color:#f87e6f;
   font-size: 1.1em;
 }
 
@@ -87,9 +78,7 @@ h1 a:hover,h2 a:hover,h3 a:hover,h4 a:hover
 
 p
 {
-  /*font-family: 'Fira Sans' Fira Mono;*/
   font-size: 1.1em;
-  /*font-weight: 500;*/
   color: #cfd7e6;
 }
 
@@ -100,6 +89,7 @@ p.red
 
 .bullet {
   color: #cfd7e6;
+  font-size: 1.1em;
 }
 
 .math {
@@ -135,7 +125,7 @@ a:active {
     background: white;
     background-image: url('/assets/img/robot_banner.jpg');
     position: relative;
-  /*  opacity: 0.9; */
+    /*opacity: 0.75;*/ 
 }
 
 .topmost .text, .topmost .image {
@@ -147,23 +137,25 @@ a:active {
 .topmost .title {
     padding-top: 20px;
     font-size: 4em;
-    font-family: "Coda", cursive;
+    font-family: "Space", monospace;
     line-height: 1em;
-    color: #891408;
+    color: #e06c75;
+    font-weight: 500;
 }
 
 .topmost .subtitle {
     padding-bottom: 20px;
     font-size: 1.2em;
     font-family: "Space", monospace;
-    color: #891408;
+    color: #e06c75;
+    font-weight: 750;
 }
 
 .topmost .bold_subtitle {
     padding-bottom: 20px;
     font-size: 1.2em;
     font-family: "Space", monospace;
-    color: #891408;
+    color: #e06c75;
 }
 
 
@@ -176,9 +168,8 @@ a:active {
     padding: 0;
     text-align: center;
     list-style: none;
-    background: #44494d;
+    background: #454c59;
     display: block;
-    /*font-family: "Space Mono", monospace;*/
     width: 100%;
 }
 
@@ -189,27 +180,20 @@ a:active {
     width: 120px;  /* navigation banner at top Blog Projects etc..*/
     line-height: 50px;
     font-size: 1.4em;
-    /*font-family: "Share", cursive;*/
+    font-weight: 750;
     margin-right: -4px;
 }
 
 .nav a {
     display: block;
-    color: white;
+    color: #e06c75;
 }
 
 .nav a:hover,
 .nav a.active {
-    background: darkorange;  /* darkorange  or # 97C2A7*/
-    color: ghostwhite;
+    background: #98c379;
+    color: #e06c75;
 }
-
-
-/*.nav li:hover,
-.nav li.active {
-    background: darkorange;
-    color: ghostwhite;
-}*/
 
 .nav a, .nav a:hover {
     text-decoration: none;
@@ -225,11 +209,11 @@ a:active {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 60px;  /* MW added this */
+    height: 60px;
     text-align: center;
     padding: 1rem;
-    background-color: #3c3c3c;
-    color: white;
+    color: #e06c75;
+    font-weight:500;
 }
 
 /* --------------- */
@@ -238,16 +222,21 @@ a:active {
 
 .post {
     margin-bottom: 2em;
+
 }
 
 .post:last-child {
     margin-bottom: 0;
+
 }
 
 .card.post {
     cursor: pointer;
-    background: #eef6e8;
+    background: #454c59;
+    border-color: #98c379;
 }
+
+
 
 .post .header {
     font-family: "Share", cursive;
@@ -259,27 +248,25 @@ a:active {
 }
 
 .post .timestamp {
-    font-size: 0.9em;
-    /*: "Space Mono", monospace;*/
+    font-size: 1.1em;
     text-align: right;
-    color: #ad270d;
+    color: #cfd7e6;
 }
+
 
 .post .timestamp_code {
     font-size: 0.9em;
-    /*font-family: "Space Mono", monospace;*/
     text-align: right;
     color: #272ded ;
     font-weight: bold;
 }
 
 .post .text {
-    /*font-family: "Roboto", monospace;*/
     text-align: justify;
 }
 
 .post .text.digest {
-    color: dimgray;
+    color: blue;
 }
 
 .post .header.centered,
@@ -288,7 +275,6 @@ a:active {
 }
 
 .list-of-contents h4 {
-    /*font-family: "Roboto", monospace;*/
     color: #e06c75;
 }
 
@@ -307,7 +293,6 @@ hr.small-margin {
 
 .post .tags {
     text-align: right;
-    /*font-family: "Space Mono", monospace;*/
     font-size: 0.9em;
     margin-bottom: 1em;
 }
