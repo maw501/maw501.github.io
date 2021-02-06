@@ -428,76 +428,90 @@ In [week 3](/../project_edx_ml/2018/10/13/columbiaX-ML-week3) we will see how th
 Some results from [The Matrix Cookbook](https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf) are useful.
 
 <a name="mc81"></a>
-###### 81
+##### 81
 
-$$
+<div class="math">
+\begin{align*}
 \frac{\partial}{\partial \mathbf{x}} \mathbf{x}^{T} A \mathbf{x} = 2 A \mathbf{x} \tag{MC 81}
-$$
-
+\end{align*}
+</div>
 when $A$ is symmetric ($A^T = A$).
 
-
 <a name="mc63"></a>
-###### 63
+##### 63
 This result is given as:
 
-$$
+<div class="math">
+\begin{align*}
 \frac{\partial \operatorname{trace} \left(A X^{-1} B \right) } {\partial X} = -\left(X^{-1} B A X^{-1}\right)^{T} \tag{MC 63}
-$$
+\end{align*}
+</div>
 
 and in the use case we have we can assume $A = I = B$ to obtain
 
-
-$$
+<div class="math">
+\begin{align*}
 \frac{\partial}{\partial \Sigma} \operatorname{trace}(\Sigma^{-1} a) = - \Sigma^{-2} a
-$$
+\end{align*}
+</div>
 
 where $ a = \sum_{i=1}^{n}\left(\mathbf{x}_{\mathbf{i}}-\boldsymbol{\mu}\right)\left(\mathbf{x}\_{\mathbf{i}}-\boldsymbol{\mu}\right)^{T}$ is of dimension $1 \times 1$ and so can essentially be ignored as a scalar.
 
 <a name="mc57"></a>
-###### 57
+##### 57
 
-$$
+<div class="math">
+\begin{align*}
 \frac{\partial}{\partial \Sigma} \ln(|\Sigma|) = \Sigma^{-T} = \Sigma^{-1} \tag{MC 57}
-$$
-
+\end{align*}
+</div>
 where the last equality holds if $\Sigma$ is symmetric.
 
 <a name="mc69"></a>
-###### 69
+##### 69
 
-$$
-\frac{\partial \mathbf{x}^{T} \mathbf{a}}{\partial \mathbf{x}}=\frac{\partial \mathbf{a}^{T} \mathbf{x}}{\partial \mathbf{x}}=\mathbf{a} \tag{MC 69}
-$$
+<div class="math">
+\begin{align*}
+\frac{\partial \mathbf{x}^{T} \mathbf{a}}{\partial \mathbf{x}}=\frac{\partial \mathbf{a}^{T} \mathbf{x}}{\partial \mathbf{x}}=\mathbf{a} \tag{MC 69}\end{align*}
+</div>
 
 <a name="trace_trick"></a>
 ##### Trace trick
 
 The trace of a matrix is the sum of its diagonal entries and so the trace of a scalar is equal to the scalar itself. The trace has the property that:
 
-$$
+<div class="math">
+\begin{align*}
 \operatorname{trace}(ABC) = \operatorname{trace}(CAB) = \operatorname{trace}(BCA)
-$$
+\end{align*}
+</div>
 
 which is called invariance under cyclical permutations of matrix products. This allows to rewrite the scalar (yes, it's a scalar!):
 
-$$
+<div class="math">
+\begin{align*}
 \left(\mathbf{x}_{\mathbf{i}}-\boldsymbol{\mu}\right)^{T} \Sigma^{-1}\left(\mathbf{x}_{\mathbf{i}}-\boldsymbol{\mu}\right)
-$$
+\end{align*}
+</div>
 
 as
 
-$$
+<div class="math">
+\begin{align*}
 \operatorname{trace}\left(\Sigma^{-1} \sum_{i=1}^{n}\left(\mathbf{x}_{\mathbf{i}}-\boldsymbol{\mu}\right)\left(\mathbf{x}_{\mathbf{i}}-\boldsymbol{\mu}\right)^{T}\right)
-$$
+\end{align*}
+</div>
 
 where we then apply $(\text{MC} \, 63)$ [above](#mc63) in order to differentiate.
 
 ##### Outer product
 
 Matrix multiplication is the same as summing over all the individual outer products.
-
-$$X^{T}X = \sum_{i=1}^{n} \mathbf{x}_i \mathbf{x}_i^{T}$$
+<div class="math">
+\begin{align*}
+X^{T}X = \sum_{i=1}^{n} \mathbf{x}_i \mathbf{x}_i^{T}
+\end{align*}
+</div>
 
 This point will matter when we talk about active learning later in the course.
 
@@ -509,9 +523,11 @@ This point will matter when we talk about active learning later in the course.
 
 The [non-central moment of a Gaussian](https://en.wikipedia.org/wiki/Normal_distribution#Moments) defined by $X \sim \mathcal{N}(\mu, \sigma^2)$ is:
 
-$$
+<div class="math">
+\begin{align*}
 \mathbb{E}[X^2] = \mu^2 + \sigma^2
-$$
+\end{align*}
+</div>
 
 <a name="prob_fact2"></a>
 ###### Fact 2
@@ -555,9 +571,11 @@ In general, capital letters are matrices, bold font represents vectors and lower
 
 MLE is a way of estimating the parameters of a model, given data. In some cases this can be done by differentiating the likelihood and solving for the parameter of interest.
 
-$$
+<div class="math">
+\begin{align*}
 \hat{\theta}_{ML} :=\arg \max_{\theta} p\left(\mathbf{x}_{1}, \ldots, \mathbf{x}_{n} | \theta\right)
-$$
+\end{align*}
+</div>
 
 ###### The notion of a probabilistic model
 
@@ -598,29 +616,37 @@ Here we derive the maximum likelihood solution under a multivariate Gaussian lik
 
 We start by noting that in general for $n$ [iid](https://en.wikipedia.org/wiki/Independent_and_identically_distributed_random_variables) data observations $\mathbf{x_i} \in \mathbb{R}^{d}$ the probability of a single observation $p(\mathbf{x} \| \boldsymbol{\mu}, \Sigma)$ can be written as
 
-$$
+<div class="math">
+\begin{align*}
 \mathbf{x_i} \stackrel{\text { iid }}{\sim} p(\mathbf{x} | \boldsymbol{\mu}, \Sigma)
-$$
+\end{align*}
+</div>
 
 for some probability distribution $p$ with parameters $\theta$. For a multivariate Gaussian $\theta = \\{\boldsymbol{\mu}, \Sigma \\}$.
 
 Under the iid assumption we can write the joint likelihood of all the data as the product of the probability of each individual observation:
 
-$$
+<div class="math">
+\begin{align*}
 p\left(\mathbf{x_1}, \ldots, \mathbf{x_n} | \theta\right)=\prod_{i=1}^{n} p\left(\mathbf{x_i} | \theta\right)
-$$
+\end{align*}
+</div>
 
 where the goal is the find the optimal values of the parameters $\theta$ that maximize the joint likelihood. That is:
 
-$$
+<div class="math">
+\begin{align*}
 \hat{\theta}_{ML} :=\arg\max_{\theta} p\left(\mathbf{x_1}, \ldots, \mathbf{x_n}| \theta\right).
-$$
+\end{align*}
+</div>
 
 The joint likelihood is the product of many terms all less than one (they are probabilities) and this can be complicated to compute. We thus take logs to turn multiplication into addition and note this is still maximizing the same set of parameters. This is now the joint log-likelihood and we solve for $\theta$ which amounts to solving:
 
-$$
+<div class="math">
+\begin{align*}
 \sum_{i=1}^{n} \nabla_{(\boldsymbol{\mu}, \Sigma)} \ln p\left(\mathbf{x_i}| \boldsymbol{\mu}, \Sigma\right)=0
-$$
+\end{align*}
+</div>
 
 ###### Solving for the mean vector
 
@@ -696,9 +722,11 @@ The mean and variance solutions for RR solution follow exactly the same procedur
 
 The solutions are:
 
-$$
+<div class="math">
+\begin{align*}
 \mathbb{E}\left[\mathbf{w}_{RR}\right]=\left(\lambda I+X^{T} X\right)^{-1} X^{T} X \mathbf{w}, \quad \operatorname{Var}\left[\mathbf{w}_{RR}\right]=\sigma^{2} Z\left(X^{T} X\right)^{-1} Z^{T}
-$$
+\end{align*}
+</div>
 
 where $ Z=\left(I+\lambda\left(X^{T} X\right)^{-1}\right)^{-1}.$
 
