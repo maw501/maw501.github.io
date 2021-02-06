@@ -281,8 +281,10 @@ There are many algorithms which offer a solution to the question of which data-p
 
 We need to do two things:
 
-1. Find a way to sequentially update the parameters of the posterior
-2. Determine a strategy for choosing which data-point to measure next
+<div class="bullet"> 
+<ol> 1. Find a way to sequentially update the parameters of the posterior</ol>
+<ol> 2. Determine a strategy for choosing which data-point to measure next</ol>
+</div>
 
 We will do the above in the context of Bayesian linear regression.
 
@@ -299,8 +301,10 @@ $$ \boldsymbol{\mu} = (\lambda \sigma^{2} I + \underbrace{X^T X}_\text{$(d \time
 
 where in the above we draw attention to the dimensions of the parameters $\boldsymbol{\mu}$ and $\Sigma$. This is to highlight that their final dimensionality does not involve $n$, the number of observations. This, and the fact that matrix multiplication can be written in terms of [outer products](#mmult_add) in an additive manner means we are able to decompose the parameter update into 2 steps:
 
-1. Calculate the parameter estimates for $\boldsymbol{\mu}$ and $\Sigma$ with the original data
-2. Update $\boldsymbol{\mu}$ and $\Sigma$ sequentially in an additive manner using the new data
+<div class="bullet"> 
+<ol> 1. Calculate the parameter estimates for $\boldsymbol{\mu}$ and $\Sigma$ with the original data</ol>
+<ol> 2. Update $\boldsymbol{\mu}$ and $\Sigma$ sequentially in an additive manner using the new data</ol>
+</div>
 
 We are thus able to re-express the above definitions of $\boldsymbol{\mu}$ and $\Sigma$ to split them into terms based on original data and terms based on new data. The parameter update equations are:
 
