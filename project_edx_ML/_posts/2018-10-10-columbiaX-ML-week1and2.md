@@ -2,7 +2,6 @@
 layout: post
 title: ColumbiaX - ML - weeks 1 and 2
 date: 2018-10-10
-repub_date: 2019-05-20
 use_math: true
 image: "bivariategauss2.jpeg"
 comments: true
@@ -129,10 +128,12 @@ $$
 where under the Gaussian noise assumption $\Sigma = \sigma^2 I$ is a diagonal matrix. Recalling that the determinant of a diagonal matrix is the product of its diagonal entries permits the above form and it also pays to note that $(\mathbf{y}-\boldsymbol{\mu})$ has dimensions $n \times 1$ and $\boldsymbol{\mu}$ is the prediction for each observation, also with dimension $n \times 1$. Under the Gaussian noise assumption we are making this is equivalent to setting the prediction, $\boldsymbol{\mu} = X \mathbf{w}$.
 
 There are a few equivalent ways of stating the assumption we make about the data in a MLE setting for linear regression:
-* $y_i = \mathbf{x_i}^T \mathbf{w} + \epsilon_i$ with $\epsilon_i \stackrel{ind}{\sim} N(0, \sigma^2)$ for $i=1,...n$
-* $y_i \stackrel{ind}{\sim} \mathcal{N}(\mathbf{x_i}^T \mathbf{w}, \sigma^2)$ for $i=1,...n$
-* $\mathbf{y} \sim \mathcal{N}(X \mathbf{w}, \sigma^2 I)$ and so $p(\mathbf{y} \| \mathbf{w}, X) = \mathcal{N}(X \mathbf{w}, \sigma^2 I)$
 
+<div class="bullet"> 
+<ol> 1. $y_i = \mathbf{x_i}^T \mathbf{w} + \epsilon_i$ with $\epsilon_i \stackrel{ind}{\sim} N(0, \sigma^2)$ for $i=1,...n$</ol>
+<ol> 2. $y_i \stackrel{ind}{\sim} \mathcal{N}(\mathbf{x_i}^T \mathbf{w}, \sigma^2)$ for $i=1,...n$</ol>
+<ol> 3. $\mathbf{y} \sim \mathcal{N}(X \mathbf{w}, \sigma^2 I)$ and so $p(\mathbf{y} \| \mathbf{w}, X) = \mathcal{N}(X \mathbf{w}, \sigma^2 I)$</ol>
+</div>
 Note this doesn't mean that the target $\mathbf{y}$ itself is normally distributed but that given a mean prediction of $X\mathbf{w}$ the residuals follow a Gaussian distribution assumed to have constant variance.
 
 Having now set up the maximum likelihood model we move on to derive the optimal weights, $\mathbf{w}_{ML}$, for linear regression under MLE with a Gaussian likelihood.
@@ -303,7 +304,7 @@ However, the prior assumption reduces the variance of the RR solution and crucia
 <a class="reference external" href="https://www.statlect.com/fundamentals-of-statistics/ridge-regression">always lower</a> than the variance of the MLE solution..
 </blockquote>
 
-This tradeoff between bias and variance is discussed [next](#bv_tradeoff).
+This trade-off between bias and variance is discussed next.
 
 <a name="bv_tradeoff"></a>
 <hr class="with-margin">
@@ -396,17 +397,17 @@ The LHS of $(7)$ can be calculated as:
 where the above is derived with the help of a few results:
 <div class="bullet"> 
 <li> $\mathbb{E}\left[y_{0} \mathbf{\hat{w}}\right]=\mathbb{E}\left[y_{0}\right] \mathbb{E}[\mathbf{\hat{w}}]$ by independence </li>
-<li> $\mathbb{E}\left[y_{0}^{2}\right]=\sigma^{2}+(\mathbf{x}\_0^{T} \mathbf{w})^{2}$ by $y_{0} \sim N\left(\mathbf{x}\_0^{T} \mathbf{w}, \sigma^{2}\right)$ and [prob fact 1](#prob_fact1) </li>
-<li> $\mathbb{E}\left[\mathbf{\hat{w}} \mathbf{\hat{w}}^{T}\right]=\operatorname{Var}[\mathbf{\hat{w}}]+\mathbb{E}[\mathbf{\hat{w}}] \mathbb{E}[\mathbf{\hat{w}}]^{T}$ from [prob fact 2](#prob_fact2) </li>
+<li> $\mathbb{E}\left[y_{0}^{2}\right]=\sigma^{2}+(\mathbf{x}\_0^{T} \mathbf{w})^{2}$ by $y_{0} \sim N\left(\mathbf{x}\_0^{T} \mathbf{w}, \sigma^{2}\right)$ and <a class="reference external" href="{{page.url}}#prob_fact1">prob fact 1</a> </li>
+<li> $\mathbb{E}\left[\mathbf{\hat{w}} \mathbf{\hat{w}}^{T}\right]=\operatorname{Var}[\mathbf{\hat{w}}]+\mathbb{E}[\mathbf{\hat{w}}] \mathbb{E}[\mathbf{\hat{w}}]^{T}$ from <a class="reference external" href="{{page.url}}#prob_fact2">prob fact 2</a> </li>
 </div>
 <br>
 ##### Comment
 
 We have thus decomposed the prediction error into 3 main components:
 <div class="bullet"> 
-<li>1. Measurement noise – we can’t control this given the model </li>
-<li>2. Model bias – how close to the solution we expect to be on average</li>
-<li>3. Model variance – how sensitive the solution is to the data</li>
+<ol> 1. Measurement noise – we can’t control this given the model </ol>
+<ol> 2. Model bias – how close to the solution we expect to be on average</ol>
+<ol> 3. Model variance – how sensitive the solution is to the data</ol>
 </div>
 <br>
 The above analysis is more general (see [ESL](#esl) [7.3]) than the linear regression case though it's usually not possible to get nice equations for the tradeoff.

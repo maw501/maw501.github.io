@@ -2,7 +2,6 @@
 layout: post
 title: ColumbiaX - ML - week 5
 date: 2018-10-21
-repub_date: 2019-06-06
 use_math: true3456
 image: "logreg.png"
 comments: true
@@ -90,13 +89,13 @@ We will still work with the set-up of log odds and a hyperplane decision:
 
 <div class="math">
 \begin{alignat*}{1}
-\ln \frac{p(y=+1 | \mathbf{x})}{p(y=-1 | \mathbf{x})} &= \mathbf{x}^{T} \mathbf{w}+w_{0} \\[5pt] \tag{0}
+\ln \frac{p(y=+1 | \mathbf{x})}{p(y=-1 | \mathbf{x})} &= \mathbf{x}^{T} \mathbf{w}+w_{0} \\[5pt] \tag{A0}
 \end{alignat*}
 </div>
 
-where the (0) being positive means we would classify an example as in class $y = +1$ and negative as class $y = -1$.
+where $(\text{A}0)$ being positive means we would classify an example as in class $y = +1$ and negative as class $y = -1$.
 
-For binary classification we can now show how the [sigmoid function](https://en.wikipedia.org/wiki/Sigmoid_function) arises from thinking about the above set-up in equation (0). Recall for binary classification we have:
+For binary classification we can now show how the [sigmoid function](https://en.wikipedia.org/wiki/Sigmoid_function) arises from thinking about the above set-up in equation $(\text{A}0)$. Recall for binary classification we have:
 
 <div class="math">
 \begin{alignat*}{1}

@@ -2,7 +2,6 @@
 layout: post
 title: ColumbiaX - ML - week 4
 date: 2018-10-16
-repub_date: 2019-05-27
 use_math: true
 image: "knn.jpg"
 comments: true
