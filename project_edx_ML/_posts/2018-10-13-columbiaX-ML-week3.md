@@ -2,7 +2,6 @@
 layout: post
 title: ColumbiaX - ML - week 3
 date: 2018-10-13
-repub_date: 2019-05-22
 use_math: true
 image: "bayes_lr.png"
 comments: true
@@ -97,7 +96,7 @@ Unfortunately this term $p(\mathbf{y} \| X)$ is usually not calculable in Bayesi
 It is [shown](#post_blr) in the appendix that the posterior is:
 
 $$
-p(\mathbf{w} | \mathbf{y}, X) = \mathcal{N}(\mathbf{w} | \boldsymbol{\mu}, \Sigma) \tag{1}
+p(\mathbf{w} | \mathbf{y}, X) = \mathcal{N}(\mathbf{w} | \boldsymbol{\mu}, \Sigma)
 $$
 
 with
@@ -202,7 +201,7 @@ The posterior predictive distribution can be written as:
 p(y_{0} | \mathbf{x}_0, \mathbf{y}, X) &= \int_{\mathbb{R}^{d}} p(y_{0}, \mathbf{w} | \mathbf{x}_0, \mathbf{y}, X) \, d\mathbf{w}
    \\[5pt]
 &= \int_{\mathbb{R}^{d}} p(y_{0} | \mathbf{w}, \mathbf{x}_0, \mathbf{y}, X) \, p(\mathbf{w} | \mathbf{x}_0, \mathbf{y}, X) \, d\mathbf{w} \\[5pt]
-&= \int_{\mathbb{R}^{d}} \underbrace{p(y_{0} | \mathbf{w}, \mathbf{x}_0)}_\text{likelihood} \,  \underbrace{p(\mathbf{w} | \mathbf{y}, X)}_\text{posterior} \, d\mathbf{w}. \hspace{1cm} &\text{(by cond. indep.)} \tag{2}
+&= \int_{\mathbb{R}^{d}} \underbrace{p(y_{0} | \mathbf{w}, \mathbf{x}_0)}_\text{likelihood} \,  \underbrace{p(\mathbf{w} | \mathbf{y}, X)}_\text{posterior} \, d\mathbf{w}. \hspace{1cm} &\text{(by cond. indep.)} 
 \end{alignat*}
 </div>
 
@@ -212,7 +211,7 @@ We then integrate over all possible values of $\mathbf{w}$. This integrating ove
 
 ##### Predictive equations
 
-In order to obtain the predictive equations for the posterior predictive distribution, $p(y_0 \| \mathbf{x}_0, \mathbf{w})$, we first recall the form of the likelihood and posterior from $(2)$:
+In order to obtain the predictive equations for the posterior predictive distribution, $p(y_0 \| \mathbf{x}_0, \mathbf{w})$, we first recall the form of the likelihood and posterior from above$:
 
 
 $$
@@ -220,7 +219,7 @@ $$
 \underbrace{p(\mathbf{w} | \mathbf{y}, X) = \mathcal{N}(\mathbf{w} | \boldsymbol{\mu}, \Sigma)}_\text{posterior}
 $$
 
-where we know the values of $\boldsymbol{\mu}$ and $\Sigma)$ from $(1)$ [above](#mu_sig_post).
+where we know the values of $\boldsymbol{\mu}$ and $\Sigma)$ from [above](#mu_sig_post).
 
 Given the above assumptions the posterior predictive distribution for a new test point $\mathbf{x}_0$ is also a Gaussian:
 
@@ -228,9 +227,9 @@ Given the above assumptions the posterior predictive distribution for a new test
 <div class="math">
 \begin{alignat*}{1}
 
-p(y_{0} | \mathbf{x}_0, \mathbf{y}, X) &=  \mathcal{N}(y_0 | \mu_0, \sigma_0^2) \tag{3} \\[5pt]
-\mu_0 &= \mathbf{x}_0^{T} \boldsymbol{\mu} \tag{4} \\[5pt]
-\sigma_0^2 &= \sigma^2 + \mathbf{x}_0^T \Sigma \mathbf{x}_0. \tag{5}
+p(y_{0} | \mathbf{x}_0, \mathbf{y}, X) &=  \mathcal{N}(y_0 | \mu_0, \sigma_0^2)  \\[5pt]
+\mu_0 &= \mathbf{x}_0^{T} \boldsymbol{\mu} \\[5pt]
+\sigma_0^2 &= \sigma^2 + \mathbf{x}_0^T \Sigma \mathbf{x}_0. 
 \end{alignat*}
 </div>
 
@@ -338,7 +337,7 @@ We fit a model to the original data $(\mathbf{y}, X)$ to get the posterior, $p(\
 4. Return to step 1 using the updated posterior
 <br>
 <br>
-Recall the posterior predictive equations $(4)$ and $(5)$ from <a class="reference external" href="{{page.url}}#pred_eqtns">above</a>.
+Recall the posterior predictive equations from <a class="reference external" href="{{page.url}}#pred_eqtns">above</a>.
 </blockquote>
 
 Intuitively the above algorithm is choosing the point, $\mathbf{x}_0$, where we are most uncertain about the predicted value. This is a natural thing to want to do, if we already have data corresponding to a certain region of the input space we are interested in it perhaps doesn't make sense to keep querying the same region.
@@ -368,7 +367,7 @@ Ideally we would like some way to perform feature selection in a way that is lea
 Quite often in machine learning we can think of an optimization function loss as composing of two parts, a term which measures how well we are fitting the data and a penalty term. This can be written as:
 
 $$
-\mathcal{L}=\underbrace{\sum_{i=1}^{n}\left(y_{i}-f\left(\mathbf{x}_{i}; \mathbf{w}\right)\right)^{2}}_\text{goodness of fit term} + \underbrace{\lambda\| \mathbf{w}\|^{2}}_\text{penalty term} \tag{6}
+\mathcal{L}=\underbrace{\sum_{i=1}^{n}\left(y_{i}-f\left(\mathbf{x}_{i}; \mathbf{w}\right)\right)^{2}}_\text{goodness of fit term} + \underbrace{\lambda\| \mathbf{w}\|^{2}}_\text{penalty term}
 $$
 
 where the goal is to minimize $\mathcal{L}$. $f$ is a function that is predicting on the data with parameters $\mathbf{w}$ and we are using a sum of squares goodness of fit term. For ridge regression we made the prediction as $f(\mathbf{x}_{i} ; \mathbf{w}) = \mathbf{x}\_{i}^T \mathbf{w}$ and $\lambda \|\| \mathbf{w} \|\|^{2}$ is called a quadratic penalty term.
@@ -437,11 +436,12 @@ Depending on the value of $p$ we obtain different shapes for the level sets of t
 ##### Impact of $p$ on computational tractability
 
 We note the following facts (using a sum of squares loss) as we vary $p$:
-
-* $p < 1$: we can only find approximate solutions to the optimization problem using iterative algorithms
-* $p \geq 1$, $p \neq 2$: convex optimization problem able to be solved exactly (includes lasso regression)
-* $p=2$: closed form solution (ridge regression)
-
+<div class="bullet"> 
+<li> $p < 1$: we can only find approximate solutions to the optimization problem using iterative algorithms </li>
+<li> $p \geq 1$, $p \neq 2$: convex optimization problem able to be solved exactly (includes lasso regression) </li>
+<li> $p=2$: closed form solution (ridge regression) </li>
+</div>
+<br>
 The loss of convexity in the optimization problem for $p < 1$ can be seen be noting that in the above chart we lose 'line of sight' between all points in the level sets of the penalty term.
 
 <a name="math_details_sec"></a>
@@ -494,14 +494,17 @@ Similar reasoning allows $X^T \mathbf{y}$ to be updated in the same way.
 <hr class="with-margin">
 <h4 class="header" id="references">References</h4>
 
+<div class="bullet"> 
+<li>
 <a name="prml"></a>
-* Bishop, C. (2006). [Pattern Recognition and Machine Learning](https://www.springer.com/gb/book/9780387310732)
-  * Chapters: 3.3 - 3.5
+Bishop, C. (2006). Chapters: 3.3 - 3.5; <a class="reference external" href="https://www.springer.com/gb/book/9780387310732">Pattern Recognition and Machine Learning</a>.</li>
+<li>
 <a name="esl"></a>
-* Hastie, T., R. Tibshirani, and J. Friedman (2001). [The Elements of Statistical Learning](http://web.stanford.edu/~hastie/ElemStatLearn/)
-  * Chapters: 3.3 - 3.8
+Hastie, T., R. Tibshirani, and J. Friedman (2001). Chapters: 3.3 - 3.8;  <a class="reference external" href="http://web.stanford.edu/~hastie/ElemStatLearn/">The Elements of Statistical Learning</a>.</li>
+<li>
 <a name="edx_ml"></a>
-* edX, ColumbiaX, [Machine Learning](https://www.edx.org/course/machine-learning-1)
+edX, ColumbiaX, <a class="reference external" href="https://www.edx.org/course/machine-learning-1">Machine Learning</a>.</li>
+</div>
 
 <hr class="with-margin">
 <h4 class="header" id="appendix">Appendix</h4>

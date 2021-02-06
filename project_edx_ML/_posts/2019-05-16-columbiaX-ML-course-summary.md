@@ -7,7 +7,9 @@ image: "ml_main_cropped.png"
 comments: true
 tags: [summary]
 ---
-Please read this page for an overview of course notes written based on the ColumbiaX Machine Learning course [hosted on edX](https://www.edx.org/course/machine-learning-columbiax-csmm-102x-4). The notes represent my take on the content and have been a fun way for me to explore the material much deeper than the course allowed.
+Please read this page for an overview of course notes written based on the ColumbiaX Machine Learning course [hosted on edX](https://www.edx.org/course/machine-learning-columbiax-csmm-102x-4). The notes represent my take on the content and have been a fun way for me to explore the material deeper than the course allowed.
+
+<strong>Status:</strong> on hold until I get more time to write-up the remaining weeks.
 
 <!--more-->
 <hr class="with-margin">
@@ -21,10 +23,10 @@ Please read this page for an overview of course notes written based on the Colum
 
 ##### Summary
 
-The story we will follow will be the core direction of the ColumbiaX Machine Learning course but we will deviate in many parts, particularly in the exposition. The journey to understanding is a deeply personal one and when forced to write about a topic the presentation of material will naturally be a function of that understanding.
+The story we will follow will be the core direction of the ColumbiaX Machine Learning course but we will deviate in many parts, particularly in the exposition. 
 
 ##### Goal
-The goal is to provide a safe passage through the more theoretical parts of the course by expanding significantly on parts that were glossed over within the course, or which represent more challenging material. In particular, we will endeavour to make wider use of external references and examples that are freely available to both bring content to life and to explain some of the trickier parts.
+The goal is to provide a safe passage through the more theoretical parts of the course by expanding on parts that were glossed over within the course, or which represent more advanced material. In particular, we will endeavour to make wider use of external references and examples that are freely available to both bring content to life and to explain some of the trickier parts.
 
 Frankly, the internet has tonnes of awesome machine learning explanations and these will be linked to where appropriate.
 
@@ -44,22 +46,7 @@ This is something that may be enhanced in the future.
 
 Machine learning brings together many areas of mathematics and it's definitely helpful to have knowledge of key concepts and results from linear algebra, probability and statistics and calculus.
 
-However, unlike most presentations of theoretical content we will endeavour to not skim over interim steps and will supply key mathematical results as they arise, typically through an appendix.
-
-##### Python code
-
-A (slightly longer term) goal of this course is to provide practical examples using Python code where applicable. This will typically take one of two forms:
-
-1. Minimal reproducible algorithm in [numpy](https://www.numpy.org/) to illustrate details
-2. Implementation in [sckit-learn](https://scikit-learn.org/stable/) with charts to illustrate concepts
-
-##### Future expansions
-
-Time permitting the following will happen:
-
-1. Walk-through of exercises from both [PRML](#prml) and [ESL](#esl)
-2. Jupyter notebooks for each week bringing to life content
-
+We will endeavour to not skim over interim steps and will supply key mathematical results as they arise, typically through an appendix.
 
 <hr class="with-margin">
 <h4 class="header" id="content">Content</h4>
@@ -159,12 +146,15 @@ We will strive to introduce new notation appropriately as it arises ease underst
 The core references for the course are given below however we will make wider use of what's available online and these will be referenced in the notes for that week as appropriate.
 
 ##### Core references
-
+<div class="bullet"> 
+<li>
 <a name="prml"></a>
-* Bishop, C. (2006). [Pattern Recognition and Machine Learning](https://www.springer.com/gb/book/9780387310732)
+Bishop, C. (2006). <a class="reference external" href="https://www.springer.com/gb/book/9780387310732">Pattern Recognition and Machine Learning</a>.</li>
+<li>
 <a name="esl"></a>
-* Hastie, T., R. Tibshirani, and J. Friedman (2001). [The Elements of Statistical Learning](http://web.stanford.edu/~hastie/ElemStatLearn/)
+Hastie, T., R. Tibshirani, and J. Friedman (2001). <a class="reference external" href="http://web.stanford.edu/~hastie/ElemStatLearn/">The Elements of Statistical Learning</a>.</li>
+<li>
 <a name="edx_ml"></a>
-* edX, ColumbiaX, [Machine Learning](https://www.edx.org/course/machine-learning-1)
-
+edX, ColumbiaX, <a class="reference external" href="https://www.edx.org/course/machine-learning-1">Machine Learning</a>.</li>
+</div>
 <hr class="with-margin">

@@ -21,8 +21,8 @@ In this article we give a thorough introduction to Gaussian process regression c
 <hr class="with-margin">
 <h4 class="header" id="introduction">Introduction</h4>
 
-<blockquote class="tip">
-<strong>TLDR:</strong> loosely speaking GPs give a way to express a view on functions. In particular they allow us to specify how smooth we expect a function to be rather than how many parameters we expect it to have. The key idea they rely on is that data-points that are close in input space are expected to be similar in output space, i.e. if $\mathbf{x}_{i}$ and $\mathbf{x}_{j}$ are similar then $f(\mathbf{x}_{i})$ and $f(\mathbf{x}_{j})$ will be close in value too.
+<blockquote>
+<strong>TLDR:</strong> GPs give a way to express a view on functions. In particular they allow us to specify how smooth we expect a function to be rather than how many parameters we expect it to have. The key idea they rely on is that data-points that are close in input space are expected to be similar in output space, i.e. if $\mathbf{x}_{i}$ and $\mathbf{x}_{j}$ are similar then $f(\mathbf{x}_{i})$ and $f(\mathbf{x}_{j})$ will be close in value too.
 </blockquote>
 
 Gaussian processes are Bayesian alternatives to kernel methods and allow us to infer a _distribution over functions_, which sounds a little crazy but is actually both an intuitive thing to desire as well as being analytically tractable in certain cases.
@@ -39,12 +39,6 @@ We start with a few preliminaries which cover some key prerequisite concepts suc
 We then walk through the predictive equations for GP regression for the noise-free and noisy case. Next we move onto showing the code and plots for the noisy case which is a simple extension.
 
 Towards the end we detail some helpful mathematical results before a small Q and A section in the appendix which lists some common questions that arose for me whilst developing my understanding of Gaussian processes.
-<br>
-<br>
-<p align="center">
-    <img src="/assets/img/grok_gps.png" alt="Image" width="600" height="500" />
-</p>
-<em class="figure">Brief outline of post coverage</em>
 
 <hr class="with-margin">
 <h4 class="header" id="intro_gp">Gaussian process preliminaries</h4>
@@ -58,11 +52,11 @@ In the context of Gaussian processes a kernel function is a function that takes 
 We can go further and say that the problem of learning for Gaussian processes is exactly the problem of learning the hyperparameters of the kernel function and that once we have chosen the kernel there is nothing else to do except turn the model fitting handle. How to actually learn the kernel hyperparameters is a separate topic and not the subject of this post, though is mentioned briefly in the Q and A section [here](#kernel_hyper).
 
 There are many kernels that can describe different classes of functions, including to encode properties such as periodicity. In this post we will restrict ourselves to the most common kernel, the [radial basis function (or Gaussian) kernel](https://en.wikipedia.org/wiki/Radial_basis_function_kernel):
-
+<div class="math">
 $$
 \kappa(\mathbf{x_i}, \mathbf{x_j}) = \sigma^{2} \exp (-\frac{ \| \mathbf{x_i} - \mathbf{x_j} \|^{2}}{2 l^{2}})
 $$
-
+</div>
 with hyperparameters $\sigma$ and $l$. The variance $\sigma^2$ determines the magnitude of fluctuation of values away from the mean and the length $l^2$ determines the reach of neighbouring data-points (small $l$ will give wiggly functions, increasing $l$ gives smoother functions). See the plot below for the effect of different values of the hyperparameters.
 
 <p align="center">
@@ -224,6 +218,7 @@ Using the [properties](#mult_rvs) of multivariate Gaussians we are able to write
 
 Instead we condition on the observed training data, $\mathbf{f}$, to obtain the posterior predictive (conditional) distribution for $f_{+}$. Using the result for the [conditioning](#mult_rvs) of Gaussians we have, for a single test point:
 
+<div style="color: #cfd7e6">
 <div class="math">
 \begin{align*}
 
@@ -232,6 +227,7 @@ p(f_{+} | X_{+}, X, \mathbf{f}) &= \mathcal{N}\left(f_{+} | \mu_{+}, \Sigma_{+}\
 \underbrace{\Sigma_{f_{+} | \mathbf{f}}}_\text{predictive uncertainty} &= \underbrace{K_{\\++}}_\text{prior uncertainty} - \overbrace{\underbrace{K_{+}^{T} K^{-1} K_{+}}_\text{reduction in uncertainty}}^\text{$\geq \, 0$} \tag{5}
 \end{align*}
 </div>
+</div> 
 
 The above conditioning reduces a 4-dimensional Gaussian down to a 1-dimensional Gaussian - we can thus think of the conditioning as cutting 3 slices in the 4-dimensional space to leave us with a 1-dimensional distribution. In general, once we have conditioned on the observed data we will be left with a multivariate Gaussian with dimensionality equal to the number of test points we wish to predict for.
 
@@ -247,27 +243,27 @@ Equation (4) above for the predictive mean was given as:
 
 <div class="math">
 \begin{align*}
-\mathbf{\mu}_{f_{+} | \mathbf{f}} &= \color{red}{\mu\left(\mathbf{x_{+}}\right)} + \color{blue}{K_{+}^{T}} \color{green}{K^{-1}}\color{orange}{(\mathbf{f} - \mu(X)) }
+\mathbf{\mu}_{f_{+} | \mathbf{f}} &= \color{#e5c07b}{\mu\left(\mathbf{x_{+}}\right)} + \color{#e06c75}{K_{+}^{T}} \color{#98c379}{K^{-1}}\color{#c678dd}{(\mathbf{f} - \mu(X)) }
 \end{align*}
 </div>
 
 which can be intepreted as
-<span style="color:red">the prior guess we had for the mean of the test point before seeing any data</span> plus
-<span style="color:orange">the surprise/difference in the observed data from what we expected</span>
-<span style="color:green">normalized by the training data's variance</span> which is then
-<span style="color:blue">weighted by how similar the training and test data are</span>.
+<span style="color:#e5c07b">the prior guess we had for the mean of the test point before seeing any data</span> plus
+<span style="color:#c678dd">the surprise/difference in the observed data from what we expected</span>
+<span style="color:#98c379">normalized by the training data's variance</span> which is then
+<span style="color:#e06c75">weighted by how similar the training and test data are</span>.
 <br>
 <br>
 Similarly for equation (5) and the predictive variance:
 <div class="math">
 \begin{align*}
-\Sigma_{f_{+} | \mathbf{f}} &= \color{red}{K_{\\++}}- \color{blue}{K_{+}^{T}} \color{green}{K^{-1}} \color{blue}{K_{+}}
+\Sigma_{f_{+} | \mathbf{f}} &= \color{#e5c07b}{K_{\\++}}- \color{#e06c75}{K_{+}^{T}} \color{#98c379}{K^{-1}} \color{#e06c75}{K_{+}}
 \end{align*}
 </div>
 can be interpreted as
-<span style="color:red">the prior guess we had for the variance of the test data before seeing any data</span> minus a reduction in uncertainty based on
-<span style="color:blue">how similar the training and test data are</span>
-<span style="color:green">normalized by the training data's variance</span>.
+<span style="color:#e5c07b">the prior guess we had for the variance of the test data before seeing any data</span> minus a reduction in uncertainty based on
+<span style="color:#e06c75">how similar the training and test data are</span>
+<span style="color:#98c379">normalized by the training data's variance</span>.
 
 </blockquote>
 
@@ -405,12 +401,15 @@ Given 10 noisy observations from a sine wave over the domain $(-5, 5)$, predict 
 <hr class="with-margin">
 
 ##### Comments on the above GP fit
-* We could technically compute each sample at finer and finer points in the $X$ domain instead of the 50 we did here.
-* All the prior functions are different but come from the same distribution whose covariance (dictated by the choice of kernel and its hyperparameters) controls the smoothness of the functions.
-* The prior is over the test points as it's the prior belief for functions before seeing any data.
-* Conditioning on data reduces the set of posterior samples to be close to the observed data. As we are observing noisy values of the function the samples will not pass exactly through these points but must come close.
-* The uncertainty bands are wide when we have little observed data - this makes sense. This is a function of the kernel hyperparameters and indicates the prior is perhaps too 'wiggly' for the true unknown function. We briefly discuss how to set the kernel hyperparameters [here](kernel_hyper).
-
+<div class="bullet"> 
+<li>We could technically compute each sample at finer and finer points in the $X$ domain instead of the 50 we did here.</li>
+<li>All the prior functions are different but come from the same distribution whose covariance (dictated by the choice of kernel and its hyperparameters) controls the smoothness of the functions.</li>
+<li>The prior is over the test points as it's the prior belief for functions before seeing any data.</li>
+<li>Conditioning on data reduces the set of posterior samples to be close to the observed data. As we are observing noisy values of the function the samples will not pass exactly through these points but must come close.</li>
+<li>The uncertainty bands are wide when we have little observed data - this makes sense. This is a function of the kernel hyperparameters and indicates the prior is perhaps too 'wiggly' for the true unknown function. We briefly discuss how to set the kernel hyperparameters 
+<a class="reference external" href="{{page.url}}#kernel_hyper">here.</a> </li> 
+</div>
+<hr class="with-margin">
 ##### Python code
 
 Example python code of the GP example (excludes plotting code):
@@ -535,64 +534,65 @@ In general, capital letters are matrices, bold font represents vectors and lower
 
 We will also try to introduce new references to notation appropriately to ease reading.
 
-* $X$: $n \times d$ data matrix with each row an observation
-* $X_{+}$: test data matrix we wish to predict the target variable for, $n_{+} \times d$
-* $\mathbf{x}\_{i}$: $i$th observation of data with $d$ elements
-* $\mathbf{x}\_{+}$: single test point with $d$ elements
-* $\mathcal{D}$: some data containing both features and target variable, i.e. $\\{X, \mathbf{y}\\}$
-* $f$: a function modelling the target variable
-* $\mathbf{f}$: vector representing the Gaussian process mean prediction for each data point in $X$, $\mathbf{f} = (f(\mathbf{x}\_{1}), ..., f(\mathbf{x}\_{n}))$
-* $\mathbf{f}\_{+}$: predictions for the target variable, $f(X_{+})$
-* $f_i$: shorthand for $f(\mathbf{x}_i)$, the function evaluated for the $i$th observation
-* $f_{+}$: shorthand for the prediction for a single test point, $f(\mathbf{x}\_{+})$
-* $\kappa(\mathbf{x}\_{1}, \mathbf{x}\_{2})$: kernel function evaluated at two points - returns a scalar
-* $\kappa(A, B)$: kernel function evaluated for two matrices $A$ and $B$ - returns a matrix with dimensions $m \times p$ for $A$ with dimensions $m \times d$ and $B$ with dimensions $p \times d$
-* $K$: $\kappa(X, X)$, a $n \times n$ matrix, where the $i , j$ th entry is $\kappa(\mathbf{x}\_{i}, \mathbf{x}\_{j})$
-* $K_{+}$: $\kappa(X, X_{+})$, a $n \times n_{+}$ matrix
-* $K_{\++}$: $\kappa(X_{+}, X_{+})$, a $n_{+} \times n_{+}$ matrix
-* $\boldsymbol{\mu}$, $\mu(X)$, $(\mu(\mathbf{x}\_{1}), \mu(\mathbf{x}\_{2}), ..., \mu(\mathbf{x}\_{n}))$: a vector of length $n$ with the mean for each observation as modelled by some function $\mu$
-* $\mu_{+}$: mean function evaluated for a single test point, $\mathbf{x}\_{+}$
-* $\boldsymbol{\mu}\_{\mathbf{f}_{+} \| \mathbf{f}}$: mean vector for predicted data after conditioning on observed data
-* $\Sigma_{\mathbf{f}\_{+} \| \mathbf{f}}$: covariance matrix for predicted data after conditioning on observed data
+<div class="bullet"> 
+<li>$X$: $n \times d$ data matrix with each row an observation </li>
+<li>$X_{+}$: test data matrix we wish to predict the target variable for, $n_{+} \times d$ </li>
+<li>$\mathbf{x}\_{i}$: $i$th observation of data with $d$ elements </li>
+<li>$\mathbf{x}\_{+}$: single test point with $d$ elements</li>
+<li>$\mathcal{D}$: some data containing both features and target variable, i.e. $\\{X, \mathbf{y}\\}$</li>
+<li>$f$: a function modelling the target variable</li>
+<li>$\mathbf{f}$: vector representing the Gaussian process mean prediction for each data point in $X$, $\mathbf{f} = (f(\mathbf{x}\_{1}), ..., f(\mathbf{x}\_{n}))$</li>
+<li>$\mathbf{f}\_{+}$: predictions for the target variable, $f(X_{+})$</li>
+<li>$f_i$: shorthand for $f(\mathbf{x}_i)$, the function evaluated for the $i$th observation</li>
+<li>$f_{+}$: shorthand for the prediction for a single test point, $f(\mathbf{x}\_{+})$</li>
+<li>$\kappa(\mathbf{x}\_{1}, \mathbf{x}\_{2})$: kernel function evaluated at two points - returns a scalar</li>
+<li>$\kappa(A, B)$: kernel function evaluated for two matrices $A$ and $B$ - returns a matrix with dimensions $m \times p$ for $A$ with dimensions $m \times d$ and $B$ with dimensions $p \times d$</li>
+<li>$K$: $\kappa(X, X)$, a $n \times n$ matrix, where the $i , j$ th entry is $\kappa(\mathbf{x}\_{i}, \mathbf{x}\_{j})$</li>
+<li>$K_{+}$: $\kappa(X, X_{+})$, a $n \times n_{+}$ matrix</li>
+<li>$K_{++}$: $\kappa(X_{+}, X_{+})$, a $n_{+} \times n_{+}$ matrix</li>
+<li>$\boldsymbol{\mu}$, $\mu(X)$, $(\mu(\mathbf{x}\_{1}), \mu(\mathbf{x}\_{2}), ..., \mu(\mathbf{x}\_{n}))$: a vector of length $n$ with the mean for each observation as modelled by some function $\mu$</li>
+<li>$\mu_{+}$: mean function evaluated for a single test point, $\mathbf{x}\_{+}$</li>
+<li>$\boldsymbol{\mu}\_{\mathbf{f}_{+} \| \mathbf{f}}$: mean vector for predicted data after conditioning on observed data</li>
+<li>$\Sigma_{\mathbf{f}\_{+} \| \mathbf{f}}$: covariance matrix for predicted data after conditioning on observed data</li>
+</div>
 
 <a name="references"></a>
 <hr class="with-margin">
 <h4 class="header" id="further">References</h4>
 
 In order to get a firm grip on the basics of GPs I read many sources, most listed below.
-
+<a class="reference external" href="http://cs229.stanford.edu/section/more_on_gaussians.pdf">here</a>.
 ###### Books and papers
+<div class="bullet"> 
+<li> Rasmussen and Williams, <a class="reference external" href="http://www.gaussianprocess.org/gpml/chapters/RW.pdf">Gaussian Processes for Machine Learning</a>.
+</li>
+<li> Murphy K, <a class="reference external" href="https://www.amazon.co.uk/Machine-Learning-Probabilistic-Perspective-Computation/dp/0262018020">Machine Learning: A Probabilistic Perspective</a>.
+</li>
+<li> Ebden M, <a class="reference external" href="https://www.robots.ox.ac.uk/~mebden/reports/GPtutorial.pdf">Gaussian Processes for Regression: A Quick Introduction</a>.
+</li>
+<li> Chuong B. Do, <a class="reference external" href="http://cs229.stanford.edu/section/more_on_gaussians.pdf">More on Multivariate Gaussians</a>.
+</li>
+<li> Chuong B. Do, <a class="reference external" href="http://cs229.stanford.edu/section/cs229-gaussian_processes.pdf">Gaussian processes</a>.</li>
+<li> Snoek J, Larochelle H, Adams R P, <a class="reference external" href="http://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf">Practical Bayesian Optimization of Machine Learning Algorithms</a>.
+</li>
 
-* Rasmussen and Williams, [Gaussian Processes for Machine Learning](http://www.gaussianprocess.org/gpml/chapters/RW.pdf)
-  * This is the canonical text for Gaussian processes
-* Murphy K, [Machine Learning: A Probabilistic Perspective](https://www.amazon.co.uk/Machine-Learning-Probabilistic-Perspective-Computation/dp/0262018020)
-  * Chapter 15 deals with GPs based on Rasmussen but with denser notation
-* Ebden M, [Gaussian Processes for Regression: A Quick Introduction](https://www.robots.ox.ac.uk/~mebden/reports/GPtutorial.pdf)
-* Chuong B. Do, [More on Multivariate Gaussians](http://cs229.stanford.edu/section/more_on_gaussians.pdf)
-  * Details on Gaussians including deriving conditioning and marginalization results
-* Chuong B. Do, [Gaussian processes](http://cs229.stanford.edu/section/cs229-gaussian_processes.pdf)
-* Snoek J, Larochelle H, Adams R P, [Practical Bayesian Optimization of MachineLearning Algorithms](http://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf)
-  * Further reading applying GPs to Bayesian optimization
-
+<hr class="with-margin">
+</div>
 ###### Videos and/or presentation slides
+<div class="bullet"> 
+<li> Turner R, <a class="reference external" href="https://www.youtube.com/watch?v=92-98SYOdlY">ML Tutorial: Gaussian Processes</a>.</li>
+<li> de Freitas N, <a class="reference external" href="https://www.youtube.com/watch?v=4vGiHC35j9s">Machine learning - Introduction to Gaussian processes</a>.</li>
+<li> de Freitas N, <a class="reference external" href="https://www.youtube.com/watch?v=MfHKW5z-OOA">Machine learning - Gaussian processes</a>.</li>
+<li> Murray I, <a class="reference external" href="https://www.cs.toronto.edu/~hinton/csc2515/notes/gp_slides_fall08.pdf">Introduction to Gaussian Processes</a>.</li>
+<li> Williams D, <a class="reference external" href="http://people.ee.duke.edu/~lcarin/David1.27.06.pdf">Gaussian Processes</a>.</li>
+</div>
 
-* Turner R, [ML Tutorial: Gaussian Processes](https://www.youtube.com/watch?v=92-98SYOdlY)
-  * First hour explains the view of multivariate Gaussians particularly well
-* de Freitas N, [Machine learning - Introduction to Gaussian processes](https://www.youtube.com/watch?v=4vGiHC35j9s)
-  * Probably the best detailed start with derivation from definition of Gaussians
-* de Freitas N, [Machine learning - Gaussian processes](https://www.youtube.com/watch?v=MfHKW5z-OOA)
-  * Follow on lecture including discussing links to Ridge regression
-* Murray I, [Introduction to Gaussian Processes](#https://www.cs.toronto.edu/~hinton/csc2515/notes/gp_slides_fall08.pdf)
-  * High quality slides with a good overview and intuition
-* Williams D, [Gaussian Processes](http://people.ee.duke.edu/~lcarin/David1.27.06.pdf)
-  * Overview of GPs plus discussion on the classification case
-
+<hr class="with-margin">
 ###### Blogs and web articles
-
-* Görtler J, [A Visual Exploration of Gaussian Processes](https://www.jgoertler.com/visual-exploration-gaussian-processes/)
-  * A quite stunning explanation of GPs at a very accessible level
-* Bailey K, [Gaussian Processes for Dummies](http://katbailey.github.io/post/gaussian-processes-for-dummies/)
-  * Very accessible introduction based on Murphy's book
+<div class="bullet"> 
+<li> Görtler J, <a class="reference external" href="https://www.jgoertler.com/visual-exploration-gaussian-processes/">A Visual Exploration of Gaussian Processes</a>. </li>
+<li> Bailey K, <a class="reference external" href="http://katbailey.github.io/post/gaussian-processes-for-dummies/">Gaussian Processes for Dummies</a>.</li>
+</div>
 
 <hr class="with-margin">
 <h4 class="header" id="appendix">Appendix Q and A</h4>
