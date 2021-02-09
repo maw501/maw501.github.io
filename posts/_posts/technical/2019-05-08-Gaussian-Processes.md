@@ -27,7 +27,7 @@ In this article we give a thorough introduction to Gaussian process regression c
 
 Gaussian processes are Bayesian alternatives to kernel methods and allow us to infer a _distribution over functions_, which sounds a little crazy but is actually both an intuitive thing to desire as well as being analytically tractable in certain cases.
 
-A typical set-up in supervised machine learning is to start with some features $X$ and labels $\mathbf{y}$ and we want to find some function $f$ that learns a mapping between $X$ and $y$ i.e. $f : X \rightarrow y$. When choosing a model, or functional form for $f$ we are typically fixing the parameterisation capacity of the model we wish to use, for example, in linear regression we are assuming there are a fixed number of slope and intercept terms and so the total amount of parameters is fixed given the data.
+A typical set-up in supervised machine learning is to start with features $X$ and labels $\mathbf{y}$ and try to find some function $f$ that is a mapping between $X$ and $y$ i.e. $f : X \rightarrow y$. When choosing a model, or functional form for $f$, we are typically fixing the capacity of the model we wish to use. For example, in linear regression, we are assuming there are a fixed number of coefficients and so the total amount of parameters is fixed given the data. Note that this still applies to more powerful models such as neural networks.
 
 What if, instead, we wished to think about all possible functional forms for $f$ without pre-specifying how many parameters are involved? It turns out this is what Gaussian processes allow us to do. In return we must find a way to specify a prior over the type of functions we wish to see.
 
@@ -43,7 +43,9 @@ Towards the end we detail some helpful mathematical results before a small Q and
 <hr class="with-margin">
 <h4 class="header" id="intro_gp">Gaussian process preliminaries</h4>
 
-Before defining Gaussian processes it is worth briefly explaining a few concepts, which we do here. It is also important to be familiar with some of the key properties of multivariate Gaussians and introductory concepts from probability theory such as conditioning and marginalization of variables. These [key](#mult_rvs) results are given in the mathematical results section.
+Before defining Gaussian processes it is worth briefly explaining a few concepts, which we do here. 
+
+It is also important to be familiar with some of the key properties of multivariate Gaussians and introductory concepts from probability theory such as conditioning and marginalization of variables. These key results are given in the [mathematical results section](#mult_rvs).
 
 <blockquote class="tip">
 <strong>Health warning:</strong> if you find preliminaries boring feel free to skip to the definition of a Gaussian process <a class="reference external" href="{{page.url}}#gp_defn">below</a> or straight to an <a class="reference external" href="{{page.url}}#example">example</a>.
@@ -51,7 +53,7 @@ Before defining Gaussian processes it is worth briefly explaining a few concepts
 
 ##### Kernel functions
 
-In the context of Gaussian processes a kernel function is a function that takes in two vectors (observations in $\mathbb{R}^ d$) and outputs a similarity scalar between them. For GPs we evaluate the kernel function for each pairwise combination of data-points to retrieve the so-called covariance matrix. As covariance matrices must be positive semi-definite this means valid kernels are those that satisfy this requirement. This covariance matrix, as determined by the kernel function, is essentially what will specify the Gaussian process. As such, we could say that the problem of learning for Gaussian processes is exactly the problem of learning the hyperparameters of the kernel function and that once we have chosen the kernel there is nothing else to do except turn the model fitting handle. How to actually learn the kernel hyperparameters is a separate topic and not the subject of this post, though is mentioned briefly in the Q and A section [here](#kernel_hyper).
+In the context of Gaussian processes a kernel function is a function that takes in two vectors (observations in $\mathbb{R}^ d$) and outputs a similarity scalar between them. For GPs we evaluate the kernel function for each pairwise combination of data-points to retrieve the so-called covariance matrix. As covariance matrices must be positive semi-definite this means valid kernels are those that satisfy this requirement. This covariance matrix, as determined by the kernel function, is essentially what will specify the Gaussian process. 
 
 There are many kernels that can describe different classes of functions, including to encode properties such as periodicity. In this post we will restrict ourselves to the most common kernel, the [radial basis function (or Gaussian) kernel](https://en.wikipedia.org/wiki/Radial_basis_function_kernel):
 <div class="math">
@@ -65,7 +67,7 @@ with hyperparameters $\sigma$ and $l$. The variance $\sigma^2$ determines the ma
 <p align="center">
     <img src="/assets/img/gp_kernel_params.png" alt="Image" width="600" height="400" />
 </p>
-<em class="figure">Effect of different kernel hyperparameters</em>
+<em class="figure">Figure 1. Effect of different kernel hyperparameters</em>
 
 Kernel functions are also sometimes referred to as covariance functions.
 
@@ -74,17 +76,17 @@ Kernel functions are also sometimes referred to as covariance functions.
 </blockquote>
 
 ##### Functions as vectors
-Loosely speaking a function can be viewed as an infinitely long vector. We could imagine discretizing the input space with a huge grid of values containing every possible combination of floating point numbers for each of the $d$ dimensions of the data matrix $X$. Theoretically (but not practically) we could then evaluate $\mathbf{f} = (f(\mathbf{x}\_{1}), ..., f(\mathbf{x}\_{n}))$ at this huge sample of $n$ points and thus $\mathbf{f}$ would be an enormous vector containing the function's values for the domain of interest.
+Loosely speaking a function can be viewed as an infinitely long vector. To do so, we could imagine discretizing the input space with a huge grid of values containing every possible combination of floating point numbers for each of the $d$ dimensions of the data matrix $X$. Theoretically (but not practically) we could then evaluate $\mathbf{f} = (f(\mathbf{x}\_{1}), ..., f(\mathbf{x}\_{n}))$ at this huge sample of $n$ points and thus $\mathbf{f}$ would be an enormous vector containing the function's values for the domain of interest. For example, if $d=2$ then we can define a grid of points within the bounds of interest for both dimensions and calculate the function value at each point. Note that whilst we will then obtain a vector $\mathbf{f}$ it doesn't really make sense to think of any ordering within this vector.
 
-Alas, we can’t store such a vector containing the function values for every possible input combination (recall each $\mathbf{x_i}$ is $d$ dimensional), though GPs do allow us to define a multivariate Gaussian prior on it. Given partial observations of the elements of this vector, it will turn out that we can infer other elements of the vector without explicitly having to represent the whole object. $\mathbf{f}$. 
+Further, we can’t store such a vector containing the function values for every possible input combination (recall each $\mathbf{x_i}$ is $d$ dimensional), though GPs do allow us to define a multivariate Gaussian prior on it. Given partial observations of the elements of this vector, it will turn out that we can infer other elements of the vector without explicitly having to represent the whole object. $\mathbf{f}$. 
 
 The miraculous thing about GPs is that they provide a rigorous, elegant and tractable way to deal with the above problem. 
 
-Note that whilst talk of functions as vectors can seem a little hand-wavy it can be made rigorous.
+Note that whilst talk of functions as vectors may seem a little hand-wavy it can be made rigorous.
 
 ##### A different way to view multivariate distributions
 
-In order to aid the discussion on large dimensional Gaussians it's crucial to switch to a different way to visualize them. As above we start by thinking of each data-point $\mathbf{x_i}$ as having $d$-dimensions, so $X$ is $n \times d$ dimensional and $\mathbf{x_1}$ and $\mathbf{x_2}$ refer to 2 observations from the data where $\mathbf{y} = \\{y_1, y_2\\}$ is the function value for each data-point.
+In order to aid the discussion on large dimensional Gaussians it's crucial to switch to a different way to visualize them. As above we start by thinking of each data-point $\mathbf{x_i}$ as having $d$-dimensions, so $X$ is $n \times d$ dimensional and $\mathbf{x_1}$ and $\mathbf{x_2}$ refer to 2 observations from the data where $\mathbf{y} = \\{y_1, y_2\\}$ contains the function value for each data-point.
 
 Using the kernel function we can calculate the covariance matrix, $\Sigma$, between these 2 points (using $X$ only, not $\mathbf{y}$), for example:
 
@@ -111,7 +113,7 @@ The red dots shown in the left hand plots are samples from this 2-dimensional Ga
 <p align="center">
     <img src="/assets/img/gp_contours.png" alt="Image" width="650" height="500" />
 </p>
-<em class="figure">A different way to visualize a sample from a 2-dimensional Gaussian</em>
+<em class="figure">Figure 2. A different way to visualize a sample from a 2-dimensional Gaussian</em>
 
 The right hand plots show an alternate way to visualize this sample, where the y-axis now represent the value of $y_1$ and $y_2$ respectively for each observation $\mathbf{x_1}$ and $\mathbf{x_2}$. In this way we could easily imagine calculating the covariance matrix between more data-points and plotting a sample in the way shown in the right hand plots, but the left hand plots don't allow this view.
 
@@ -120,14 +122,14 @@ Following this method we could calculate the covariance matrix between 5 observa
 <p align="center">
     <img src="/assets/img/gp_many_dims_single.png" alt="Image" width="500" height="350" />
 </p>
-<em class="figure">A single sample from a multi-dimensional Gaussian</em>
+<em class="figure">Figure 3. A single sample from a multi-dimensional Gaussian</em>
 
 <a name="prelim_plot"></a>
 ###### Hold on, what's the x-axis for the above plot?
 
 In the above plot we calculated the $5 \times 5$ covariance matrix between 5 points and imagined ordering the points according to their index in the covariance matrix in the above plot. This is simply for illustrative purposes to demonstrate the visualization technique.
 
-In general, the x-axis will be the values of $X$ for which we wish to calculate a point at and thus can take on any real-value. For data with 1 input dimension ($d=1$ and is time, say) this would result in even spacing on the x-axis but this needn't be the case.
+In general, the x-axis will be the values of $X$ for which we wish to calculate a point at and thus can take on any real-value. For data with 1 input dimension ($d=1$ and is time, say) this might result in even spacing on the x-axis but this needn't be the case.
 
 However once $d > 1$ even this view of things breaks down as the input space is now a high-dimensional grid (arbitrarily fine if we wish) for which we can calculate function values at.
 
@@ -149,7 +151,7 @@ Before we start with the equations for GPs we draw a link to the Bayesian approa
 \end{align*}
 </div>
 
-and so for each new test point in $X_{+}$ we obtain a probability distribution for the corresponding prediction in $\mathbf{y_{+}} $. It turns out for the regression case that the above can be done in closed form using known statistical and linear algebra results.
+and so for each new test point in $X_{+}$ we obtain a probability distribution for the corresponding prediction $\mathbf{y_{+}} $. It turns out for the regression case that the above can be done in closed form using known statistical and linear algebra results.
 
 Whilst the above formulation is useful in linking Gaussian processes into the wider Bayesian framework (by showing a likelihood and a prior) it's not typically the most intuitive place to start when explaining GPs. For that, it's much more natural to start by actually defining a Gaussian process and then to rely upon some key properties of the multivariate Gaussian distribution. These are given [below](#mult_rvs) and assumed from now on though we will make reference to them as they're used.
 
@@ -282,14 +284,14 @@ In the above we have 3 observed data-points and made a prediction for a single n
 ##### Walking through an example with plots
 We now give an example to illustrate the above discussion.
 
-In this example we are given 3 training data-points $\mathcal{D} = \\{(-2, 1), (1, -1.5), (4, 2)\\}$ and a new test point $x_{+} = 3$ and we wish to predict $f_{+} = f(3)$.
+In this example we are given 3 training data-points as $(x, y)$ pairs with $\mathcal{D} = \\{(-2, 1), (1, -1.5), (4, 2)\\}$ and a new test point $x_{+} = 3$ and we wish to predict $f_{+} = f(3)$.
 
 The below chart visualizes parts of the GP fit process and is explained below:
 
 <p align="center">
     <img src="/assets/img/gp_blog_plots.png" alt="Image" width="700" height="500" />
 </p>
-<em class="figure">Gaussian process fit plots</em>
+<em class="figure">Figure 4. Gaussian process fit plots</em>
 <hr class="with-margin">
 
 ###### Subplot 1: just the data
@@ -312,7 +314,7 @@ Recall that we can represent a function as a big vector where we assume this unk
 <hr class="with-margin">
 <h4 class="header" id="gp_reg_noisy">GP regression (noisy)</h4>
 
-Having walked through the noise-free case the extension to the noisy case is straightforward. We now assume that the observed data is a noisy version of the true underlying function and instead we now observe training data $\mathcal{D} = \\{X, \mathbf{y} \\}$ where, for a single point $i$, we have
+Having walked through the noise-free case the extension to the noisy case is straightforward. We now assume that the observed data is a noisy version of the true underlying function and instead we now observe training data $\mathcal{D}$ where, for a single point $i$, we have
 
 $$y_i = f(\mathbf{x_i}) + \epsilon \tag{6} $$
 
@@ -405,7 +407,7 @@ Given 10 noisy observations from a sine wave over the domain $(-5, 5)$, predict 
     <img src="/assets/img/gp_noise_example.png" alt="Image" width="700" height="575" />
 </p>
 
-<em class="figure">Gaussian process example with limited data for a sine wave</em>
+<em class="figure">Figure 5. Gaussian process example with limited data for a sine wave</em>
 <hr class="with-margin">
 
 ##### Comments on the above GP fit
@@ -604,9 +606,7 @@ The kernel hyperparameters control the type of functions GPs can produce and yet
 
 ###### Empirical Bayes
 
-The [empirical Bayes](https://en.wikipedia.org/wiki/Empirical_Bayes_method) approach is a popular method for choosing how to set the prior that involves estimating it from the data. In this way some Bayesians philosophically disagree with the use of empirical Bayes methods as the prior will no longer represent the view we have about functions before seeing the data.
-
-For GPs the problem is how best to choose the hyperparameters of the kernel function which we discuss next. There is also a choice to be made as to which is the appropriate choice of kernel, though we do not discuss this topic in this post.
+The [empirical Bayes](https://en.wikipedia.org/wiki/Empirical_Bayes_method) approach is a popular method for choosing how to set the prior that involves estimating it from the data. In this way some Bayesians philosophically disagree with the use of empirical Bayes methods as the prior will no longer represent the view we have about functions before seeing the data. As well as the kernel hyperparameters there is also a choice to be made as to which is the appropriate choice of kernel, though we do not discuss this topic in this post.
 
 In order to perform empirical Bayes for GP regression we maximize the marginal likelihood, or equivalently marginal log-likelihood, of the data which is given by:
 
@@ -653,9 +653,9 @@ For more reading on this topic please see [Rasmussen](http://www.gaussianprocess
 <a name="know_uncertainty"></a>
 ##### Why is knowing the uncertainty important?
 
-Often in the real-world we care not just about the mean prediction but also the amount by which it could vary. Further, knowing where we are most uncertain can be helpful if we have to make a decision about where to next obtain a sample which is expensive to compute. Examples of expensive functions could be drilling a well, conducting a clinical trial or training a large neural network.
+Often in the real-world we (should) care not just about the mean prediction but also the amount by which it could vary. Further, knowing where we are most uncertain can be helpful if we have to make a decision about where to next obtain a sample which is expensive to compute. Examples of expensive functions could be drilling a well, conducting a clinical trial or training a large neural network.
 
-Using uncertainty in a probabilistic model to guide search is called Bayesian optimization and is not discussed in this post.
+Using uncertainty in a probabilistic model to guide search is called Bayesian optimization and commonly uses Gaussian processes.
 
 <a name="cholesky"></a>
 ##### How can we sample from a multivariate Gaussian
@@ -664,7 +664,7 @@ Sampling from an arbitrary distribution usually involves computing the CDF of th
 
 Broadly speaking it will be much more efficient if we can relate everything to a standard Gaussian. In 1-dimension we can use the fact that $x \sim \mathcal{N}(\mu, \sigma^2)$ can be written as $x \sim \mu + \sigma \mathcal{N}(0, 1)$ and use this fact to sample from a Gaussian with arbitrary mean and variance by sampling from $\mathcal{N}(0, 1)$ instead.
 
-To generalize this idea to sample from multi-dimensional correlated random variables $X \sim \mathcal{N}(\boldsymbol{\mu}, \Sigma)$ we would like to be able to sample from $X \sim \boldsymbol{\mu} + L \, \mathcal{N}(0, I)$ for some $L$. This $L$ needs to be computable and the equivalent to the 'square-root' of the covariance matrix, i.e. a matrix $L$ such that $LL^T = \Sigma$.
+To generalize this idea to sample from multi-dimensional correlated random variables $X \sim \mathcal{N}(\boldsymbol{\mu}, \Sigma)$ we would like to be able to sample from $X \sim \boldsymbol{\mu} + L \, \mathcal{N}(0, I)$ for some $L$. This $L$ needs to be computable and the equivalent to the *square-root* of the covariance matrix, i.e. a matrix $L$ such that $LL^T = \Sigma$.
 
 $L$ is exactly what the [Cholesky decomposition](https://en.wikipedia.org/wiki/Cholesky_decomposition) gives us.
 
@@ -676,7 +676,7 @@ This is a standard result but discussion is provided in [Rasmussen](http://www.g
 
 The idea behind the above relates to the inverse sampling transform algorithm.
 
-<blockquote class="algo">
+<blockquote class="math">
 <hr class="small-margin">
 <strong>Algorithm: Inverse sampling transform
 </strong>
@@ -698,7 +698,7 @@ The idea behind the above relates to the inverse sampling transform algorithm.
 
 When forming a prior over functions we somehow must define a way to construct a covariance matrix. Clearly we don't want to specify anything manually and we'd like to use the belief that points in input space that are similar have function values that are similar, in other words, the function has some form of smoothness. This is a reasonable assumption for most real world phenomena.
 
-If we used a diagonal covariance matrix then it would be the same as saying we believed the function values to be independent and so observing the function in one location would tell us nothing about its values in other locations. Given we usually want to model continuous functions we would like function values for more similar inputs to have large covariances.
+If we used a diagonal covariance matrix then it would be the same as saying we believed the function values to be independent and so observing the function in one location would tell us nothing about its values in other locations. Given we usually want to model continuous functions we would like function values for more similar inputs to be closely related.
 
 ##### Why are GPs non-parametric?
 
@@ -710,6 +710,6 @@ GPs are non-parametric models and technically have an infinite number of paramet
 
 As we add more data the flexibility and capacity of the model will adjust to fit the data: we would see the mean function adjust itself to pass close to these points, and the posterior uncertainty would reduce close to the observations.
 
-In this way we do not have to worry about whether it is possible for the model to fit the data.
+In this way we do not have to worry about whether it is possible for the model to fit the data - the complexity of the model adjusts naturally with the data.
 
 <hr class="with-margin">
