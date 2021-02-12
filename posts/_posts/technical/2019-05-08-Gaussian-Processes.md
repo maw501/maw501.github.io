@@ -183,7 +183,8 @@ We start by assuming we are given 3 training data-points which we call $\mathcal
 
 By the definition of a GP it is assumed that any set of random variables, which are the output function values for the data-points, are distributed as a multivariate Gaussian. Given this assumption we can write the joint distribution between the observed training data and the predicted output as:
 
-$$
+<div class="math">
+\begin{align*}
 \left[ \begin{array}{l}{\mathbf{f}} \\ {f_{+}}\end{array}\right]
 \sim
 \mathcal{N}
@@ -192,7 +193,8 @@ $$
 
 \left[ \begin{array}{cc}{K} & {K_{+}} \\ {K_{+}^T} & {K_{\\++}}\end{array}\right]
 \Bigg) \tag{2}
-$$
+\end{align*}
+</div>
 
 It is normally common to assume the mean function is 0 for Gaussian processes, the reasons for why this is are discussed in the Q and A section [below](#mean_modelling).
 
@@ -202,7 +204,8 @@ It is normally common to assume the mean function is 0 for Gaussian processes, t
 
 The above sub-matrix $K$ contains the similarity of each training point to every other training point:
 
-$$
+<div class="math">
+\begin{align*}
 K =
 \left[
 \begin{array}{cc}
@@ -211,7 +214,8 @@ K =
 {K_{31}} & {K_{32}} & {K_{33}}
 \end{array}
 \right]
-$$
+\end{align*}
+</div>
 
 where each entry $K_{ij} = \kappa(\mathbf{x_i}, \mathbf{x_j})$ is the evaluation of the kernel function between any two data-points.
 
@@ -316,7 +320,11 @@ Recall that we can represent a function as a big vector where we assume this unk
 
 Having walked through the noise-free case the extension to the noisy case is straightforward. We now assume that the observed data is a noisy version of the true underlying function and instead we now observe training data $\mathcal{D}$ where, for a single point $i$, we have
 
-$$y_i = f(\mathbf{x_i}) + \epsilon \tag{6} $$
+<div class="math">
+\begin{align*}
+y_i = f(\mathbf{x_i}) + \epsilon \tag{6}
+\end{align*}
+</div>
 
 and $\epsilon$ is additive independent identically distributed Gaussian noise such that $\epsilon \sim \mathcal{N}(0, \sigma_y^2)$.
 
@@ -340,18 +348,22 @@ where here we are assuming a [0 mean vector](#mean_modelling).
 <br>
 Under the independent identically distributed Gaussian noise assumption only a diagonal matrix is added to the noisy observed terms. We can see this by recalling a property of covariance:
 
-$$
+<div class="math">
+\begin{align*}
 \operatorname{cov}(X+Y, W+V)=\operatorname{cov}(X, W)+\operatorname{cov}(X, V)+\operatorname{cov}(Y, W)+ \operatorname{cov}(Y, V)
-$$
+\end{align*}
+</div>
 
 and for $\operatorname{cov}(\mathbf{y}, \mathbf{y})$ we have for a single point $i$:
 
-$$
+<div class="math">
+\begin{align*}
 \operatorname{cov}(f(\mathbf{x_i}) + \epsilon, f(\mathbf{x_i}) + \epsilon) = \underbrace{\operatorname{cov}(f(\mathbf{x_i}), f(\mathbf{x_i}))}_\text{$K(X, X)$} +
 \underbrace{\operatorname{cov}(f(\mathbf{x_i}), \epsilon)}_\text{= 0} +  
 \underbrace{\operatorname{cov}(\epsilon, f(\mathbf{x_i}))}_\text{= 0} +
 \underbrace{\operatorname{cov}(\epsilon, \epsilon)}_\text{$\sigma_y^2$}
-$$
+\end{align*}
+</div>
 
 Similar reasoning means the noise term will not contribute to the $\operatorname{cov}(\mathbf{y}, \mathbf{f_{+}})$, $\operatorname{cov}(\mathbf{f_{+}}, \mathbf{y})$ or $\operatorname{cov}(\mathbf{f_{+}}, \mathbf{f_{+}})$ terms.
 </blockquote>
@@ -478,13 +490,15 @@ Let $X = (x_1, ..., x_n)$ and $Y = (y_1, ..., y_n)$
 
 be jointly distributed Gaussian random variables:
 
-$$
+<div class="math">
+\begin{align*}
 p(X, Y) = \mathcal{N} \Bigg(
 \left[ \begin{array}{c}{\boldsymbol{\mu}_X} \\ {\boldsymbol{\mu}_Y}\end{array}\right] \, , \,
 
 \left[ \begin{array}{cc}{\Sigma_{XX}} & {\Sigma_{XY}} \\ {\Sigma_{YX}} & {\Sigma_{YY}} \end{array}\right]
 \Bigg)
-$$
+\end{align*}
+</div>
 
 then the marginal distribution is Gaussian
 
@@ -500,7 +514,11 @@ p(X) &= \int p(X, Y) \, dY \\[5pt]
 <br>
 It is also the case that:
 
-$$X | Y \sim \mathcal{N}\left(\boldsymbol{\mu}_{X}+\Sigma_{X Y} \Sigma_{YY}^{-1}\left(Y - \boldsymbol{\mu}_{Y}\right), \Sigma_{X X}-\Sigma_{X Y} \Sigma_{YY}^{-1} \Sigma_{Y X}\right) $$
+<div class="math">
+\begin{align*}
+X | Y \sim \mathcal{N}\left(\boldsymbol{\mu}_{X}+\Sigma_{X Y} \Sigma_{YY}^{-1}\left(Y - \boldsymbol{\mu}_{Y}\right), \Sigma_{X X}-\Sigma_{X Y} \Sigma_{YY}^{-1} \Sigma_{Y X}\right) 
+\end{align*}
+</div>
 
 and so conditioning also gives us a Gaussian.
 <br>
@@ -511,21 +529,28 @@ For references on how to derive the first two results see CS229 notes
 <br>
 <strong>Product of two Gaussian densities is an (unnormalized) Gaussian</strong>
 <br>
-$$
+
+<div class="math">
+\begin{align*}
 \mathcal{N}(\mathbf{x} ; \mathbf{a}, A) \mathcal{N}(\mathbf{x} ; \mathbf{b}, B)=Z^{-1} \mathcal{N}(\mathbf{x} ; \mathbf{c}, C)
-$$
+\end{align*}
+</div>
 
 where
 
-$$
+<div class="math">
+\begin{align*}
 \mathbf{c}=C\left(A^{-1} \mathbf{a}+B^{-1} \mathbf{b}\right) \quad \text { and } \quad C=\left(A^{-1}+B^{-1}\right)^{-1}
-$$
+\end{align*}
+</div>
 
 with the normalizing constant itself looking Gaussian:
 
-$$
+<div class="math">
+\begin{align*}
 Z^{-1}=(2 \pi)^{-D / 2}|A+B|^{-1 / 2} \exp \left(-\frac{1}{2}(\mathbf{a}-\mathbf{b})^{\top}(A+B)^{-1}(\mathbf{a}-\mathbf{b})\right)
-$$
+\end{align*}
+</div>
 
 See
 <a class="reference external" href="http://www.gaussianprocess.org/gpml/chapters/RW.pdf">Rasmussen</a> [A.7] for more details.
@@ -610,9 +635,11 @@ The [empirical Bayes](https://en.wikipedia.org/wiki/Empirical_Bayes_method) appr
 
 In order to perform empirical Bayes for GP regression we maximize the marginal likelihood, or equivalently marginal log-likelihood, of the data which is given by:
 
-$$
+<div class="math">
+\begin{align*}
 p(\mathbf{y} | X)=\int p(\mathbf{y} | \mathbf{f}, X) \, p(\mathbf{f} | X) \, d \mathbf{f} \tag{11}
-$$
+\end{align*}
+</div>
 
 The term marginal likelihood is used to refer to the marginalization over the function values $\mathbf{f}$. For a GP the prior is a Gaussian
 
@@ -639,12 +666,14 @@ p(\mathbf{y} | \mathbf{f}, X) &= \mathcal{N}(\mathbf{f}, \sigma_y^2 I) \\[5pt]
 
 Given the above it is possible to perform the integration of $(11)$ by using the [fact](#mult_rvs) that the product of two Gaussian densities gives another (unnormalized) Gaussian. This allows us to obtain
 
-$$
+<div class="math">
+\begin{align*}
 \log p(\mathbf{y} | X)=
 \underbrace{-\frac{1}{2} \mathbf{y}^{\top}\left(K+\sigma_{n}^{2} I\right)^{-1} \mathbf{y}}_\text{data fit term} -
 \underbrace{\frac{1}{2} \log \left|K+\sigma_{n}^{2} I\right|}_\text{complexity penalty} -
 \underbrace{\frac{n}{2} \log 2 \pi }_\text{normalization constant} \tag{13}
-$$
+\end{align*}
+</div>
 
 an expression for the log marginal likelihood. Depending on the kernel function we chose we are now able to now compute its derivative with respect to each hyperparameter and then to estimate the hyperparameters using any standard gradient-based optimizer. However, since the objective is not convex, local minima can be a problem.
 
