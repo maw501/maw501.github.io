@@ -7,7 +7,7 @@ image: "kernel.png"
 comments: true
 tags: ['kernels', 'kernel trick', 'SVMs']
 ---
-The kernel trick allows us to implicitly perform a calculation in a high-dimensional feature space whilst only working in the original feature space. In this article we explain the kernel trick via a toy example which we follow through in detail to get to the heart of the trick.
+The kernel trick allows us to implicitly perform a calculation in a high-dimensional feature space whilst only working in the original feature space. In this article we explain the kernel trick via a toy example which we follow through in detail to illustrate the trick.
 <!--more-->
 <hr class="with-margin">
 
@@ -21,7 +21,7 @@ The kernel trick allows us to implicitly perform a calculation in a high-dimensi
 
 The kernel trick is a useful technique that allows the use of linear models to model complex non-linear functions by pushing the original data through a non-linear (and possibly high-dimensional) mapping at little extra computational cost. In this way the kernel trick gives us the benefit of using a more powerful non-linear model for the price of sticking with a linear model.
 
-It is important to note that the class of algorithms that kernels work for are based on computing similarity between observations of the data. In other words, we are working with the rows of the data frame for a typical machine learning problem with $n$ rows and $d$ features. The kernel trick is most famously applied to support vector machines (SVMs) for classification problems.
+It is important to note that the class of algorithms that kernels work for are based on computing similarity between observations of the data. In other words, we are working with the rows of the data frame when viewed from the perspective of a typical machine learning dataset with $n$ rows and $d$ features. The kernel trick is perhaps most famously used to support vector machines (SVMs) for classification problems though kernels are widely used across many algorithms.
 
 The key benefit to performing such transformations, $\phi$, of the observations, is that after applying the transformation the data can often be linearly separable in the new feature space.
 
@@ -29,16 +29,16 @@ The key benefit to performing such transformations, $\phi$, of the observations,
     <img src="/assets/img/kernel_trick.png" alt="Image" width="500" height="300" />
 </p>
 
-<em class="figure">Mapping data to a new feature space can often allow easier separability between classes
+<em class="figure">Figure 1: Mapping data to a new feature space can often allow easier separability between classes
 <br> [Image credit](https://towardsdatascience.com/the-kernel-trick-c98cdbcaeb3f)</em>
 
 <hr class="with-margin">
 <h4 class="header" id="motivating">Walking through an example</h4>
 
 ##### Problem definition
-Imagine we have a dataset, $X$, with only two columns which represent the height and weight of a set of people where the target variable, $y$, is a binary number denoting if the person is an adult or not. $X$ has dimensions $n \times d$ where $d=2$ in this example.
+Imagine we have a dataset, $X$, with only two columns which represent the height and weight of a set of people where the target variable, $y$, is a binary number denoting if the person is an adult or not. In this example $X$ then has dimensions $n \times d$ where $d=2$.
 
-This is a binary classification problem and let us further assume that we can't separate the classes well with linear combinations of the columns. In other words the data might not be well separated by a linear decision boundary and so we either need a more powerful model or better features.
+This is a binary classification problem and let us further assume that we can't separate the classes well with linear combinations of the columns. In other words the data might not be well separated by a linear decision boundary and so we either need a more powerful model, or better features (loosely speaking).
 
 For notational simplicity let's call the column representing height $x_1$ and the column representing weight $x_2.$
 
@@ -64,11 +64,19 @@ We decide to take Bob at his word and try this by hand for two rows of the data,
 
 $\textbf{a}^T = (a_1, a_2) = (1, 2)$ giving new entries for row 1 of:
 
-$$(1, \sqrt{2}a_1, \sqrt{2}a_2, \sqrt{2}a_1a_2, a_1^2, a_2^2) = (1, \sqrt{2}, 2\sqrt{2}, 2\sqrt{2}, 1, 4)$$
+<div class="math">
+\begin{align*}
+(1, \sqrt{2}a_1, \sqrt{2}a_2, \sqrt{2}a_1a_2, a_1^2, a_2^2) = (1, \sqrt{2}, 2\sqrt{2}, 2\sqrt{2}, 1, 4)
+\end{align*}
+</div>
 
 $\textbf{b}^T = (b_1, b_2) = (3, 4)$ giving new entries for row 2 of:
 
-$$(1, \sqrt{2}b_1, \sqrt{2}b_2, \sqrt{2}b_1b_2, b_1^2, b_2^2) = (1, 3\sqrt{2}, 4\sqrt{2}, 12\sqrt{2}, 9, 16)$$
+<div class="math">
+\begin{align*}
+(1, \sqrt{2}b_1, \sqrt{2}b_2, \sqrt{2}b_1b_2, b_1^2, b_2^2) = (1, 3\sqrt{2}, 4\sqrt{2}, 12\sqrt{2}, 9, 16)
+\end{align*}
+</div>
 
 If we compute the dot product of these two new rows we get 144:
 
@@ -90,11 +98,15 @@ If we compute the dot product of these two new rows we get 144:
 
 ##### A shortcut?
 
-Another friend Alice pops over and sees what we are doing. She laughs that we bothered creating all those new columns and tells us there is a simpler way to get the same answer. She says we should try just computing $(1 + \textbf{a}^T\textbf{b})^2 \,$ directly instead with the original data and not to bother with Bob's idea.
+Another friend Alice pops over and sees what we are doing. She laughs that we bothered creating all those new columns and tells us there is a simpler way to get the same answer. She says we should just compute $(1 + \textbf{a}^T\textbf{b})^2 \,$ directly instead with the original data and not to bother with Bob's idea.
 
 We are a bit sceptical about what Alice means (how can we possibly get the same answer?!) but we decide to try this anyway. Sure enough...
 
-$$(1 + \textbf{a}^T\textbf{b})^2 = \bigg(1 + \left( \begin{array}{c} 1 & 2 \end{array} \right) \left( \begin{array}{c} 3 \\ 4 \end{array} \right) \bigg)^2 = (1 + 11)^2 = 144$$
+<div class="math">
+\begin{align*}
+(1 + \textbf{a}^T\textbf{b})^2 = \bigg(1 + \left( \begin{array}{c} 1 & 2 \end{array} \right) \left( \begin{array}{c} 3 \\ 4 \end{array} \right) \bigg)^2 = (1 + 11)^2 = 144
+\end{align*}
+</div>
 
 ##### What just happened?!
 
@@ -128,11 +140,13 @@ Let's call the new features some transformation of the original data, $\phi(\tex
 
 The dot product between $\phi(\textbf{a})^T$ and $\phi(\textbf{b})$ is just element wise multiplication and then summing up to give:
 
-$$
+<div class="math">
+\begin{align*}
 \phi(\textbf{a})^T\phi(\textbf{b}) = 1 + 2a_1b_1 + 2a_2b_2 + 2a_1a_2b_1b_2 + a_1^2b_1^2 + a_2^2b_2^2. \tag{1}
-$$
+\end{align*}
+</div>
 
-This is mathematically identical to
+This is mathematically identical to:
 
 <a name="eq2"></a>
 <div class="math">
@@ -146,7 +160,11 @@ This is mathematically identical to
 
 where equation (1) is the same as (2). We have thus shown that
 
-$$\phi(\textbf{a})^T\phi(\textbf{b}) = (1 + \textbf{a}^T\textbf{b})^2 $$
+<div class="math">
+\begin{align*}
+\phi(\textbf{a})^T\phi(\textbf{b}) = (1 + \textbf{a}^T\textbf{b})^2
+\end{align*}
+</div>
 
 for the transformation $\phi$, as defined in [(0)](#eq0), from the original feature space to a feature space of polynomials with degree 2. This is called the [quadratic kernel](https://en.wikipedia.org/wiki/Polynomial_kernel).
 
@@ -154,15 +172,15 @@ for the transformation $\phi$, as defined in [(0)](#eq0), from the original feat
 
 Weighing up what we have done there are two choices:
 <div class="bullet"> 
-<ol> 1. Start creating numerous columns as per Bob's suggestion to get $\phi(\textbf{a})^T$ and  $\phi(\textbf{b})^T$. This will create a large amount of extra columns if $d$ is large and we want a polynomial kernel of high order. </ol>
+<ol> 1. Start creating numerous columns as per Bob's suggestion to get $\phi(\textbf{a})^T$ and  $\phi(\textbf{b})^T$. This will create a large amount of extra columns if $d$ is large and particularly if we wanted to use a polynomial kernel of high degree. </ol>
 <ol> 2. Compute $(1 + \textbf{a}^T\textbf{b})^2 = \kappa(\textbf{a},\textbf{b})$ instead. </ol>
 </div>
 
-We call $\kappa(\textbf{a},\textbf{b})$ the kernel between two observations/data-points and it is computationally much easier to work with the original data via option 2 than to start creating many new columns.
+We call $\kappa(\textbf{a},\textbf{b})$ the kernel between two observations/data-points and it is computationally much easier to work with the original data via option 2.
 
 ##### Further explanation
 
-The kernel trick is that we do not need to use the transformation $\phi$ and can actually just stick with the original data and compute $\kappa(\textbf{a},\textbf{b}) = (1 + \textbf{a}^T\textbf{b})^2$ instead. The fact we don't need to perform the transformation to a higher dimensional space by creating new columns saves us a lot of computational overhead. This allows us to find complex non linear boundaries that are able to better separate the classes in the dataset.
+The kernel trick is that we do not actually need to use the transformation $\phi$ and can actually just stick with the original data and compute $\kappa(\textbf{a},\textbf{b}) = (1 + \textbf{a}^T\textbf{b})^2$ instead. The fact we don't need to perform the transformation to a higher dimensional space by creating new columns saves us a lot of computational overhead. This allows us to find complex non-linear boundaries that are able to better separate the classes in the dataset.
 
 The special functions for which it turns out allow us to stay in the original lower dimensional space but are equivalent to operating in a higher dimensional space are called kernel functions.
 
@@ -187,9 +205,11 @@ Below we introduce two of the most common kernels.
 
 So far we have considered a kernel of the form $\kappa(\textbf{a},\textbf{b}) = (1 + \textbf{a}^T\textbf{b})^2$ which we called a quadratic kernel. A more general form for a polynomial of any order is given by:
 
-$$
+<div class="math">
+\begin{align*}
 \kappa(\textbf{a},\textbf{b}) = (c + \textbf{a}^T\textbf{b})^d \tag{3}
-$$
+\end{align*}
+</div>
 
 where $d$ is the degree of the polynomial and $c \geq 0$ is a free parameter often set to 1. Varying $c$ amounts to trading off the influence of higher-order versus lower-order terms in the polynomial.
 
@@ -197,9 +217,11 @@ where $d$ is the degree of the polynomial and $c \geq 0$ is a free parameter oft
 
 Perhaps the most popular kernel in machine learning is the radial basis function (RBF) kernel, defined as:
 
-$$
+<div class="math">
+\begin{align*}
 \kappa\left(\textbf{a}, \textbf{b}\right)=\exp \left(-\frac{\left\|\textbf{a}-\textbf{b}\right\|^{2}}{2 \sigma^{2}}\right) \tag{4}
-$$
+\end{align*}
+</div>
 
 with $\sigma^{2}$ a hyperparameter.
 
@@ -214,7 +236,11 @@ In order to understand the kernel trick it is helpful to have knowledge of the f
 ##### Kernel functions
 A kernel function $ \kappa$ takes in two data points $\textbf{a}, \textbf{b} \, \in \mathbb{R}^d$ and returns a single number expressing how similar the data points are. Formally this can be written as:
 
-$$ \kappa(\textbf{a}, \textbf{b}) : \mathbb{R}^d \times \mathbb{R}^d \rightarrow \mathbb{R} $$
+<div class="math">
+\begin{align*}
+\kappa(\textbf{a}, \textbf{b}) : \mathbb{R}^d \times \mathbb{R}^d \rightarrow \mathbb{R}
+\end{align*}
+</div>
 
  Kernel functions are symmetric, $\kappa(\textbf{a}, \textbf{b}) = \kappa(\textbf{b}, \textbf{a})$ and so computing the similarity between all the data-points results in a $n \times n$ matrix which is [positive definite](https://en.wikipedia.org/wiki/Definiteness_of_a_matrix).
 
@@ -225,7 +251,7 @@ It is helpful to have an understanding of how certain transformations of the dat
     <img src="/assets/img/linear_sep.jpeg" alt="Image" width="700" height="300" />
 </p>
 
-<em class="figure">Knowledge of the distance from the origin makes this data linearly separable</em>
+<em class="figure">Figure 2: Knowing the distance from the origin makes this data linearly separable</em>
 
 <hr class="with-margin">
 <h4 class="header" id="references">References</h4>
@@ -264,6 +290,9 @@ and that for $\textbf{a}^T = (a_1, a_2)$ and $\textbf{b}^T = (b_1, b_2)$, we sho
 
 In order to match the factors of 2 that appear in front of the terms in (5) the transformation $\phi$ requires $\sqrt{2}$s in the appropriate places. This ensures when we compute $\phi(\textbf{a})^T\phi(\textbf{b})$ the factors match and $\phi$ is the correct transformation such that:
 
-$$\kappa(\textbf{a},\textbf{b}) = \phi(\textbf{a})^T\phi(\textbf{b}).$$
+<div class="math">
+\begin{align*}
+\kappa(\textbf{a},\textbf{b}) = \phi(\textbf{a})^T\phi(\textbf{b}).\end{align*}
+</div>
 
 <hr class="with-margin">
