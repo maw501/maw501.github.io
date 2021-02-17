@@ -65,14 +65,14 @@ y_{i}=w_{0}+\sum_{j=1}^{d} x_{i j} w_{j}+\epsilon_{i}  \tag{0}
 </div>
 where $\epsilon \sim \mathcal{N}(0, \sigma_i^2)$ is an additive independent identically distributed Gaussian noise.
 
-It is possible and more compact to restate this in matrix form by absorbing the intercept, $w_0$ into the vector $\mathbf{w}$ and adding a column of 1s to $X$ to write as:
+It is possible and more compact to restate this in matrix form by absorbing the intercept, $w_0$ into the vector $\mathbf{w}$ and adding a column of 1s to $X$ to rewrite as:
 
 <div class="math">
 \begin{align*}
 \mathbf{y}= X \mathbf{w} + \mathbf{\epsilon}
 \end{align*}
 </div>
-where $X$ is now $n \times (d+1)$ and $\mathbf{w}$ is a vector of length $(d+1)$.
+where $X$ is now $n \times (d+1)$ dimensional and $\mathbf{w}$ is a vector of length $(d+1)$.
 
 The prediction we make from linear regression is given by:
 
@@ -81,11 +81,11 @@ The prediction we make from linear regression is given by:
 \mathbf{\tilde{y}}= X \mathbf{w}
 \end{align*}
 </div>
-and is a vector of length $n$.
+and is a vector of length $n$ for the training data.
 
 ##### OLS objective term
 
-In order to assess how good the predictions for the model are we define a loss function we wish to minimize, $\mathcal{L}$. For ordinary least squares (OLS) the loss can be defined as:
+In order to assess how good the predictions for the model are we can define a loss function we wish to minimize, $\mathcal{L}$. For ordinary least squares (OLS) the loss can be defined as:
 
 <div class="math">
 \begin{align*}
@@ -95,15 +95,13 @@ In order to assess how good the predictions for the model are we define a loss f
 \end{align*}
 </div>
 
-depending on notational preferences. So far all we have assumed is a least squares loss function and the goal is to minimize this error for the linear model of choice. In many cases modelling scenarios we might think of this as a reasonable thing to do where we have made no (explicit) assumptions about the data.
-
-Our goal is to return a set of weights from the optimization that are optimal for the above model.
+depending on notational preferences. So far all we have assumed is a least squares loss function and the goal is to minimize this error for the linear model of choice. In many scenarios we might think of this as a reasonable thing to do and that we have made no (explicit) assumptions about the data.
 
 ##### OLS optimal weights, $\mathbf{w}_{LS}$
 
 In order to derive the optimal set of weights, $\mathbf{w}_{LS}$, that minimizes the above function $\mathcal{L}$ we take the derivative of $(1)$, set it to 0 and solve for $\mathbf{w}$.
 
-It can be helpful when following the below to always think about whether the dimensions tie up and remember that once we differentiate we will return a vector (as we are simultaneously differentiating w.r.t each element of $\mathbf{w}$), of dimension $(d+1) \times 1$. In order to derive the below we apply some standard [results](#matrix_cook) from matrix calculus.
+It can be helpful when following the below to always think about whether the dimensions tie up and remember that once we differentiate we will return a vector (as we are simultaneously differentiating w.r.t each element of $\mathbf{w}$), of dimension $(d+1) \times 1$. In order to derive the below we can apply standard [results](#matrix_cook) from matrix calculus.
 
 <div class="math">
 \begin{alignat*}{2}
@@ -126,17 +124,17 @@ In the case of linear regression the model assumption we make is that the [resid
 
 <div class="math">
 \begin{align*}
-p\left(\mathbf{y} | \boldsymbol{\mu}, \sigma^{2} I \right)=\frac{1}{\left(2 \pi \sigma^{2}\right)^{\frac{n}{2}}} \exp \left(-\frac{1}{2 \sigma^{2}}(\mathbf{y}-\boldsymbol{\mu})^{T}\, I \, (\mathbf{y}-\boldsymbol{\mu})\right) \tag{3}\end{align*}
+p\left(\mathbf{y} \mid \boldsymbol{\mu}, \sigma^{2} I \right)=\frac{1}{\left(2 \pi \sigma^{2}\right)^{\frac{n}{2}}} \exp \left(-\frac{1}{2 \sigma^{2}}(\mathbf{y}-\boldsymbol{\mu})^{T}\, I \, (\mathbf{y}-\boldsymbol{\mu})\right) \tag{3}\end{align*}
 </div>
 
-where under the Gaussian noise assumption $\Sigma = \sigma^2 I$ is a diagonal matrix. Recalling that the determinant of a diagonal matrix is the product of its diagonal entries permits the above form and it also pays to note that $(\mathbf{y}-\boldsymbol{\mu})$ has dimensions $n \times 1$ and $\boldsymbol{\mu}$ is the prediction for each observation, also with dimension $n \times 1$. Under the Gaussian noise assumption we are making this is equivalent to setting the prediction, $\boldsymbol{\mu} = X \mathbf{w}$.
+where under the Gaussian noise assumption $\Sigma = \sigma^2 I$ is a diagonal matrix. Recalling that the determinant of a diagonal matrix is the product of its diagonal entries permits the above form and it also pays to note that $(\mathbf{y}-\boldsymbol{\mu})$ has dimensions $n \times 1$ and that $\boldsymbol{\mu}$ is the prediction for each observation, also with dimension $n \times 1$. Under the Gaussian noise assumption we are making this is equivalent to setting the prediction, $\boldsymbol{\mu} = X \mathbf{w}$.
 
 There are a few equivalent ways of stating the assumption we make about the data in a MLE setting for linear regression:
 
 <div class="bullet"> 
 <ol> 1. $y_i = \mathbf{x_i}^T \mathbf{w} + \epsilon_i$ with $\epsilon_i \stackrel{ind}{\sim} N(0, \sigma^2)$ for $i=1,...n$</ol>
 <ol> 2. $y_i \stackrel{ind}{\sim} \mathcal{N}(\mathbf{x_i}^T \mathbf{w}, \sigma^2)$ for $i=1,...n$</ol>
-<ol> 3. $\mathbf{y} \sim \mathcal{N}(X \mathbf{w}, \sigma^2 I)$ and so $p(\mathbf{y} \| \mathbf{w}, X) = \mathcal{N}(X \mathbf{w}, \sigma^2 I)$</ol>
+<ol> 3. $\mathbf{y} \sim \mathcal{N}(X \mathbf{w}, \sigma^2 I)$ and so $p(\mathbf{y} \mid \mathbf{w}, X) = \mathcal{N}(X \mathbf{w}, \sigma^2 I)$</ol>
 </div>
 Note this doesn't mean that the target $\mathbf{y}$ itself is normally distributed but that given a mean prediction of $X\mathbf{w}$ the residuals follow a Gaussian distribution assumed to have constant variance.
 
@@ -197,7 +195,7 @@ leading to the solution for ridge regression:
 \mathbf{w}_{RR} = \left(\lambda I+X^{T} X\right)^{-1} X^{T} \mathbf{y}. \tag{5}
 \end{align*}
 </div>
-As with OLS we didn't explicitly make any probabilistic assumptions, we just defined a loss function with a regularization term and calculated the optimal set of weights for it.
+As with OLS we didn't *explicitly* make any probabilistic assumptions, we just defined a loss function with a regularization term and calculated the optimal set of weights for it.
 
 However, as we now show, it turns out the ridge regression solution also has a nice probabilistic interpretation.
 
@@ -226,27 +224,27 @@ Bayes's rule can be written in this case as:
 
 <div class="math">
 \begin{align*}
-p(\mathbf{w} | \mathbf{y}, X) = \dfrac{p(\mathbf{y} | \mathbf{w}, X) p(\mathbf{w})}{p(\mathbf{y} | X)}
+p(\mathbf{w} \mid \mathbf{y}, X) = \dfrac{p(\mathbf{y} \mid \mathbf{w}, X) p(\mathbf{w})}{p(\mathbf{y} \mid X)}
 \end{align*}
 </div>
 whereby taking logs of both sides leaves us with:
 
 <div class="math">
 \begin{align*}
-\ln \underbrace{p(\mathbf{w} | \mathbf{y}, X)}_\text{posterior} = \underbrace{\ln p(\mathbf{y} | \mathbf{w}, X)}_\text{log-likelihood} + \ln \underbrace{p(\mathbf{w})}_\text{prior} - \ln \underbrace{ p(\mathbf{y} | X)}_\text{evidence}\end{align*}
+\ln \underbrace{p(\mathbf{w} \mid \mathbf{y}, X)}_\text{posterior} = \underbrace{\ln p(\mathbf{y} \mid \mathbf{w}, X)}_\text{log-likelihood} + \ln \underbrace{p(\mathbf{w})}_\text{prior} - \ln \underbrace{ p(\mathbf{y} \mid X)}_\text{evidence}\end{align*}
 </div>
 
 <br>
-It is worth noting that the MAP solution is still a point estimate and as a result we don't need to calculate the denominator in Bayes' rule, $p(\mathbf{y} | X)$. This is helpful as this term is usually difficult to calculate.
+It is worth noting that the MAP solution is still a point estimate and as a result we don't need to calculate the denominator in Bayes' rule, $p(\mathbf{y} \mid X)$. This is helpful as this term is usually difficult to calculate.
 </blockquote>
 
-We proceed by recalling that the likelihood assumption is $p(\mathbf{y} \| \mathbf{w}, X) = \mathcal{N}(X \mathbf{w}, \sigma^2 I)$ which we can solve by taking logs of Bayes' rule.
+In order to derive the optimal weights we proceed by recalling that the likelihood assumption is $p(\mathbf{y} \mid \mathbf{w}, X) = \mathcal{N}(X \mathbf{w}, \sigma^2 I)$ which we can solve by taking logs of Bayes' rule.
 
 The MAP solution can thus be written as:
 
 <div class="math">
 \begin{align*}
-\mathbf{w}_{MAP} &= \arg \max_{\mathbf{w}} \ln p(\mathbf{y} | \mathbf{w}, X)+\ln p(\mathbf{w})  \\[5pt]
+\mathbf{w}_{MAP} &= \arg \max_{\mathbf{w}} \ln p(\mathbf{y} \mid \mathbf{w}, X)+\ln p(\mathbf{w})  \\[5pt]
 &= \arg \max_{\mathbf{w}}-\frac{1}{2 \sigma^{2}}(\mathbf{y}-X \mathbf{w})^{T}(\mathbf{y}-X \mathbf{w})-\frac{\lambda}{2} \mathbf{w}^{T} \mathbf{w}+\mathrm{const.} \\[5pt]
 &= \mathcal{L}
 \end{align*}
@@ -276,8 +274,6 @@ This solution is the same as $\mathbf{w}\_{RR}$ (after redefining the constant $
 
 It is possible to extend the above analysis in many ways, in particular it becomes easy to make the link to lasso regression. A similar analysis to the above shows that adding a regularization term that sums the absolute values of $\mathbf{w}$ is equivalent to placing a [Laplace distribution](https://en.wikipedia.org/wiki/Laplace_distribution) over the model's weights from a Bayesian perspective.
 
-The regularization term added in the ridge regression objective term is [sometimes called](https://en.wikipedia.org/wiki/Norm_(mathematics)#p-norm) a $l_2$ penalty and for lasso it's often called a $l_1$ penalty.
-
 <a name="analysis_ols_rr"></a>
 <hr class="with-margin">
 <h4 class="header" id="analysis">Analysis of OLS and RR</h4>
@@ -288,22 +284,24 @@ So far in the above we have proceeded somewhat mechanically in order to link OLS
 
 ##### Motivating RR
 
-As we have stated the OLS solutions to linear regression can suffer from high variance. In particular, it can be [shown](#mean_var_mle_solution) that the expected value and variance of the MLE solutions to linear regression under the Gaussian assumption, $\mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right)$, are given by:
+As we briefly mentioned earlier, the OLS solutions to linear regression can suffer from high variance. In particular, it can be [shown](#mean_var_mle_solution) that the expected value and variance of the MLE solutions to linear regression under the Gaussian assumption, $\mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right)$, are given by:
 
 <div class="math">
 \begin{align*}
-\mathbb{E}\left[\mathbf{w}_{ML}\right]=\mathbf{w}, \quad \operatorname{Var}\left[\mathbf{w}_{ML}\right]=\sigma^{2}\left(X^{T} X\right)^{-1}.
+\mathbb{E}\left[\mathbf{w}_{ML}\right] &= \mathbf{w}, \\
+\operatorname{Var}\left[\mathbf{w}_{ML}\right] &= \sigma^{2}\left(X^{T} X\right)^{-1}.
 \end{align*}
 </div>
 The above is interpreted as showing that the MLE solution is [unbiased](https://en.wikipedia.org/wiki/Bias_of_an_estimator) but that the model parameters can have large variance if $(X^T X)^{-1}$ is large - typically this is when the columns of $X$ are highly correlated. This can be bad if we want to predict using $\mathbf{w}_{ML}$ as the solution has potentially [very large variance](https://en.wikipedia.org/wiki/Variance_inflation_factor).
 
 Ridge regression adds a penalty term to the objective function of OLS and probabilistically this is equivalent to assuming a Gaussian prior over the model weights. This further assumption about the distribution of the model’s parameters biases the solution we obtain but reduces the variance.
 
-Following similar analysis to ML it can be [shown](#mean_var_rr_solution) that:
+Following similar analysis to that for the MLE solution it can be [shown](#mean_var_rr_solution) that:
 
 <div class="math">
 \begin{align*}
-\mathbb{E}\left[\mathbf{w}_{RR}\right]=\left(\lambda I+X^{T} X\right)^{-1} X^{T} X \mathbf{w}, \quad \operatorname{Var}\left[\mathbf{w}_{RR}\right]=\sigma^{2} Z\left(X^{T} X\right)^{-1} Z^{T}
+\mathbb{E}\left[\mathbf{w}_{RR}\right] &= \left(\lambda I+X^{T} X\right)^{-1} X^{T} X \mathbf{w}, \\
+\operatorname{Var}\left[\mathbf{w}_{RR}\right] &= \sigma^{2} Z\left(X^{T} X\right)^{-1} Z^{T}
 \end{align*}
 </div>
 where $ Z=\left(I+\lambda\left(X^{T} X\right)^{-1}\right)^{-1}.$
@@ -324,7 +322,7 @@ This trade-off between bias and variance is discussed next.
 <hr class="with-margin">
 <h4 class="header" id="bv">Bias-variance tradeoff</h4>
 
-We now move onto discussing one of the fundamental results in machine learning from a frequentist viewpoint, the bias-variance tradeoff. So far we have talked about the terms bias and variance a little loosely, now we put them on a firmer footing through analysing the generalization error for new data. The ability of a model to generalize to unseen data is of primary importance in machine learning and in order to do this we must try to minimise the overfitting the training data too badly.
+We now move onto discussing one of the fundamental results in machine learning from a frequentist viewpoint, the bias-variance tradeoff. So far we have talked about the terms bias and variance a little loosely, now we put them on a firmer footing through analysing the generalization error for new data. The ability of a model to generalize to unseen data is of primary importance in machine learning and in order to do this we must minimise overfitting.
 
 The concept of overfitting is linked to model complexity where the loose relationship is that more complex models are more prone to overfitting. The figure below shows a typical case of this phenomena.
 
@@ -333,7 +331,7 @@ The concept of overfitting is linked to model complexity where the loose relatio
 </p>
 <em class="figure">Bias variance tradeoff</em>
 
-It is worth saying that the problems with maximum likelihood do not arise when we marginalize
+It is worth saying that the problems with maximum likelihood estimation do not arise when we marginalize
 over parameters in a Bayesian setting, however this is not discussed in this post and the reader is referred to [PRML](#prml) [3.2].
 
 Recall that in linking OLS to MLE and RR to MAP we have that:
@@ -345,15 +343,15 @@ Recall that in linking OLS to MLE and RR to MAP we have that:
 To analyse which of these is preferable we note that ultimately the true thing we care about the generalization error on unseen data. In order to start this analysis we consider the prediction for a single new test prediction: $(\mathbf{x}_0, y_0)$.
 
 <div class="bullet"> 
-<li> Least squares predicts: $\mathbf{x}_0^T \mathbf{w}\_{LS}$ </li>
-<li> Ridge regression predicts: $\mathbf{x}_0^T \mathbf{w}\_{RR}$ </li>
+<li> <strong>Least squares predicts:</strong> $\mathbf{x}_0^T \mathbf{w}_{LS}$ </li>
+<li> <strong>Ridge regression predicts:</strong> $\mathbf{x}_0^T \mathbf{w}_{RR}$ </li>
 </div>
 <br>
 We can calculate the expected squared error of this prediction as:
 
 <div class="math">
 \begin{align*}
-\mathbb{E}[(y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 | X,\mathbf{x}_0] = \int_{\mathbb{R}}^{} \int_{\mathbb{R^n}}^{} (y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 \, \underbrace{p(\mathbf{y} | X, \mathbf{w})}_\text{$ \mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right) $} \, \underbrace{p(y_0 | \mathbf{x}_0, \mathbf{w})}_\text{$ y_0 \sim \mathcal{N}\left(\mathbf{x}_0^T \mathbf{w}, \sigma^{2} \right)$} \, d\mathbf{y} \, dy_0 \tag{7}
+\mathbb{E}[(y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 \mid X,\mathbf{x}_0] = \int_{\mathbb{R}}^{} \int_{\mathbb{R^n}}^{} (y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 \, \underbrace{p(\mathbf{y} \mid X, \mathbf{w})}_\text{$ \mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right) $} \, \underbrace{p(y_0 \mid \mathbf{x}_0, \mathbf{w})}_\text{$ y_0 \sim \mathcal{N}\left(\mathbf{x}_0^T \mathbf{w}, \sigma^{2} \right)$} \, d\mathbf{y} \, dy_0 \tag{7}
 \end{align*}
 </div>
 where $\mathbf{\hat{w}}$ is either $\mathbf{w}\_{LS}$ or $\mathbf{w}\_{RR}$.
@@ -366,7 +364,7 @@ The above integral looks a little scary and appears to have come out of nowhere.
 
 <div class="math">
 \begin{align*}
-E[g(X) | A] = \int_{} g(x) \, p_{X| A}(x) \, dx
+E[g(X) \mid A] = \int_{} g(x) \, p_{X \mid A}(x) \, dx
 \end{align*}
 </div>
 
@@ -374,7 +372,7 @@ which in the notation we have can be written as:
 
 <div class="math">
 \begin{align*}
-E[g(Y_0) | A] = \int_{} g(y_0) \, p_{Y_0 | A}(y_0) \, dy_0.
+E[g(Y_0) \mid A] = \int_{} g(y_0) \, p_{Y_0 \mid A}(y_0) \, dy_0.
 \end{align*}
 </div>
 
@@ -390,21 +388,22 @@ which is just some function of the random variable $Y_0$. The probability distri
 
 <div class="math">
 \begin{align*}
-p_{Y_0 | A}(y_0) = \overbrace{\int_{\mathbb{R^n}}^{} \underbrace{p(y_0 | \mathbf{y} , \mathbf{x}_0, \mathbf{w})}_\text{$ = \, p(y_0 | \mathbf{x}_0, \mathbf{w})$} \, p(\mathbf{y} | X, \mathbf{w}) \, d \mathbf{y}}^\text{$ = \, p(y_0 | \mathbf{x}_0, \mathbf{w})$}\end{align*}
+p_{Y_0 \mid A}(y_0) = \overbrace{\int_{\mathbb{R^n}}^{} \underbrace{p(y_0 \mid \mathbf{y} , \mathbf{x}_0, \mathbf{w})}_\text{$ = \, p(y_0 | \mathbf{x}_0, \mathbf{w})$} \, p(\mathbf{y} \mid X, \mathbf{w}) \, d \mathbf{y}}^\text{$ = \, p(y_0 \mid \mathbf{x}_0, \mathbf{w})$}\end{align*}
 </div>
 
 and so we could rewrite $(7)$ initially as:
 
 <div class="math">
 \begin{align*}
-\mathbb{E}[(y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 | X, \mathbf{x}_0] = \int_{\mathbb{R}}^{} (y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 \, p(y_0 | \mathbf{x}_0, \mathbf{w}) \, dy_0\end{align*}
+\mathbb{E}[(y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 \mid X, \mathbf{x}_0] = \int_{\mathbb{R}}^{} (y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 \, p(y_0 \mid \mathbf{x}_0, \mathbf{w}) \, dy_0\end{align*}
 </div>
 
 before substituting in the above result.
 
 The above is essentially saying:
 <br>
-* If we know data $X$ and $\mathbf{x}_0$ and assume there is some true underlying $\mathbf{w}$ (frequentist assumption)
+<br>
+* If we know the data $X$ and $\mathbf{x}_0$ and assume there is some true underlying $\mathbf{w}$ (frequentist assumption)
 <br>
 * Generate $\mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right)$ and approximate $\mathbf{w}$ with $\mathbf{\hat{w}} = \mathbf{w}_{LS}$ or  $\mathbf{\hat{w}} = \mathbf{w}_{RR}$
 <br>
@@ -436,9 +435,9 @@ where the above is derived with the help of a few results:
 
 We have thus decomposed the prediction error into 3 main components:
 <div class="bullet"> 
-<ol> 1. Measurement noise – we can’t control this given the model </ol>
-<ol> 2. Model bias – how close to the solution we expect to be on average</ol>
-<ol> 3. Model variance – how sensitive the solution is to the data</ol>
+<ol> 1. Measurement noise – we can’t control this given the model. </ol>
+<ol> 2. Model bias – how close to the solution we expect to be on average.</ol>
+<ol> 3. Model variance – how sensitive the solution is to the data.</ol>
 </div>
 <br>
 The above analysis is more general (see [ESL](#esl) [7.3]) than the linear regression case though it's usually not possible to get nice equations for the tradeoff.
@@ -604,7 +603,7 @@ MLE is a way of estimating the parameters of a model, given data. In some cases 
 
 <div class="math">
 \begin{align*}
-\hat{\theta}_{ML} :=\arg \max_{\theta} p\left(\mathbf{x}_{1}, \ldots, \mathbf{x}_{n} | \theta\right)
+\hat{\theta}_{ML} :=\arg \max_{\theta} p\left(\mathbf{x}_{1}, \ldots, \mathbf{x}_{n} \mid \theta\right)
 \end{align*}
 </div>
 
@@ -645,11 +644,11 @@ edX, ColumbiaX, <a class="reference external" href="https://www.edx.org/course/m
 
 Here we derive the maximum likelihood solution under a multivariate Gaussian likelihood assumption for the data.
 
-We start by noting that in general for $n$ [iid](https://en.wikipedia.org/wiki/Independent_and_identically_distributed_random_variables) data observations $\mathbf{x_i} \in \mathbb{R}^{d}$ the probability of a single observation $p(\mathbf{x} \| \boldsymbol{\mu}, \Sigma)$ can be written as
+We start by noting that in general for $n$ [iid](https://en.wikipedia.org/wiki/Independent_and_identically_distributed_random_variables) data observations $\mathbf{x_i} \in \mathbb{R}^{d}$ the probability of a single observation $p(\mathbf{x} \mid \boldsymbol{\mu}, \Sigma)$ can be written as
 
 <div class="math">
 \begin{align*}
-\mathbf{x_i} \stackrel{\text { iid }}{\sim} p(\mathbf{x} | \boldsymbol{\mu}, \Sigma)
+\mathbf{x_i} \stackrel{\text { iid }}{\sim} p(\mathbf{x} \mid \boldsymbol{\mu}, \Sigma)
 \end{align*}
 </div>
 
@@ -659,7 +658,7 @@ Under the iid assumption we can write the joint likelihood of all the data as th
 
 <div class="math">
 \begin{align*}
-p\left(\mathbf{x_1}, \ldots, \mathbf{x_n} | \theta\right)=\prod_{i=1}^{n} p\left(\mathbf{x_i} | \theta\right)
+p\left(\mathbf{x_1}, \ldots, \mathbf{x_n} \mid \theta\right)=\prod_{i=1}^{n} p\left(\mathbf{x_i} \mid \theta\right)
 \end{align*}
 </div>
 
