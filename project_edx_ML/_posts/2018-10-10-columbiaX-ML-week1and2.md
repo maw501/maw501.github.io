@@ -58,26 +58,29 @@ The idea is that least squares has an insightful probabilistic interpretation th
 
 For linear regression we can state problem formulation as
 
-$$
+<div class="math">
+\begin{align*}
 y_{i}=w_{0}+\sum_{j=1}^{d} x_{i j} w_{j}+\epsilon_{i}  \tag{0}
-$$
-
+\end{align*}
+</div>
 where $\epsilon \sim \mathcal{N}(0, \sigma_i^2)$ is an additive independent identically distributed Gaussian noise.
 
 It is possible and more compact to restate this in matrix form by absorbing the intercept, $w_0$ into the vector $\mathbf{w}$ and adding a column of 1s to $X$ to write as:
 
-$$
+<div class="math">
+\begin{align*}
 \mathbf{y}= X \mathbf{w} + \mathbf{\epsilon}
-$$
-
+\end{align*}
+</div>
 where $X$ is now $n \times (d+1)$ and $\mathbf{w}$ is a vector of length $(d+1)$.
 
 The prediction we make from linear regression is given by:
 
-$$
+<div class="math">
+\begin{align*}
 \mathbf{\tilde{y}}= X \mathbf{w}
-$$
-
+\end{align*}
+</div>
 and is a vector of length $n$.
 
 ##### OLS objective term
@@ -121,9 +124,10 @@ By contrast the maximum likelihood approach starts by assuming a statistical mod
 
 In the case of linear regression the model assumption we make is that the [residuals](https://en.wikipedia.org/wiki/Errors_and_residuals) are independent and identically distributed Gaussian noise with variance $\sigma^2$. This allows us to write the joint likelihood of the data, an $n$-dimensional Gaussian, as:
 
-$$
-p\left(\mathbf{y} | \boldsymbol{\mu}, \sigma^{2} I \right)=\frac{1}{\left(2 \pi \sigma^{2}\right)^{\frac{n}{2}}} \exp \left(-\frac{1}{2 \sigma^{2}}(\mathbf{y}-\boldsymbol{\mu})^{T}\, I \, (\mathbf{y}-\boldsymbol{\mu})\right) \tag{3}
-$$
+<div class="math">
+\begin{align*}
+p\left(\mathbf{y} | \boldsymbol{\mu}, \sigma^{2} I \right)=\frac{1}{\left(2 \pi \sigma^{2}\right)^{\frac{n}{2}}} \exp \left(-\frac{1}{2 \sigma^{2}}(\mathbf{y}-\boldsymbol{\mu})^{T}\, I \, (\mathbf{y}-\boldsymbol{\mu})\right) \tag{3}\end{align*}
+</div>
 
 where under the Gaussian noise assumption $\Sigma = \sigma^2 I$ is a diagonal matrix. Recalling that the determinant of a diagonal matrix is the product of its diagonal entries permits the above form and it also pays to note that $(\mathbf{y}-\boldsymbol{\mu})$ has dimensions $n \times 1$ and $\boldsymbol{\mu}$ is the prediction for each observation, also with dimension $n \times 1$. Under the Gaussian noise assumption we are making this is equivalent to setting the prediction, $\boldsymbol{\mu} = X \mathbf{w}$.
 
@@ -181,16 +185,18 @@ In general, when developing a model in can be helpful to constrain the model par
 
 We can find the optimal weights by the same procedure as for OLS:
 
-$$
+<div class="math">
+\begin{align*}
 \nabla_{\mathbf{w}} \mathcal{L} = -2 X^{T} \mathbf{y}+2 X^{T} X \mathbf{w}+2 \lambda \mathbf{w}=0
-$$
-
+\end{align*}
+</div>
 leading to the solution for ridge regression:
 
-$$
+<div class="math">
+\begin{align*}
 \mathbf{w}_{RR} = \left(\lambda I+X^{T} X\right)^{-1} X^{T} \mathbf{y}. \tag{5}
-$$
-
+\end{align*}
+</div>
 As with OLS we didn't explicitly make any probabilistic assumptions, we just defined a loss function with a regularization term and calculated the optimal set of weights for it.
 
 However, as we now show, it turns out the ridge regression solution also has a nice probabilistic interpretation.
@@ -199,10 +205,11 @@ However, as we now show, it turns out the ridge regression solution also has a n
 
 We make the connection to a Bayesian perspective by placing a prior over the weights of the solution. In this case we will place a Gaussian prior over the weights with 0 mean:
 
-$$
+<div class="math">
+\begin{align*}
 p(\mathbf{w})=\left(\frac{\lambda}{2 \pi}\right)^{\frac{d}{2}} \mathrm{e}^{-\frac{\lambda}{2} \mathbf{w}^{T} \mathbf{w}}
-$$
-
+\end{align*}
+</div>
 and so $\mathbf{w} \sim N\left(0, \lambda^{-1}I\right)$.
 
 <blockquote class="tip">
@@ -217,15 +224,18 @@ This is analogous to the maximum likelihood solution except we combine the likel
 <br>
 Bayes's rule can be written in this case as:
 
-$$
+<div class="math">
+\begin{align*}
 p(\mathbf{w} | \mathbf{y}, X) = \dfrac{p(\mathbf{y} | \mathbf{w}, X) p(\mathbf{w})}{p(\mathbf{y} | X)}
-$$
-
+\end{align*}
+</div>
 whereby taking logs of both sides leaves us with:
 
-$$
-\ln \underbrace{p(\mathbf{w} | \mathbf{y}, X)}_\text{posterior} = \underbrace{\ln p(\mathbf{y} | \mathbf{w}, X)}_\text{log-likelihood} + \ln \underbrace{p(\mathbf{w})}_\text{prior} - \ln \underbrace{ p(\mathbf{y} | X)}_\text{evidence}
-$$
+<div class="math">
+\begin{align*}
+\ln \underbrace{p(\mathbf{w} | \mathbf{y}, X)}_\text{posterior} = \underbrace{\ln p(\mathbf{y} | \mathbf{w}, X)}_\text{log-likelihood} + \ln \underbrace{p(\mathbf{w})}_\text{prior} - \ln \underbrace{ p(\mathbf{y} | X)}_\text{evidence}\end{align*}
+</div>
+
 <br>
 It is worth noting that the MAP solution is still a point estimate and as a result we don't need to calculate the denominator in Bayes' rule, $p(\mathbf{y} | X)$. This is helpful as this term is usually difficult to calculate.
 </blockquote>
@@ -244,16 +254,18 @@ The MAP solution can thus be written as:
 
 by plugging in the Gaussian assumptions we have made for the likelihood and prior. We can solve the above analytically as for MLE by differentiating w.r.t $\mathbf{w}$ and setting to 0:
 
-$$
+<div class="math">
+\begin{align*}
 \nabla_{\mathbf{w}} \mathcal{L}=\frac{1}{\sigma^{2}} X^{T} \mathbf{y}-\frac{1}{\sigma^{2}} X^{T} X \mathbf{w}-\lambda \mathbf{w}=0
-$$
-
+\end{align*}
+</div>
 which results in the MAP solution for ridge regression as:
 
-$$
+<div class="math">
+\begin{align*}
 \mathbf{w}_{MAP} = \left(\lambda \sigma^{2} I+X^{T} X\right)^{-1} X^{T} \mathbf{y}. \tag{6}
-$$
-
+\end{align*}
+</div>
 This solution is the same as $\mathbf{w}\_{RR}$ (after redefining the constant $\lambda$) and so we have shown that $\mathbf{w}\_{RR} = \mathbf{w}\_{MAP}$.
 
 <blockquote class="tip">
@@ -278,20 +290,22 @@ So far in the above we have proceeded somewhat mechanically in order to link OLS
 
 As we have stated the OLS solutions to linear regression can suffer from high variance. In particular, it can be [shown](#mean_var_mle_solution) that the expected value and variance of the MLE solutions to linear regression under the Gaussian assumption, $\mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right)$, are given by:
 
-$$
+<div class="math">
+\begin{align*}
 \mathbb{E}\left[\mathbf{w}_{ML}\right]=\mathbf{w}, \quad \operatorname{Var}\left[\mathbf{w}_{ML}\right]=\sigma^{2}\left(X^{T} X\right)^{-1}.
-$$
-
+\end{align*}
+</div>
 The above is interpreted as showing that the MLE solution is [unbiased](https://en.wikipedia.org/wiki/Bias_of_an_estimator) but that the model parameters can have large variance if $(X^T X)^{-1}$ is large - typically this is when the columns of $X$ are highly correlated. This can be bad if we want to predict using $\mathbf{w}_{ML}$ as the solution has potentially [very large variance](https://en.wikipedia.org/wiki/Variance_inflation_factor).
 
 Ridge regression adds a penalty term to the objective function of OLS and probabilistically this is equivalent to assuming a Gaussian prior over the model weights. This further assumption about the distribution of the model’s parameters biases the solution we obtain but reduces the variance.
 
 Following similar analysis to ML it can be [shown](#mean_var_rr_solution) that:
 
-$$
+<div class="math">
+\begin{align*}
 \mathbb{E}\left[\mathbf{w}_{RR}\right]=\left(\lambda I+X^{T} X\right)^{-1} X^{T} X \mathbf{w}, \quad \operatorname{Var}\left[\mathbf{w}_{RR}\right]=\sigma^{2} Z\left(X^{T} X\right)^{-1} Z^{T}
-$$
-
+\end{align*}
+</div>
 where $ Z=\left(I+\lambda\left(X^{T} X\right)^{-1}\right)^{-1}.$
 
 It is noted that $\lambda = 0$ returns the same solutions as in the MLE case. As $\lambda \to \infty$ then $\mathbf{w}\_{RR} \to 0$ and also $\operatorname{Var}\left[\mathbf{w}\_{RR}\right] \to 0 $.
@@ -337,9 +351,11 @@ To analyse which of these is preferable we note that ultimately the true thing w
 <br>
 We can calculate the expected squared error of this prediction as:
 
-$$\mathbb{E}[(y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 | X,\mathbf{x}_0] = \int_{\mathbb{R}}^{} \int_{\mathbb{R^n}}^{} (y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 \, \underbrace{p(\mathbf{y} | X, \mathbf{w})}_\text{$ \mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right) $} \, \underbrace{p(y_0 | \mathbf{x}_0, \mathbf{w})}_\text{$ y_0 \sim \mathcal{N}\left(\mathbf{x}_0^T \mathbf{w}, \sigma^{2} \right)$} \, d\mathbf{y} \, dy_0 \tag{7}
-$$
-
+<div class="math">
+\begin{align*}
+\mathbb{E}[(y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 | X,\mathbf{x}_0] = \int_{\mathbb{R}}^{} \int_{\mathbb{R^n}}^{} (y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 \, \underbrace{p(\mathbf{y} | X, \mathbf{w})}_\text{$ \mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right) $} \, \underbrace{p(y_0 | \mathbf{x}_0, \mathbf{w})}_\text{$ y_0 \sim \mathcal{N}\left(\mathbf{x}_0^T \mathbf{w}, \sigma^{2} \right)$} \, d\mathbf{y} \, dy_0 \tag{7}
+\end{align*}
+</div>
 where $\mathbf{\hat{w}}$ is either $\mathbf{w}\_{LS}$ or $\mathbf{w}\_{RR}$.
 
 <blockquote class="tip">
@@ -348,26 +364,41 @@ where $\mathbf{\hat{w}}$ is either $\mathbf{w}\_{LS}$ or $\mathbf{w}\_{RR}$.
 
 The above integral looks a little scary and appears to have come out of nowhere. To understand it we first note that it is using the result for expected value:
 
-$$E[g(X) | A] = \int_{} g(x) \, p_{X| A}(x) \, dx$$
+<div class="math">
+\begin{align*}
+E[g(X) | A] = \int_{} g(x) \, p_{X| A}(x) \, dx
+\end{align*}
+</div>
 
 which in the notation we have can be written as:
 
-$$E[g(Y_0) | A] = \int_{} g(y_0) \, p_{Y_0 | A}(y_0) \, dy_0.$$
+<div class="math">
+\begin{align*}
+E[g(Y_0) | A] = \int_{} g(y_0) \, p_{Y_0 | A}(y_0) \, dy_0.
+\end{align*}
+</div>
 
 Here we have that:
 
-$$g(y_0) = (y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2$$
+<div class="math">
+\begin{align*}
+g(y_0) = (y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2
+\end{align*}
+</div>
 
 which is just some function of the random variable $Y_0$. The probability distribution is:
 
-$$
-p_{Y_0 | A}(y_0) = \overbrace{\int_{\mathbb{R^n}}^{} \underbrace{p(y_0 | \mathbf{y} , \mathbf{x}_0, \mathbf{w})}_\text{$ = \, p(y_0 | \mathbf{x}_0, \mathbf{w})$} \, p(\mathbf{y} | X, \mathbf{w}) \, d \mathbf{y}}^\text{$ = \, p(y_0 | \mathbf{x}_0, \mathbf{w})$}
-$$
+<div class="math">
+\begin{align*}
+p_{Y_0 | A}(y_0) = \overbrace{\int_{\mathbb{R^n}}^{} \underbrace{p(y_0 | \mathbf{y} , \mathbf{x}_0, \mathbf{w})}_\text{$ = \, p(y_0 | \mathbf{x}_0, \mathbf{w})$} \, p(\mathbf{y} | X, \mathbf{w}) \, d \mathbf{y}}^\text{$ = \, p(y_0 | \mathbf{x}_0, \mathbf{w})$}\end{align*}
+</div>
+
 and so we could rewrite $(7)$ initially as:
 
-$$
-\mathbb{E}[(y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 | X, \mathbf{x}_0] = \int_{\mathbb{R}}^{} (y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 \, p(y_0 | \mathbf{x}_0, \mathbf{w}) \, dy_0
-$$
+<div class="math">
+\begin{align*}
+\mathbb{E}[(y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 | X, \mathbf{x}_0] = \int_{\mathbb{R}}^{} (y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 \, p(y_0 | \mathbf{x}_0, \mathbf{w}) \, dy_0\end{align*}
+</div>
 
 before substituting in the above result.
 
@@ -748,14 +779,22 @@ The upshot is that the regularization term $\lambda$ in the ridge regression sol
 
 In particular it is shown that:
 
-$$\mathbf{w}_{RR} = VS_{\lambda}^{-1}U^T \mathbf{y}$$
-
+<div class="math">
+\begin{align*}
+\mathbf{w}_{RR} = VS_{\lambda}^{-1}U^T \mathbf{y}
+\end{align*}
+</div>
 where:
 <div class="bullet"> 
 <li> $S$ is a matrix holding the singular values (i.e. the square roots of the eigenvalues) of $X$ </li>
 <li> $S_{\lambda}^{-1}$ refers to a diagonal matrix with each term of the form:
 
-$$\dfrac{S_{ii}}{\lambda + S^2_{ii}}$$
+<div class="math">
+\begin{align*}
+\dfrac{S_{ii}}{\lambda + S^2_{ii}}
+\end{align*}
+</div>
+
 </li>
 <li> $S$ is a $d$ by $d$ matrix </li>
 </div>
