@@ -322,7 +322,7 @@ This trade-off between bias and variance is discussed next.
 <hr class="with-margin">
 <h4 class="header" id="bv">Bias-variance tradeoff</h4>
 
-We now move onto discussing one of the fundamental results in machine learning from a frequentist viewpoint, the bias-variance tradeoff. So far we have talked about the terms bias and variance a little loosely, now we put them on a firmer footing through analysing the generalization error for new data. The ability of a model to generalize to unseen data is of primary importance in machine learning and in order to do this we must minimise overfitting.
+We now move onto discussing one of the fundamental results in machine learning from a frequentist viewpoint, the bias-variance tradeoff. So far we have talked about the terms bias and variance a little loosely, now we put them on a firmer footing through analysing the generalization error for new data, which is of primary importance in machine learning.
 
 The concept of overfitting is linked to model complexity where the loose relationship is that more complex models are more prone to overfitting. The figure below shows a typical case of this phenomena.
 
@@ -332,15 +332,15 @@ The concept of overfitting is linked to model complexity where the loose relatio
 <em class="figure">Bias variance tradeoff</em>
 
 It is worth saying that the problems with maximum likelihood estimation do not arise when we marginalize
-over parameters in a Bayesian setting, however this is not discussed in this post and the reader is referred to [PRML](#prml) [3.2].
+over parameters in a Bayesian setting, however we do not discuss this here and the reader is referred to [PRML](#prml) [3.2] instead.
 
 Recall that in linking OLS to MLE and RR to MAP we have that:
 <div class="bullet"> 
-<li> Least squares solution: unbiased, but potentially high variance </li>
-<li> Ridge regression solution: biased, but lower variance than LS</li>
+<li> <strong>Least squares solution:</strong> unbiased, but potentially high variance. </li>
+<li> <strong>Ridge regression solution:</strong> biased, but lower variance than LS.</li>
 </div>
 <br>
-To analyse which of these is preferable we note that ultimately the true thing we care about the generalization error on unseen data. In order to start this analysis we consider the prediction for a single new test prediction: $(\mathbf{x}_0, y_0)$.
+To analyse which of these is preferable we note that ultimately the thing we care about is the generalization error on unseen data. To start the analysis we consider the prediction for a single new test prediction: $(\mathbf{x}_0, y_0)$.
 
 <div class="bullet"> 
 <li> <strong>Least squares predicts:</strong> $\mathbf{x}_0^T \mathbf{w}_{LS}$ </li>
@@ -354,7 +354,16 @@ We can calculate the expected squared error of this prediction as:
 \mathbb{E}[(y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 \mid X,\mathbf{x}_0] = \int_{\mathbb{R}}^{} \int_{\mathbb{R^n}}^{} (y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2 \, \underbrace{p(\mathbf{y} \mid X, \mathbf{w})}_\text{$ \mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right) $} \, \underbrace{p(y_0 \mid \mathbf{x}_0, \mathbf{w})}_\text{$ y_0 \sim \mathcal{N}\left(\mathbf{x}_0^T \mathbf{w}, \sigma^{2} \right)$} \, d\mathbf{y} \, dy_0 \tag{7}
 \end{align*}
 </div>
-where $\mathbf{\hat{w}}$ is either $\mathbf{w}\_{LS}$ or $\mathbf{w}\_{RR}$.
+where $\mathbf{\hat{w}}$ is either $\mathbf{w}\_{LS}$ or $\mathbf{w}\_{RR}$. 
+
+The sidebar below provides more explanation of the technical details, but essentially the above is saying:
+<div class="bullet"> 
+<ol> 1. If we know the data $X$ and $\mathbf{x}_0$ and <i>assume</i> there is some true underlying $\mathbf{w}$ (this is a frequentist assumption). </ol>
+<ol> 2. Generate $\mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right)$ and approximate the true $\mathbf{w}$ with $\mathbf{\hat{w}} = \mathbf{w}_{LS}$ or  $\mathbf{\hat{w}} = \mathbf{w}_{RR}.$ </ol>
+<ol> 3. Predict the true target $y_0$ as $\approx \mathbf{x}_0^T \mathbf{\hat{w}}.$ </ol>
+<ol> <strong>4. Ask the question: </strong> what is the squared error of the prediction? </ol>
+</div>
+<br>
 
 <blockquote class="tip">
 <strong>Sidebar on the above integral</strong>
@@ -384,14 +393,14 @@ g(y_0) = (y_0 - \mathbf{x}_0^T\mathbf{\hat{w}})^2
 \end{align*}
 </div>
 
-which is just some function of the random variable $Y_0$. The probability distribution is:
+which is just some function of the random variable $Y_0$. The probability distribution $p_{Y_0 \mid A}(y_0) $ is:
 
 <div class="math">
 \begin{align*}
 p_{Y_0 \mid A}(y_0) = \overbrace{\int_{\mathbb{R^n}}^{} \underbrace{p(y_0 \mid \mathbf{y} , \mathbf{x}_0, \mathbf{w})}_\text{$ = \, p(y_0 | \mathbf{x}_0, \mathbf{w})$} \, p(\mathbf{y} \mid X, \mathbf{w}) \, d \mathbf{y}}^\text{$ = \, p(y_0 \mid \mathbf{x}_0, \mathbf{w})$}\end{align*}
 </div>
 
-and so we could rewrite $(7)$ initially as:
+and so we can rewrite $(7)$ initially as:
 
 <div class="math">
 \begin{align*}
@@ -400,20 +409,9 @@ and so we could rewrite $(7)$ initially as:
 
 before substituting in the above result.
 
-The above is essentially saying:
-<br>
-<br>
-* If we know the data $X$ and $\mathbf{x}_0$ and assume there is some true underlying $\mathbf{w}$ (frequentist assumption)
-<br>
-* Generate $\mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right)$ and approximate $\mathbf{w}$ with $\mathbf{\hat{w}} = \mathbf{w}_{LS}$ or  $\mathbf{\hat{w}} = \mathbf{w}_{RR}$
-<br>
-* Predict the true target $y_0$ as $\approx \mathbf{x}_0^T \mathbf{\hat{w}}$
-<br>
-* What is the squared error of the prediction?
-
 </blockquote>
 
-The LHS of $(7)$ can be calculated as:
+The LHS of $(7)$ can be written as:
 
 <div class="math">
 \begin{align*}
@@ -426,23 +424,23 @@ The LHS of $(7)$ can be calculated as:
 
 where the above is derived with the help of a few results:
 <div class="bullet"> 
-<li> $\mathbb{E}\left[y_{0} \mathbf{\hat{w}}\right]=\mathbb{E}\left[y_{0}\right] \mathbb{E}[\mathbf{\hat{w}}]$ by independence </li>
-<li> $\mathbb{E}\left[y_{0}^{2}\right]=\sigma^{2}+(\mathbf{x}\_0^{T} \mathbf{w})^{2}$ by $y_{0} \sim N\left(\mathbf{x}\_0^{T} \mathbf{w}, \sigma^{2}\right)$ and <a class="reference external" href="{{page.url}}#prob_fact1">prob fact 1</a> </li>
-<li> $\mathbb{E}\left[\mathbf{\hat{w}} \mathbf{\hat{w}}^{T}\right]=\operatorname{Var}[\mathbf{\hat{w}}]+\mathbb{E}[\mathbf{\hat{w}}] \mathbb{E}[\mathbf{\hat{w}}]^{T}$ from <a class="reference external" href="{{page.url}}#prob_fact2">prob fact 2</a> </li>
+<li> $\mathbb{E}\left[y_{0} \mathbf{\hat{w}}\right]=\mathbb{E}\left[y_{0}\right] \mathbb{E}[\mathbf{\hat{w}}]$ by independence. </li>
+<li> $\mathbb{E}\left[y_{0}^{2}\right]=\sigma^{2}+(\mathbf{x}\_0^{T} \mathbf{w})^{2}$ by $y_{0} \sim N\left(\mathbf{x}\_0^{T} \mathbf{w}, \sigma^{2}\right)$ and <a class="reference external" href="{{page.url}}#prob_fact1">prob fact 1</a>. </li>
+<li> $\mathbb{E}\left[\mathbf{\hat{w}} \mathbf{\hat{w}}^{T}\right]=\operatorname{Var}[\mathbf{\hat{w}}]+\mathbb{E}[\mathbf{\hat{w}}] \mathbb{E}[\mathbf{\hat{w}}]^{T}$ from <a class="reference external" href="{{page.url}}#prob_fact2">prob fact 2</a>. </li>
 </div>
 <br>
 ##### Comment
 
 We have thus decomposed the prediction error into 3 main components:
 <div class="bullet"> 
-<ol> 1. Measurement noise – we can’t control this given the model. </ol>
-<ol> 2. Model bias – how close to the solution we expect to be on average.</ol>
-<ol> 3. Model variance – how sensitive the solution is to the data.</ol>
+<ol> 1. <strong>Measurement noise</strong> – we can’t control this given the model. </ol>
+<ol> 2. <strong>Model bias</strong> – how close to the solution we expect to be on average.</ol>
+<ol> 3. <strong>Model variance</strong> – how sensitive the solution is to the data.</ol>
 </div>
 <br>
-The above analysis is more general (see [ESL](#esl) [7.3]) than the linear regression case though it's usually not possible to get nice equations for the tradeoff.
+The above analysis is more general (see [ESL](#esl) [7.3]) than the linear regression case though it's usually not possible to get nice equations for the trade-off.
 
-In the case of OLS and RR we have expressions for $\mathbb{E}[\mathbf{\hat{w}}]$ and $\operatorname{Var}[\mathbf{\hat{w}}]$ and so in theory would be able to compare the generalization error if we knew the true $\mathbf{w}$. In reality we don't and so techniques such as cross-validation are used instead to estimate the generalization error.
+In the case of OLS and RR we have expressions for $\mathbb{E}[\mathbf{\hat{w}}]$ and $\operatorname{Var}[\mathbf{\hat{w}}]$ and so in theory would be able to compare the generalization error <strong>if</strong> we knew the true $\mathbf{w}$. In reality we don't and so techniques such as cross-validation are used instead to estimate the generalization error.
 
 When building machine learning predictive models understanding whether you have a bias or a variance problem is critical for deciding what action you should take.
 
@@ -469,7 +467,6 @@ when $A$ is symmetric ($A^T = A$).
 
 <a name="mc63"></a>
 ##### 63
-This result is given as:
 
 <div class="math">
 \begin{align*}
@@ -516,7 +513,7 @@ The trace of a matrix is the sum of its diagonal entries and so the trace of a s
 \end{align*}
 </div>
 
-which is called invariance under cyclical permutations of matrix products. This allows to rewrite the scalar (yes, it's a scalar!):
+which is called invariance under cyclical permutations of matrix products. This allows to rewrite the scalar (yes, it's a scalar):
 
 <div class="math">
 \begin{align*}
@@ -579,7 +576,7 @@ If $y \sim N(\mu, \Sigma)$ then:
 <a name="invert_X"></a>
 ##### When does $(X^T X)^{-1}$ exist?
 
-When $X^T X$ is full rank. This loosely means that $X$, $n \times (d+1)$, has at least $d+1$ linearly independent rows and so any point in $\mathbb{R}^{d+1}$ can be reached by a weighted combination of $d+1$ rows of $X$.
+When $X^T X$ is full rank. This loosely means that $X$, $n \times (d+1)$ dimensional, has at least $d+1$ linearly independent rows and so any point in $\mathbb{R}^{d+1}$ can be reached by a weighted combination of $d+1$ rows of $X$.
 
 <a name="notation"></a>
 <hr class="with-margin">
@@ -754,7 +751,8 @@ The solutions are:
 
 <div class="math">
 \begin{align*}
-\mathbb{E}\left[\mathbf{w}_{RR}\right]=\left(\lambda I+X^{T} X\right)^{-1} X^{T} X \mathbf{w}, \quad \operatorname{Var}\left[\mathbf{w}_{RR}\right]=\sigma^{2} Z\left(X^{T} X\right)^{-1} Z^{T}
+\mathbb{E}\left[\mathbf{w}_{RR}\right] &= \left(\lambda I+X^{T} X\right)^{-1} X^{T} X \mathbf{w} \\ 
+\operatorname{Var}\left[\mathbf{w}_{RR}\right] &= \sigma^{2} Z\left(X^{T} X\right)^{-1} Z^{T}
 \end{align*}
 </div>
 
@@ -774,7 +772,7 @@ In particular we write the data matrix $X$ as $X = USV^T$ with:
 <br>
 We give just a sketch summary of the result here and the reader is referred to [ESL](#esl) [3.4.1] for more details.
 
-The upshot is that the regularization term $\lambda$ in the ridge regression solution acts as a sort of protection to stop us dividing by really small values when calculating $\mathbf{w}\_{RR}$. This is loosely analogous to what we sometimes do to avoid division by 0 errors or blow-ups by adding a term, $\epsilon$, to the denominator $\frac{1}{x + \epsilon}$.
+The upshot is that the regularization term $\lambda$ in the ridge regression solution acts as a sort of protection to stop us dividing by really small values when calculating $\mathbf{w}\_{RR}$. This is loosely analogous to what we sometimes do to avoid division by 0 errors by adding a term, $\epsilon$, to the denominator $\frac{1}{x + \epsilon}$.
 
 In particular it is shown that:
 
