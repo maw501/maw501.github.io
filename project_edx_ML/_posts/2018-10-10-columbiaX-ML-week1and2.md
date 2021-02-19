@@ -340,14 +340,24 @@ Recall that in linking OLS to MLE and RR to MAP we have that:
 <li> <strong>Ridge regression solution:</strong> biased, but lower variance than LS.</li>
 </div>
 <br>
-To analyse which of these is preferable we note that ultimately the thing we care about is the generalization error on unseen data. To start the analysis we consider the prediction for a single new test prediction: $(\mathbf{x}_0, y_0)$.
+To analyse which of these is preferable we note that ultimately the thing we care about is the generalization error on unseen data. To start the analysis we consider the prediction for a single new test prediction: $(\mathbf{x}_0, y_0)$ and note that:
 
 <div class="bullet"> 
 <li> <strong>Least squares predicts:</strong> $\mathbf{x}_0^T \mathbf{w}_{LS}$ </li>
 <li> <strong>Ridge regression predicts:</strong> $\mathbf{x}_0^T \mathbf{w}_{RR}$ </li>
 </div>
 <br>
-We can calculate the expected squared error of this prediction as:
+
+Now consider the following process:
+
+<div class="bullet"> 
+<ol> 1. Given data $X$ and $\mathbf{x}_0$, <i>assume</i> there is some true underlying $\mathbf{w}$ (this is a frequentist assumption). </ol>
+<ol> 2. Generate $\mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right)$ and approximate the true $\mathbf{w}$ with $\mathbf{\hat{w}} = \mathbf{w}_{LS}$ or  $\mathbf{\hat{w}} = \mathbf{w}_{RR}.$ </ol>
+<ol> 3. Predict the true target $y_0$ as $\approx \mathbf{x}_0^T \mathbf{\hat{w}}.$ </ol>
+<ol> <strong>4. Ask the question: </strong> what is the squared error of the prediction? </ol>
+</div>
+
+Under the above assumptions we can calculate the expected squared error of this prediction as:
 
 <div class="math">
 \begin{align*}
@@ -355,15 +365,6 @@ We can calculate the expected squared error of this prediction as:
 \end{align*}
 </div>
 where $\mathbf{\hat{w}}$ is either $\mathbf{w}\_{LS}$ or $\mathbf{w}\_{RR}$. 
-
-The sidebar below provides more explanation of the technical details, but essentially the above is saying:
-<div class="bullet"> 
-<ol> 1. If we know the data $X$ and $\mathbf{x}_0$ and <i>assume</i> there is some true underlying $\mathbf{w}$ (this is a frequentist assumption). </ol>
-<ol> 2. Generate $\mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right)$ and approximate the true $\mathbf{w}$ with $\mathbf{\hat{w}} = \mathbf{w}_{LS}$ or  $\mathbf{\hat{w}} = \mathbf{w}_{RR}.$ </ol>
-<ol> 3. Predict the true target $y_0$ as $\approx \mathbf{x}_0^T \mathbf{\hat{w}}.$ </ol>
-<ol> <strong>4. Ask the question: </strong> what is the squared error of the prediction? </ol>
-</div>
-<br>
 
 <blockquote class="tip">
 <strong>Sidebar on the above integral</strong>
@@ -425,7 +426,7 @@ The LHS of $(7)$ can be written as:
 where the above is derived with the help of a few results:
 <div class="bullet"> 
 <li> $\mathbb{E}\left[y_{0} \mathbf{\hat{w}}\right]=\mathbb{E}\left[y_{0}\right] \mathbb{E}[\mathbf{\hat{w}}]$ by independence. </li>
-<li> $\mathbb{E}\left[y_{0}^{2}\right]=\sigma^{2}+(\mathbf{x}\_0^{T} \mathbf{w})^{2}$ by $y_{0} \sim N\left(\mathbf{x}\_0^{T} \mathbf{w}, \sigma^{2}\right)$ and <a class="reference external" href="{{page.url}}#prob_fact1">prob fact 1</a>. </li>
+<li> $\mathbb{E}\left[y_{0}^{2}\right]=\sigma^{2}+(\mathbf{x}_0^{T} \mathbf{w})^{2}$ by $y_{0} \sim N\left(\mathbf{x}_0^{T} \mathbf{w}, \sigma^{2}\right)$ and <a class="reference external" href="{{page.url}}#prob_fact1">prob fact 1</a>. </li>
 <li> $\mathbb{E}\left[\mathbf{\hat{w}} \mathbf{\hat{w}}^{T}\right]=\operatorname{Var}[\mathbf{\hat{w}}]+\mathbb{E}[\mathbf{\hat{w}}] \mathbb{E}[\mathbf{\hat{w}}]^{T}$ from <a class="reference external" href="{{page.url}}#prob_fact2">prob fact 2</a>. </li>
 </div>
 <br>
