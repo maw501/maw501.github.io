@@ -53,9 +53,11 @@ This opens up a range of possibilities, for instance, we can now ask questions s
 <br>
 Before we start it helps to recall Bayes' rule:
 
-$$
+<div class="math">
+\begin{align*}
 p(\mathbf{w} | \mathbf{y}, X) = \dfrac{p(\mathbf{y} | \mathbf{w}, X) p(\mathbf{w})}{p(\mathbf{y} | X)}
-$$
+\end{align*}
+</div>
 
 where for Bayesian linear regression we assume:
 <br>
@@ -87,23 +89,31 @@ For the denominator we need to calculate the probability of the data independent
 
 We don't actually know what the probability of the data independent of any parameters is and so the tactic used to calculate $p(\mathbf{y} \| X)$ is to take the numerator (which contains the model assumptions) and integrate out any parameters. We do this by noting that the denominator can be expressed as:
 
-$$
+<div class="math">
+\begin{align*}
 p(\mathbf{y} | X) = \int_{\mathbb{R}^{d}} p(\mathbf{y} | \mathbf{w}, X) \, p(\mathbf{w}) \, d\mathbf{w}
-$$
+\end{align*}
+</div>
 
 Unfortunately this term $p(\mathbf{y} \| X)$ is usually not calculable in Bayesian analysis due to [the curse of dimensionality](https://en.wikipedia.org/wiki/Curse_of_dimensionality). However, for Bayesian linear regression under the assumptions we have made for the likelihood and prior we are able to calculate an analytic solution.
 
 It is [shown](#post_blr) in the appendix that the posterior is:
 
-$$
+<div class="math">
+\begin{align*}
 p(\mathbf{w} | \mathbf{y}, X) = \mathcal{N}(\mathbf{w} | \boldsymbol{\mu}, \Sigma)
-$$
+\end{align*}
+</div>
 
 with
 
 <a name="mu_sig_post"></a>
 
-$$ \boldsymbol{\mu} = (\lambda \sigma^{2} I + X^T X)^{-1} X^T \mathbf{y} \,\, , \,\, \Sigma = (\lambda I + \sigma^{-2} X^T X)^{-1}.$$
+<div class="math">
+\begin{align*}
+\boldsymbol{\mu} = (\lambda \sigma^{2} I + X^T X)^{-1} X^T \mathbf{y} \,\, , \,\, \Sigma = (\lambda I + \sigma^{-2} X^T X)^{-1}.
+\end{align*}
+</div>
 
 And so the posterior distribution is also a Gaussian distribution with dimensionality equal to the number of parameters in $\mathbf{w}$.
 
@@ -214,10 +224,12 @@ We then integrate over all possible values of $\mathbf{w}$. This integrating ove
 In order to obtain the predictive equations for the posterior predictive distribution, $p(y_0 \| \mathbf{x}_0, \mathbf{w})$, we first recall the form of the likelihood and posterior from above$:
 
 
-$$
+<div class="math">
+\begin{align*}
 \underbrace{p\left(y_{0} | \mathbf{x}_0, \mathbf{w}\right) = \mathcal{N}\left(y_{0} | \mathbf{x}_0^{T} \mathbf{w}, \sigma^{2}\right)}_\text{likelihood}, \, \,
 \underbrace{p(\mathbf{w} | \mathbf{y}, X) = \mathcal{N}(\mathbf{w} | \boldsymbol{\mu}, \Sigma)}_\text{posterior}
-$$
+\end{align*}
+</div>
 
 where we know the values of $\boldsymbol{\mu}$ and $\Sigma)$ from [above](#mu_sig_post).
 
@@ -240,16 +252,22 @@ We can see that the expected value of the prediction we make is the same as for 
 <br>
 In the last two posts we have derived results based upon the assumption we made about the likelihood:
 
-$$\mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right)$$
+<div class="math">
+\begin{align*}
+\mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right)
+\end{align*}
+</div>
 
 without talking about how to estimate $\sigma^2$. It's actually simple to do this as the solution to $\mathbf{w}_{ML}$ doesn't depend on $\sigma^{2}$ and recalling that the prediction we make from maximum likelihood is $X\mathbf{w}_{ML}$.
 <br>
 <br>
 We can thus calculate $\sigma^{2}$ as:
 
-$$
+<div class="math">
+\begin{align*}
 \sigma^{2} = \frac{1}{n} \sum_{i=1}^{n}(y_i - \mathbf{x}_i \mathbf{w}_{ML})^2
-$$
+\end{align*}
+</div>
 
 which is essentially the sample variance calculated for the residuals.
 </blockquote>
@@ -291,13 +309,19 @@ We will do the above in the context of Bayesian linear regression.
 ##### Sequentially updating the posterior
 In order to sequentially learn the posterior distribution we need a way to sequentially learn the parameter estimates $\boldsymbol{\mu}$ and $\Sigma$ for the Bayesian linear regression posterior. Recall the posterior is given by:
 
-$$
+<div class="math">
+\begin{align*}
 p(\mathbf{w} | \mathbf{y}, X) = \mathcal{N}(\mathbf{w} | \boldsymbol{\mu}, \Sigma)
-$$
+\end{align*}
+</div>
 
 with
 
-$$ \boldsymbol{\mu} = (\lambda \sigma^{2} I + \underbrace{X^T X}_\text{$(d \times n) \times (n \times d)$})^{-1} \underbrace{X^T \mathbf{y}}_\text{$(d \times n) \times (n \times 1)$} \,\, , \,\, \Sigma = (\lambda I + \sigma^{-2} \underbrace{X^T X}_\text{$(d \times n) \times (n \times d)$})^{-1}$$
+<div class="math">
+\begin{align*}
+\boldsymbol{\mu} = (\lambda \sigma^{2} I + \underbrace{X^T X}_\text{$(d \times n) \times (n \times d)$})^{-1} \underbrace{X^T \mathbf{y}}_\text{$(d \times n) \times (n \times 1)$} \,\, , \,\, \Sigma = (\lambda I + \sigma^{-2} \underbrace{X^T X}_\text{$(d \times n) \times (n \times d)$})^{-1}
+\end{align*}
+</div>
 
 where in the above we draw attention to the dimensions of the parameters $\boldsymbol{\mu}$ and $\Sigma$. This is to highlight that their final dimensionality does not involve $n$, the number of observations. This, and the fact that matrix multiplication can be written in terms of [outer products](#mmult_add) in an additive manner means we are able to decompose the parameter update into 2 steps:
 
@@ -370,9 +394,11 @@ Ideally we would like some way to perform feature selection in a way that is lea
 
 Quite often in machine learning we can think of an optimization function loss as composing of two parts, a term which measures how well we are fitting the data and a penalty term. This can be written as:
 
-$$
+<div class="math">
+\begin{align*}
 \mathcal{L}=\underbrace{\sum_{i=1}^{n}\left(y_{i}-f\left(\mathbf{x}_{i}; \mathbf{w}\right)\right)^{2}}_\text{goodness of fit term} + \underbrace{\lambda\| \mathbf{w}\|^{2}}_\text{penalty term}
-$$
+\end{align*}
+</div>
 
 where the goal is to minimize $\mathcal{L}$. $f$ is a function that is predicting on the data with parameters $\mathbf{w}$ and we are using a sum of squares goodness of fit term. For ridge regression we made the prediction as $f(\mathbf{x}_{i} ; \mathbf{w}) = \mathbf{x}\_{i}^T \mathbf{w}$ and $\lambda \|\| \mathbf{w} \|\|^{2}$ is called a quadratic penalty term.
 
@@ -397,9 +423,11 @@ To achieve sparsity we turn instead to linear penalties, which, faced with a few
 
 To get an intuition about how linear penalties encourage sparsity a common chart shown is the one below. In order to understand this it is helpful to [write](#ridge_obj) the objective term for ridge regression (we can rewrite the lasso objective term similarly) as:
 
-$$
+<div class="math">
+\begin{align*}
 \|\mathbf{y} - X \mathbf{w} \|^{2}+\lambda\|\mathbf{w}\|^{2} = \underbrace{\left(\mathbf{w}-\mathbf{w}_{LS}\right)^{T}\left(X^{T} X\right)\left(\mathbf{w}-\mathbf{w}_{LS}\right)}_\text{level sets in red} + \underbrace{\lambda \mathbf{w}^{T} \mathbf{w}}_\text{level sets in blue} + \mathrm{const.} \text { w.r.t. } \mathbf{w}
-$$
+\end{align*}
+</div>
 
 where we are using the idea of level sets - set of points in the domain of a function where the function is constant. Points where both the red and blue curves intersect are viable solutions to the optimization problem - it is worth spending time to understand these charts are they give strong intuition into the objective function.
 
@@ -422,9 +450,11 @@ The geometric reasoning behind why linear penalties encourage sparsity is that d
 
 The ideas of quadratic and linear penalty terms can be generalized to any power $p$ of penalty, called the [$l_p$ norm](https://en.wikipedia.org/wiki/Norm_(mathematics)#p-norm) of a vector. That is, we can consider penalty terms of the form $\lambda \|\| \mathbf{w} \|\|^p$ where:
 
-$$
+<div class="math">
+\begin{align*}
 || \mathbf{w} ||^p = \left(\sum_{j=1}^{d}\left|w_{j}\right|^{p}\right)^{\frac{1}{p}} \hspace{2cm} \text{for $0<p \leq \infty$}
-$$
+\end{align*}
+</div>
 
 The norm of a vector in a loose sense can be thought of as some measure of its length and hence cannot be negative.
 
@@ -459,7 +489,8 @@ To see that we can compute matrix multiplication sequentially consider a matrix 
 
 Let's say $A$ is given by:
 
-$$
+<div class="math">
+\begin{align*}
 A =
 \left[
 \begin{array}{cc}
@@ -468,11 +499,13 @@ A =
 {3} & {4}
 \end{array}
 \right]
-$$
+\end{align*}
+</div>
 
 and so
 
-$$
+<div class="math">
+\begin{align*}
 A^T A =
 \left[
 \begin{array}{cc}
@@ -480,7 +513,8 @@ A^T A =
 {17} & {26} \\
 \end{array}
 \right]
-$$
+\end{align*}
+</div>
 
 This is exactly the same as performing:
 
@@ -554,30 +588,38 @@ Due to proportionality we are able to multiply and divide by any terms that don'
 
 Comparing the terms from (A1) and (A2) that are quadratic and linear in $\mathbf{w}$ we might be tempted to set:
 
-$$
+<div class="math">
+\begin{align*}
 \Sigma^{-1}=\left(\lambda I+\sigma^{-2} X^{T} X \right), \, \, \,
 \Sigma^{-1} \boldsymbol{\mu} = X^{T} \mathbf{y} \sigma^{-2} \tag{A3}
-$$
+\end{align*}
+</div>
 
 in (A2). If we did this we only then need to decide what the normalising constant, $Z$, should be in order to match (A1) - and we can set it to anything we like as long as it doesn't involve $\mathbf{w}$.
 
 Looking at (A1) to see what we are missing in (A2) implies we set:
 
-$$
+<div class="math">
+\begin{align*}
 Z=(2 \pi)^{\frac{d}{2}}|\Sigma|^{\frac{1}{2}} \underbrace{\exp ({\frac{1}{2} \boldsymbol{\mu}^{T} \Sigma^{-1}  \boldsymbol{\mu}}}_\text{missing in (A2)}) \tag{A4}
-$$
+\end{align*}
+</div>
 
 The above leads directly to the Bayesian posterior as
 
-$$
+<div class="math">
+\begin{align*}
 p(\mathbf{w} | \mathbf{y}, X) = \mathcal{N}(\mathbf{w} | \boldsymbol{\mu}, \Sigma)
-$$
+\end{align*}
+</div>
 
 with
 
-$$ \boldsymbol{\mu} = (\lambda \sigma^{2} I + X^T X)^{-1} X^T \mathbf{y}, \,\,\,\, \Sigma = (\lambda I + \sigma^{-2} X^T X)^{-1} \tag{A5}
-
-$$
+<div class="math">
+\begin{align*}
+\boldsymbol{\mu} = (\lambda \sigma^{2} I + X^T X)^{-1} X^T \mathbf{y}, \,\,\,\, \Sigma = (\lambda I + \sigma^{-2} X^T X)^{-1} \tag{A5}
+\end{align*}
+</div>
 
 where we manipulate $\boldsymbol{\mu}$ from (A3) slightly to get the above form.
 
@@ -586,15 +628,19 @@ where we manipulate $\boldsymbol{\mu}$ from (A3) slightly to get the above form.
 
 Simply expand:
 
-$$
+<div class="math">
+\begin{align*}
 \left(\mathbf{w}-\mathbf{w}_{LS}\right)^{T}\left(X^{T} X\right)\left(\mathbf{w}-\mathbf{w}_{LS}\right)
-$$
+\end{align*}
+</div>
 
 using:
 
-$$
+<div class="math">
+\begin{align*}
 \mathbf{w}_{LS} = (X^T X)X^T \mathbf{y}
-$$
+\end{align*}
+</div>
 
 and fact that $X^T X$ is symmetric.
 
