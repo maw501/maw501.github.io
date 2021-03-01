@@ -42,9 +42,11 @@ The net result of these omissions and extensions leaves the appendix comparative
 
 Logistic regression, despite its name, is an algorithm that can be used for binary and multi-class classification. There are several popular ways of motivating the introduction of logistic regression and we do so here by continuing from [last week's](/../project_edx_ml/2018/10/16/columbiaX-ML-week4#perceptron) discussion of the perceptron which attempted to fit a hyperplane to data and then classify an example using:
 
-$$
+<div class="math">
+\begin{align*}
 f(\mathbf{x})=\operatorname{sign}\left(w_{0}+\mathbf{x}^{T} \mathbf{w}\right).
-$$
+\end{align*}
+</div>
 
 Where we recall that $\mathbf{x}^{T} \mathbf{w}+w_{0} = 0$ defines the equation of the hyperplane.
 
@@ -72,9 +74,11 @@ We also
 <a class="reference external" href="/../project_edx_ml/2018/10/16/columbiaX-ML-week4#lda_equation">showed</a>
  that evaluating $(\text{R}1)$ led to, for LDA, a decision based on:
 
-$$
+<div class="math">
+\begin{align*}
 f(\mathbf{x})=\operatorname{sign}\left(w_{0}+\mathbf{x}^{T} \mathbf{w}\right).
-$$
+\end{align*}
+</div>
 
 where we had analytic expressions for $w_0$ and $\mathbf{w}$.
 </blockquote>
@@ -140,9 +144,11 @@ where the goal is to find the optimal weight vector $\mathbf{w}\_{ML}$ that maxi
 
 However, unlike linear regression, this cannot be solve analytically, and so we need to use an iterative algorithm like gradient ascent. Finding the derivative of the sigmoid function and its log is straightforward and is given in the [appendix](#sig_deriv), here we just state the results:
 
-$$
+<div class="math">
+\begin{align*}
 \nabla_{z} \sigma(z) = \sigma(z)(1-\sigma(z)), \,\,\,\, \nabla_z \, \ln \sigma(z) = \frac{1}{1 + e^z}
-$$
+\end{align*}
+</div>
 
 which will be used to calculate $\nabla_{\mathbf{w}} \mathcal{L}$.
 
@@ -163,10 +169,11 @@ We now present a simple form of the logistic regression algorithm with gradient 
 <br>
 &emsp; &emsp; Update:
 
-$$
+<div class="math">
+\begin{align*}
 \mathbf{w}^{(t+1)}=\mathbf{w}^{(t)}+\eta \underbrace{\sum_{i=1}^{n}\overbrace{\left(1-\sigma_{i}\left(y_{i} \cdot \mathbf{w}\right)\right)}^\text{prob of misclassification} y_{i} \mathbf{x}_{i}}_\text{$= \, \nabla_{\mathbf{w}} \mathcal{L}$} \tag{LRGD}
-$$
-
+\end{align*}
+</div>
 </blockquote>
 
 ##### Link to perceptron
@@ -215,9 +222,11 @@ As we have mentioned above the natural answer to this issue is to modify the obj
 
 The objective function for logistic regression now becomes:
 
-$$
+<div class="math">
+\begin{align*}
 \mathbf{w}_{MAP}=\arg \max_{\mathbf{w}} \sum_{i=1}^{n} \ln \sigma_{i}\left(y_{i} \cdot \mathbf{w}\right)-\lambda \mathbf{w}^{T} \mathbf{w} \tag{2}
-$$
+\end{align*}
+</div>
 
 where the maximization problem is now seeking the [MAP estimate](https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation) for the weights.
 
@@ -269,9 +278,11 @@ Intuitively, this means $K$ satisfies the properties of a covariance matrix, tho
 
 Based on [Mercer's theorem](#mercer) if $\kappa$ satisfies the above definition then we have that:
 
-$$
+<div class="math">
+\begin{align*}
 \kappa\left(\mathbf{x}_{i}, \mathbf{x}_{j}\right)=\phi\left(\mathbf{x}_{i}\right)^{T} \phi\left(\mathbf{x}_{j}\right). \tag{3}
-$$
+\end{align*}
+</div>
 
 In words the above is saying that there are certain functions, $\kappa$ that are the equivalent to computing the dot product between data-points in some feature space $\phi : \mathbb{R}^d \rightarrow \mathbb{R}^D$. The reason this is interesting and of use is that computing $K$ using $\kappa$ is often much more efficient than using $\phi$ due to what is commonly referred to as the kernel trick. Given the importance and amount of times this crops up I have written a [separate post](/../posts/2018/10/19/The-kernel-trick) on it.
 
@@ -288,9 +299,11 @@ In order to take advantage of kernels it turns out we can actually reformulate m
 
 For example, in [PRML [6.1]](#prml), it is shown that we can rewrite the prediction from ridge regression for a new test point $\mathbf{x}\_{\star}$, $y\_{\star}$, as:
 
-$$
+<div class="math">
+\begin{align*}
 y_{\star} = \underbrace{\mathbf{k}_{\star}^T}_\text{$1 \times n$}\underbrace{(K + \lambda I)^{-1}}_\text{$n \times n$}\underbrace{\textbf{y}}_\text{$n \times 1$} \tag{4}
-$$
+\end{align*}
+</div>
 
 where $\mathbf{k}\_{\star} = \kappa(\mathbf{x}\_{\star}, X)$ is the vector with the kernel function computed for a single test point against all the training data and $K_\{i j} = \kappa\left(\mathbf{x}_i, \mathbf{x}_j\right)$ is an $n \times n$ matrix with the kernel function evaluated for all the training data.
 
@@ -300,9 +313,11 @@ Why would we do this?
 
 Consider the prediction from ridge regression if we instead computed a feature expansion $\phi$ of the data:
 
-$$
+<div class="math">
+\begin{align*}
 y_{\star} = \mathbf{w}^T \phi(\mathbf{x}_{\star}).
-$$
+\end{align*}
+</div>
 
 Using kernels avoids the explicit introduction of the feature transformation, $\phi$, which means we can implicitly use feature spaces of high, even infinite, dimensionality. Of course, this means we pay a price in terms of inverting a $n \times n$ matrix vs. one of $d \times d$ which is required in the solution for the solution to ridge regression, $\mathbf{w}\_{RR}$. This solution, $\mathbf{w}\_{RR}$, is covered in [weeks 1 and 2](/../project_edx_ml/2018/10/10/columbiaX-ML-week1and2#rr_map) of the course.
 
@@ -314,10 +329,11 @@ The field of kernels and the types we can use to model the data are many and var
 
 There are many kernels that can describe different classes of functions, including to encode properties such as periodicity. In this post we will restrict ourselves to the most common kernel which we merely state (as it's extensively written about elsewhere), the [radial basis function (or Gaussian) kernel](https://en.wikipedia.org/wiki/Radial_basis_function_kernel):
 
-$$
+<div class="math">
+\begin{align*}
 \kappa(\mathbf{x_i}, \mathbf{x_j}) = \sigma^{2} \exp (-\frac{ \| \mathbf{x_i} - \mathbf{x_j} \|^{2}}{2 l^{2}}) \tag{5}
-$$
-
+\end{align*}
+</div>
 with hyperparameters $\sigma$ and $l$.
 
 <hr class="with-margin">
@@ -354,9 +370,11 @@ It's actually possible to write the equations for logistic regression more compa
 ###### 1. Absorb intercept
 Absorb the $w_0$ term into the weight vector $\mathbf{w}$ which amounts to appending a 1 to each $\mathbf{x}$ as follows:
 
-$$
+<div class="math">
+\begin{align*}
 \mathbf{w} \leftarrow\left[\begin{array}{c}{w_{0}} \\ {\mathbf{w}}\end{array}\right], \, \, \, \mathbf{x} \leftarrow\left[\begin{array}{l}{1} \\ {\mathbf{x}}\end{array}\right]
-$$
+\end{align*}
+</div>
 
 ###### 2. Change sigmoid notation
 A simple change depending on style, define $\sigma_{i}(\mathbf{w})=\sigma\left(\mathbf{x}_{i}^{T} \mathbf{w}\right)$
@@ -394,9 +412,11 @@ p\left(y = -1 | \mathbf{x} \right) &= 1 - \sigma_{i}(\mathbf{w}) \\[5pt]
 
 which uses the fact the sigmoid function can be written in two equivalent ways:
 
-$$
+<div class="math">
+\begin{align*}
 \frac{1}{1+e^{-x}}=\frac{e^{x}}{e^{x}+1}
-$$
+\end{align*}
+</div>
 
 and so we can denote $\sigma_i(y_i \mathbf{w})$ as the probability that observation $i$ has label $y_i$ for both $y=1$ or $y=-1.$
 
@@ -453,37 +473,48 @@ The derivation of the below is pretty involved and a summary is provided below. 
 <br>
 Given labeled data $(\mathbf{x}_1, y_1), ..., (\mathbf{x}_n, y_n) $ and the model:
 
-$$
+
+<div class="math">
+\begin{align*}
 \color{#e06c75}{p\left(y_{i} | \mathbf{x}_i, \mathbf{w} \right)=\sigma\left(y_i \mathbf{x}_i^T \mathbf{w}\right)}, \quad
 \color{#61afef}{\mathbf{w} \sim \mathcal{N}\left(0, \lambda^{-1} I\right)}, \quad
 \color{#98c379}{\sigma\left(y_i \mathbf{x}_i^T \mathbf{w}\right)=\frac{\exp\left\{y_{i} \mathbf{x}_i^T  \mathbf{w}\right\}}{1+\exp\left\{y_{i} \mathbf{x}_i^T  \mathbf{w}\right\}}}
-$$
+\end{align*}
+</div>
 
 where the above is defining <span style="color:#e06c75">the likelihood</span>, <span style="color:#61afef">the prior</span> and <span style="color:#98c379">the definition of sigmoid</span>.
 <br>
 <br>
 <strong>Step 1:</strong> find the MAP solution for the weights by solving the optimization problem given by the objective function of logistic regression:
 
-$$
+<div class="math">
+\begin{align*}
 \mathbf{w}_{MAP}=\arg \max_{\mathbf{w}} \sum_{i=1}^{n} \ln \sigma\left(y_{i} \mathbf{x}_i^T \mathbf{w}\right)-\frac{\lambda}{2} \mathbf{w}^T \mathbf{w}
-$$
+\end{align*}
+</div>
 
 which is typically done via some optimization algorithm.
 <br>
 <br>
 <strong>Step 2:</strong> compute the (inverse) covariance matrix as
 
-$$
+<div class="math">
+\begin{align*}
 -\Sigma^{-1}=-\lambda I-\sum_{i=1}^{n} \sigma\left(y_i \mathbf{x}_i^T \mathbf{w}_{MAP}\right)\left(1-\sigma\left(y_i \mathbf{x}_i^T \mathbf{w}_{MAP}\right)\right) \mathbf{x}_i \mathbf{x}_i^T
-$$
+\end{align*}
+</div>
 
 where details of how we arrive at the above expression are given below.
 <br>
 <br>
 <strong>Step 3:</strong> approximate the posterior using a Gaussian
-$$
+
+<div class="math">
+\begin{align*}
 p(\mathbf{w} | X, \mathbf{y})=\mathcal{N}\left(\mathbf{w}_{MAP}, \Sigma\right)
-$$
+\end{align*}
+</div>
+
 </blockquote>
 
 ###### Some prerequisites
@@ -498,31 +529,39 @@ Before starting we give some things to watch out for as we proceed.
 <br>
 <li>Bayes' rule can be written just using the joint distribution:
 
-$$
+<div class="math">
+\begin{align*}
 p(\mathbf{w} | \mathbf{y}, X) = \frac{p(\mathbf{y}, \mathbf{w} | X)}{\int p(\mathbf{y}, \mathbf{w} | X) \, d\mathbf{w}}.
-$$
+\end{align*}
+</div>
 </li>
 <br>
 <li>Laplace approximation is based on <a class="reference external" href="https://en.wikipedia.org/wiki/Laplace%27s_method">Laplace's method</a> which approximates integrals of the form:
 
-$$
+<div class="math">
+\begin{align*}
 \int_{a}^{b} e^{M f(x)} d x
-$$
+\end{align*}
+</div>
 
 for a large number $M$ and where $f(x)$ is a twice-differentiable function. Here we forget about $M$ and just rewrite the integral into the required form by exponentiating then taking logs (which cancels out).</li>
 <br>
 
 <li>The second order Taylor expansion for a function $f(\mathbf{w})$ with $\mathbf{w} \in \mathbb{R}^{d+1}$ at a point $z \in \mathbb{R}^{d+1}$ is:
 
-$$
+<div class="math">
+\begin{align*}
 f(\mathbf{w}) \approx f(z)+(\mathbf{w}-z)^{T} \nabla f(z)+\frac{1}{2}(\mathbf{w}-z)^{T}\left(\nabla^{2} f(z)\right)(\mathbf{w}-z)
-$$
+\end{align*}
+</div>
 
 where we use the notation that:
 
-$$
+<div class="math">
+\begin{align*}
 \nabla f(z) = \nabla_{\mathbf{w}} f(\mathbf{w})\mid_{z}
-$$
+\end{align*}
+</div>
 
 is the derivative of the function $f$ w.r.t $\mathbf{w}$ evaluated at the point $z$. </li>
 </blockquote>
@@ -530,9 +569,11 @@ is the derivative of the function $f$ w.r.t $\mathbf{w}$ evaluated at the point 
 ###### Choosing the form of the posterior
 The goal is to approximate the posterior with a Gaussian distribution:
 
-$$
+<div class="math">
+\begin{align*}
 p(\mathbf{w} | X, \mathbf{y}) \approx \mathcal{N}(\mu, \Sigma)
-$$
+\end{align*}
+</div>
 
 for some $\mu$ and $\Sigma$ which we need to find. The true posterior distribution is a multivariate distribution in parameter space that will (hopefully) have some dominant mode - we would like to center the Gaussian distribution here if we are able to.
 
@@ -550,9 +591,11 @@ p(\mathbf{w} | X, \mathbf{y})
 
 For Laplace's method we define a function $f$ equal to the log of the joint likelihood:
 
-$$
+<div class="math">
+\begin{align*}
 f(\mathbf{w})=\ln p(\mathbf{y}, \mathbf{w} | X)
-$$
+\end{align*}
+</div>
 
 which we will expand $f(\mathbf{w})$ around a point, $z$. We say $f$ if only a function of $\mathbf{w}$ as this is the variable of interest, the data $\mathbf{y}$ and $X$ are given and considered fixed.
 
@@ -586,34 +629,44 @@ p(\mathbf{w} | X, \mathbf{y}) &=\frac{\exp\left\{f(\mathbf{w})\right\}}{\int \ex
 <br>
 We are thus only left with the following term to worry about in the both the numerator and denominator:
 
-$$
+<div class="math">
+\begin{align*}
 \frac{1}{2}(\mathbf{w}-z)^{T}\left(\nabla^{2} f(z)\right)(\mathbf{w}-z)
-$$
+\end{align*}
+</div>
 
 which we can rewrite slightly by setting $z = \mathbf{w}\_{MAP}$, using the definition of $f(z)$ and pulling a negative out the front to match the form of a Gaussian, giving:
 
-$$
+<div class="math">
+\begin{align*}
 -\frac{1}{2}\left(\mathbf{w}-\mathbf{w}_{MAP}\right)^{T}\left(-\nabla^{2} \ln p\left(\mathbf{y}, \mathbf{w}_{MAP}|X\right)\right)\left(\mathbf{w}-\mathbf{w}_{MAP}\right)
-$$
+\end{align*}
+</div>
 
 ###### Recognising the solution is a Gaussian
 Looking at $\text{(L2)}$ we see this is in the form of a multivariate Gaussian with:
 
-$$
+<div class="math">
+\begin{align*}
 \mu=\mathbf{w}_{MAP}, \quad \Sigma=\left(-\nabla^{2} \ln p\left(\mathbf{y}, \mathbf{w}_{MAP} | X\right)\right)^{-1}
-$$
+\end{align*}
+</div>
 
 where we still need to be able to calculate the derivative in $\Sigma$. This derivative is the second derivative (Hessian) of the log joint likelihood (details given below [here](#deriv_log_like)) and results in:
 
-$$
+<div class="math">
+\begin{align*}
 \nabla^{2} \ln p\left(\mathbf{y}, \mathbf{w}_{MAP} | X \right)=-\lambda I-\sum_{i=1}^{n} \sigma\left(y_{i} \cdot  \mathbf{w}_{MAP}\right)\left(1-\sigma\left(y_{i} \cdot \mathbf{w}_{MAP}\right)\right) \mathbf{x}_i \mathbf{x}_i^T
-$$
+\end{align*}
+</div>
 
 which means we now we have expressions for both $\mu$ and $\Sigma$ in the Gaussian approximation to the posterior:
 
-$$
+<div class="math">
+\begin{align*}
 p(\mathbf{w} | X, \mathbf{y}) \approx \mathcal{N}(\mu, \Sigma)
-$$
+\end{align*}
+</div>
 
 <a name="deriv_log_like"></a>
 
@@ -621,9 +674,11 @@ $$
 
 To compute $\Sigma$ we need to calculate:
 
-$$
+<div class="math">
+\begin{align*}
 \nabla_{\mathbf{w}}^2 \ln p\left(\mathbf{y}, \mathbf{w} | X \right)
-$$
+\end{align*}
+</div>
 
 at the point $\mathbf{w}=\mathbf{w}\_{MAP}$. Recall also that the prior is a Gaussian $\mathbf{w} \sim \mathcal{N}\left(0, \lambda^{-1} I\right)$.
 
@@ -650,9 +705,11 @@ The above is the form that will be used to calculate $\Sigma$ as required at the
 
 Mercer's theorem assures us that by computing $\kappa(\mathbf{x}_i, \mathbf{x}_j)$ for any symmetric positive-definite choice of the kernel, $\kappa$, it's possible to find a transformation $\phi : \mathbb{R}^d \rightarrow \mathbb{R}^D$ such that:
 
-$$
+<div class="math">
+\begin{align*}
 \kappa(\mathbf{x}_i, \mathbf{x}_j) = \phi(\mathbf{x}_i)^T \phi(\mathbf{x}_j).
-$$
+\end{align*}
+</div>
 
 The reason this is of interest is that as opposed to thinking in terms of explicit expressions for $\phi$ (which may be very complicated) we can instead postulate a kernel function $\kappa$ that captures the prior beliefs we have about the correlation structure. We can actually do this without even needing to know what the equivalent feature mapping $\phi$ was that gave rise to it - Mercer's theorem guarantees such a $\phi$ exists.
 
