@@ -50,18 +50,22 @@ Before we dive into classification algorithms, it's important to see the lay of 
 <br>
 It's worth recalling Bayes' rule for classification, where the goal is to assign each observation to one of $k$ classes:
 
-$$
+<div class="math">
+\begin{align*}
 \color{#e5c07b}{p\left(c_{k} | \mathbf{x}\right)}=\frac{ \color{#e06c75}{p\left(\mathbf{x} | c_{k}\right)} \color{#61afef}{p\left(c_{k}\right)}}{\color{#98c379}{p(\mathbf{x})}} \tag{BR}
-$$
+\end{align*}
+</div>
 
 with terms: <span style="color:#e5c07b">class posterior</span>, <span style="color:#e06c75">data likelihood given class</span>, <span style="color:#61afef">class prior</span> and <span style="color:#98c379">evidence</span>.
 <br>
 <br>
 Note $p(\mathbf{x})$ can be found via:
 
-$$
+<div class="math">
+\begin{align*}
 p(\mathbf{x})=\sum_{k} p\left(\mathbf{x} | c_{k}\right) p\left(c_{k}\right).
-$$
+\end{align*}
+</div>
 </blockquote>
 
 Bishop essentially defines 3 approaches, decreasing in complexity:
@@ -120,9 +124,11 @@ And so in essence the point $\mathbf{x}_0$ will be assigned to the class based o
 
 There are many options open to us in terms of how to measure distance. The crux of the $k$-NN algorithm is to be able to quantify in some way, how similar data-points are to each other. A common metric used for two points $\mathbf{a}, \mathbf{b} \in \mathbb{R}^d$ is the Euclidean distance:
 
-$$
+<div class="math">
+\begin{align*}
 ||\mathbf{a} -\mathbf{b}||_{2} = \left(\sum_{j=1}^{d} \left(\mathbf{a}_j -\mathbf{b}_j \right)^{2} \right)^{\frac{1}{2}}
-$$
+\end{align*}
+</div>
 
 However, whilst this is an intuitive and appealing metric to use it is not particularly suitable for high-dimensional data as we discuss briefly [shortly](#knn_high_dim).
 
@@ -157,9 +163,11 @@ We now move onto discussing the theoretically best classifier, the Bayes classif
 <blockquote class="tip">
 <strong>TLDR:</strong> the Bayes classifier is the theoretically best possible classifier if we knew the true underlying distribution, $\mathcal{P}$, from which the data pairs are jointly generated, independent of any other pairs:
 
-$$
+<div class="math">
+\begin{align*}
 (X, Y) \stackrel{iid}{\sim} \mathcal{P}
-$$
+\end{align*}
+</div>
 
 It is the classifier that has the smallest expected prediction error amongst all classifiers, or equivalently, the best prediction accuracy.
 <br>
@@ -213,9 +221,11 @@ Proofs on the optimality of the Bayes classifier can often obscure what is a hig
 
 Suppose we have data from 2 classes with prior probabilities:
 
-$$
+<div class="math">
+\begin{align*}
 p(y_1) = 0.7, \, \, \, p(y_2) = 0.3
-$$
+\end{align*}
+</div>
 
 and $X \in \\{1,2,3,4,5 \\}$ is a discrete random variable, a particular instance of which is called $x$.
 
@@ -231,9 +241,11 @@ The blue cells in Tables 1 and 2 are the result of an arbitrary decision rule fr
 
 Given the class priors and data likelihood we can also formulate the joint probability using:
 
-$$
+<div class="math">
+\begin{align*}
 p(X=x, Y=y) = p(X =x | Y=y)p(Y=y)
-$$
+\end{align*}
+</div>
 
 by multiplying the entries in each row by the prior class probability. This joint probability is shown in Table 2 below:
 
@@ -251,9 +263,11 @@ Now, given the arbitrary classifier (per the blue predictions) we can think abou
 <br>
 To see the above, consider that if every time the classifier encounters $x=1$ it predicts class label $y_2$ it will incur an error equal to:
 
-$$
+<div class="math">
+\begin{align*}
 p(x=1 | y=1)p(y = 1) = p(x=1, y=1).
-$$
+\end{align*}
+</div>
 
 Looking at Table 2 this means that the classifier will be wrong 14% of time from the fact that when $x=1$ it always predicts $y=2$ and we know from the true underlying joint distribution (this is what Table 2 is, this is what knowledge of $\mathcal{P}$ allows us to calculate!) that the pair $(x=1, y=1)$ will occur in 14% of the cases.
 
@@ -298,9 +312,11 @@ However optimal Bayes classification is sometimes introduced differently, withou
 
 We call $\mathcal{F}$ the set of all possible classifiers and in this case the best classification decision to make given data, $\mathcal{D}$, is:
 
-$$
+<div class="math">
+\begin{align*}
 \underset{y \in \mathcal{Y}}{\arg \max } \color{#e06c75}{\sum_{f_{i} \in \mathcal{F}}} \color{#61afef}{p\left(y | f_{i}\right)} \color{#98c379}{ p\left(f_{i} | \mathcal{D}\right)}.
-$$
+\end{align*}
+</div>
 
 In other words, we assign the label based on the highest probability as computed by the <span style="color:#61afef">prediction from a given classifier</span> weighted by the <span style="color:#98c379">posterior probability of that classifier given the data</span> <span style="color:#e06c75">summing over all possible classifiers</span>.
 
@@ -321,15 +337,19 @@ Per the justification provided by the [Bayes classifier](#bayes_class_app) we as
 
 <a name="gen_classifier_opt"></a>
 
-$$
+<div class="math">
+\begin{align*}
 \arg \max_{y \in \mathcal{Y}} \underbrace{p(Y=y)}_{\text {class prior}} \, \underbrace{p(\mathbf{x}| Y=y).}_{\text { data likelihood } | \text {class}} \tag{0}
-$$
+\end{align*}
+</div>
 
 In this case we are not obtaining a full posterior but simply using the fact that:
 
-$$
+<div class="math">
+\begin{align*}
 \arg \max_{y \in \mathcal{Y}} \underbrace{p(Y=y | \mathbf{x})}_\text{class posterior} = \arg \max_{y \in \mathcal{Y}} \underbrace{p(Y=y)}_{\text {class prior}} \, \underbrace{p(\mathbf{x}| Y=y)}_{\text { data likelihood } | \text {class}} \tag{1}
-$$
+\end{align*}
+</div>
 
 and the above is valid as the denominator in [Bayes' rule](#bayes_rule_class) does not depend on $y$.
 
@@ -371,9 +391,11 @@ Dimensions for reference with respect to the above:
 
 Using the above assumptions and dropping any terms not dependent on $y$ we can write Gaussian class conditional decision as:
 
-$$
+<div class="math">
+\begin{align*}
 \arg \max_{y \in \mathcal{Y}} \hat{\pi}_{y}\left|\hat{\Sigma}_{y}\right|^{-\frac{1}{2}} \exp \left\{-\frac{1}{2}\left(\mathbf{x}-\hat{\boldsymbol{\mu}}_{y}\right)^{T} \hat{\Sigma}_{y}^{-1}\left(\mathbf{x} -\hat{\boldsymbol{\mu}}_{y}\right)\right\} \tag{2}
-$$
+\end{align*}
+</div>
 
 whereby an instance is assigned to the class $y$ that maximizes (2).
 
@@ -385,9 +407,11 @@ We will return to the discussion of the above classifier in the next section on 
 
 We very briefly mention the naive Bayes classifier now which makes the assumption that the covariates of $X$ are conditionally independent given $y$. In other words, there is no correlation between the features given the class. This allows us to write the class conditional densities as a product of one dimensional densities:
 
-$$
+<div class="math">
+\begin{align*}
 p(X=x | Y=y)=\prod_{j=1}^{d} p_{j}(x_j | Y=y) \tag{3}
-$$
+\end{align*}
+</div>
 
 where $x_j$ denotes the $j$th feature of $X$.
 
@@ -434,17 +458,22 @@ An advantage of using log odds to make a decision rule is that the denominator i
 
 For the case where we have a shared covariance matrix across both classes, by the Gaussian likelihood assumption we made, calculating the log odds per equation (4) leads to:
 <a name="lda_equation"></a>
-$$
+
+<div class="math">
+\begin{align*}
 \begin{array}{l}{\underbrace{\ln \frac{\pi_{1}}{\pi_{0}}-\frac{1}{2}\left(\boldsymbol{\mu}_{1}+\boldsymbol{\mu}_{0}\right)^{T} \Sigma^{-1}\left(\boldsymbol{\mu}_{1}-\boldsymbol{\mu}_{0}\right)}_{\text{ a constant, call $w_0$}}} {+\mathbf{x}^{T} \underbrace{\Sigma^{-1}\left(\boldsymbol{\mu}_{1}-\boldsymbol{\mu}_{0}\right)}_{\text { a vector, call } \mathbf{w}}}\end{array} \tag{5}
-$$
+\end{align*}
+</div>
 
 which we can write in shorthand as $w_0 + \mathbf{x}^T\mathbf{w}$.
 
 Based on equation (4) we can thus write the classification decision as:
 
-$$
+<div class="math">
+\begin{align*}
 f(\mathbf{x}) = \operatorname{sign} (w_0 + \mathbf{x}^T\mathbf{w})
-$$
+\end{align*}
+</div>
 
 where we are classifying an observation based on the resulting sign of $w_0 + \mathbf{x}^T\mathbf{w}$. It is important to remember that we can calculate all the terms in $w_0$ and $\mathbf{w}$ based on the maximum likelihood estimates we made for each $\pi_y, \mu_y$ as well as for $\Sigma$.
 
@@ -468,9 +497,11 @@ By similar analysis as for LDA, working out the log odds from equation (4) gives
 
 which is called quadratic discriminant analysis as it leads to quadratic shaped decision boundaries, but is linear in the weights. The resulting classifier for QDA, similar to LDA, can be written as:
 
-$$
+<div class="math">
+\begin{align*}
 f(\mathbf{x}) = \operatorname{sign} (c + \mathbf{x}^T\mathbf{b} + \mathbf{x}^T A \mathbf{x})
-$$
+\end{align*}
+</div>
 
 for a constant, $c$, a vector $\mathbf{b}$ and a matrix $A$. Again, all of $c$, $\mathbf{b}$ and $A$ are able to be computed in closed form from the maximum likelihood estimates we made for each $\pi_y, \mu_y$ and $\Sigma_y$.
 
@@ -509,9 +540,11 @@ If in the QDA model we make the assumption that the covariance matrices are diag
 
 In the LDA model we classified the data based on:
 
-$$
+<div class="math">
+\begin{align*}
 f(\mathbf{x}) = \operatorname{sign} (w_0 + \mathbf{x}^T\mathbf{w})
-$$
+\end{align*}
+</div>
 
 where $w_0$ and $\mathbf{w}$ are given by explicit formulae. This can be too restrictive an assumption in general and so we now introduce a way to learn both $w_0$ and $\mathbf{w}$.
 
@@ -529,18 +562,22 @@ The perceptron is perhaps more (famously and) recently known as a core building 
 
 The above notational change means we can write a general linear classifier as:
 
-$$
+<div class="math">
+\begin{align*}
 f(\mathbf{x}) = \operatorname{sign}\left(\mathbf{x}^{T}\mathbf{w}\right)
-$$
+\end{align*}
+</div>
 
 and so we are predicting each example to be the sign of the dot product $\mathbf{x}_i^T\mathbf{w}$, with true label $y_i$.
 
 Given the perceptron algorithm assumes the data is linearly separable, it tries to find a hyperplane that classifies every instance of the training data correctly. Such a loss function can be formulated as:
 
-$$
+<div class="math">
+\begin{align*}
 \mathcal{L}=-\sum_{i=1}^{n} \overbrace{\left(y_{i} \cdot \mathbf{x}_{i}^{T} \mathbf{w}\right)
 \underbrace{\mathcal{I} \left\{y_{i} \neq \operatorname{sign}\left(\mathbf{x}_{i}^{T} \mathbf{w}\right)\right\}.}_\text{$= \,1$ if misclassified, else $0$}}^\text{always negative as only counting misclassified}
-$$
+\end{align*}
+</div>
 
 The perceptron loss function can be roughly explained as summing over some sense of distance from the hyperplane for all misclassified examples.
 
@@ -549,9 +586,11 @@ The perceptron loss function can be roughly explained as summing over some sense
 <br>
 It is worth thinking about what the perceptron loss function means by examining the term $(y_{i} \cdot \mathbf{x}_{i}^{T} \mathbf{w})$:
 
-$$
+<div class="math">
+\begin{align*}
 y_{i} \cdot \mathbf{x}_{i}^{T} \mathbf{w} \quad \text { is } \quad \left\{\begin{array}{l}{>0 \text { if } y_{i}=\operatorname{sign}\left(\mathbf{x}_{i}^{T} \mathbf{w}\right)} \\ {<0 \text { if } y_{i} \neq \operatorname{sign}\left(\mathbf{x}_{i}^{T} \mathbf{w}\right)}\end{array}\right.
-$$
+\end{align*}
+</div>
 
 In words this is as follows:
 <br>
@@ -572,9 +611,11 @@ For more on hyperplanes and why $\mathbf{x}_{i}^{T} \mathbf{w}$ is measure of di
 
 Whilst we cannot solve the loss function analytically, we can differentiate it. The derivative for a misclassified observation is:
 
-$$
+<div class="math">
+\begin{align*}
 \nabla_{\mathbf{w}} \mathcal{L}=-\sum_{i \in \mathcal{M}_{t}} y_{i} \mathbf{x}_{i}
-$$
+\end{align*}
+</div>
 
 where $\mathcal{M}\_t$ is the set of misclassified instances. Thus the derivative for a single observation is $- y_{i} \mathbf{x}_{i}$. This is then used in the gradient descent update step.
 
@@ -595,10 +636,11 @@ Below is an example of the perceptron algorithm:
 <br>
 &emsp; b) <strong>If:</strong> such a $(\mathbf{x}_i, y_i)$ exists, randomly pick one and update:
 
-$$
+<div class="math">
+\begin{align*}
 \mathbf{w}^{(t+1)}=\mathbf{w}^{(t)}+\eta y_{i} \mathbf{x}_{i}
-$$
-
+\end{align*}
+</div>
 &emsp;&emsp;&emsp; <strong>Else:</strong> return $\mathbf{w}^{(t)}$ as all examples are correctly classified.
 </blockquote>
 
@@ -643,9 +685,11 @@ Raschka, S, <a class="reference external" href="https://sebastianraschka.com/Art
 
 If we simply wish to assign an instance to a class based on the highest posterior probability per the [Bayes classifier](#bayes_class_app) we needn't actually calculate the denominator in Bayes' rule as it doesn't depend on the class label $y$ and is common to all classes. We can instead simply choose the class such that the numerator in Bayes' rule is maximized:
 
-$$
+<div class="math">
+\begin{align*}
 \arg \max_{y \in \mathcal{Y}} p(Y=y) \, p(X=x | Y=y). \tag{A1}
-$$
+\end{align*}
+</div>
 
 ###### Inference vs. decision making
 
@@ -664,18 +708,21 @@ Here we will discuss some of the geometric understanding of hyperplanes and how 
 
 Recall that we classify a point for a generic binary linear classifier according to:
 
-$$
+<div class="math">
+\begin{align*}
 f(\mathbf{x})=\operatorname{sign}\left(\mathbf{x}^{T} \mathbf{w}+w_{0}\right)  \tag{A2}
-$$
-
+\end{align*}
+</div>
 with $\mathbf{x}^T, \mathbf{w} \in \mathbb{R}^d$ and $w_0 \in \mathbb{R}$.
 
 <blockquote class="tip">
 <strong>Notation:</strong> to be consistent with <a class="reference external" href="{{page.url}}#prml">PRML</a> it will help to define:
 
-$$
+<div class="math">
+\begin{align*}
 y(\mathbf{x}) = \mathbf{x}^{T} \mathbf{w}+w_{0}  \tag{A3}
-$$
+\end{align*}
+</div>
 
 and it pays to not confuse $y$ with $f$, $f$ is just the sign of $y$.
 </blockquote>
@@ -713,9 +760,11 @@ Let's call $r$ the perpendicular distance of a point from the hyperplane and con
 
 Then we can state $\mathbf{x}$ as:
 
-$$
+<div class="math">
+\begin{align*}
 \mathbf{x} = \color{#e06c75}{\mathbf{x}_{\perp}} + \color{#61afef}{r} \color{#98c379}{\frac{\mathbf{w}}{\|\mathbf{w}\|}} \tag{A5}
-$$
+\end{align*}
+</div>
 
 where $\color{#98c379}{\frac{\mathbf{w}}{\\|\mathbf{w}\\|}}$ is the unit vector orthogonal to the hyperplane.
 
@@ -742,9 +791,11 @@ To prove this call $\mathbf{x'}$ the point on the hyperplane that is closest to 
 
 Given that $\mathbf{w}$ is orthogonal to the hyperplane we can write:
 
-$$
+<div class="math">
+\begin{align*}
 \mathbf{x'} = \alpha \mathbf{w}
-$$
+\end{align*}
+</div>
 
 for some scalar $\alpha$ which may be positive or negative. Then because $\mathbf{x'}$ is on the hyperplane we have:
 
