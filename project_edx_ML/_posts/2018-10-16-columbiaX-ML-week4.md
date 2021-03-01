@@ -121,7 +121,6 @@ And so in essence the point $\mathbf{x}_0$ will be assigned to the class based o
 There are many options open to us in terms of how to measure distance. The crux of the $k$-NN algorithm is to be able to quantify in some way, how similar data-points are to each other. A common metric used for two points $\mathbf{a}, \mathbf{b} \in \mathbb{R}^d$ is the Euclidean distance:
 
 $$
-
 ||\mathbf{a} -\mathbf{b}||_{2} = \left(\sum_{j=1}^{d} \left(\mathbf{a}_j -\mathbf{b}_j \right)^{2} \right)^{\frac{1}{2}}
 $$
 
@@ -214,7 +213,9 @@ Proofs on the optimality of the Bayes classifier can often obscure what is a hig
 
 Suppose we have data from 2 classes with prior probabilities:
 
-$$p(y_1) = 0.7, \, \, \, p(y_2) = 0.3$$
+$$
+p(y_1) = 0.7, \, \, \, p(y_2) = 0.3
+$$
 
 and $X \in \\{1,2,3,4,5 \\}$ is a discrete random variable, a particular instance of which is called $x$.
 
@@ -230,7 +231,9 @@ The blue cells in Tables 1 and 2 are the result of an arbitrary decision rule fr
 
 Given the class priors and data likelihood we can also formulate the joint probability using:
 
-$$p(X=x, Y=y) = p(X =x | Y=y)p(Y=y)$$
+$$
+p(X=x, Y=y) = p(X =x | Y=y)p(Y=y)
+$$
 
 by multiplying the entries in each row by the prior class probability. This joint probability is shown in Table 2 below:
 
@@ -248,7 +251,8 @@ Now, given the arbitrary classifier (per the blue predictions) we can think abou
 <br>
 To see the above, consider that if every time the classifier encounters $x=1$ it predicts class label $y_2$ it will incur an error equal to:
 
-$$p(x=1 | y=1)p(y = 1) = p(x=1, y=1).
+$$
+p(x=1 | y=1)p(y = 1) = p(x=1, y=1).
 $$
 
 Looking at Table 2 this means that the classifier will be wrong 14% of time from the fact that when $x=1$ it always predicts $y=2$ and we know from the true underlying joint distribution (this is what Table 2 is, this is what knowledge of $\mathcal{P}$ allows us to calculate!) that the pair $(x=1, y=1)$ will occur in 14% of the cases.
