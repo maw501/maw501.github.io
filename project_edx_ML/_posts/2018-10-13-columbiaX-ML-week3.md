@@ -30,7 +30,7 @@ We move linear regression into a fully Bayesian setting as well as introducing p
 
 This leads onto a discussion about [posterior predictive distributions](#pred_dist) which allow us to get uncertainty estimates for a prediction. There are many ways to use uncertainty estimates from a Bayesian analysis and [active learning](#active) is discussed as one such application.
 
-We then finish by discussing [sparse regression](#sparse) to address cases where the dimensionality of the problem is much larger than the number of samples.
+We then finish by discussing [sparse regression](#sparse) to address cases where the dimensionality of the input data is much larger than the number of samples.
 
 <a name="blr"></a>
 <hr class="with-margin">
@@ -59,7 +59,7 @@ p(\mathbf{w} | \mathbf{y}, X) = \dfrac{p(\mathbf{y} | \mathbf{w}, X) p(\mathbf{w
 \end{align*}
 </div>
 
-where for Bayesian linear regression we assume:
+where for Bayesian linear regression we will assume:
 <br>
 <br>
 Likelihood: $\mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right)$
@@ -68,10 +68,7 @@ Prior: $\mathbf{w} \sim \mathcal{N}\left(0, \lambda^{-1} I\right).$
 <br>
 <br>
 In
-<a class="reference external" href="/../project_edx_ml/2018/10/10/columbiaX-ML-week1and2">weeks 1 and 2</a>  we considered linear regression from both a maximum likelihood (ML) and MAP perspective.
-<br>
-<br>
-We can now summarise the 3 approaches:
+<a class="reference external" href="/../project_edx_ml/2018/10/10/columbiaX-ML-week1and2">weeks 1 and 2</a>  we considered linear regression from both a maximum likelihood (ML) and MAP perspective and now we can now summarise the 3 approaches for $\mathbf{w}$:
 <br>
 <br>
 <strong>ML</strong>: point estimate using likelihood only, $p(\mathbf{y} | \mathbf{w}, X)$
@@ -81,54 +78,55 @@ We can now summarise the 3 approaches:
 <strong>Bayesian linear regression</strong>: full posterior distribution, $p(\mathbf{w} | \mathbf{y}, X)$
 </blockquote>
 
-In order to calculate the posterior we need to calculate $p(\mathbf{y} \| X)$, but what exactly is it?
+In order to calculate the posterior we need to calculate $p(\mathbf{y} \mid X)$ but what, exactly, is it?
 
-Recall we have assumed a probabilistic model for the data which is the numerator in Bayes' rule as the likelihood multiplied by the prior belief of the parameters. In the numerator we evaluate this likelihood for a given set of parameters e.g. calculate $p(\mathbf{y} \| \mathbf{w}, X)$.
+Recall we have assumed a probabilistic model for the data which is the numerator in Bayes' rule. In the numerator we evaluate this likelihood for a given set of parameters e.g. calculate $p(\mathbf{y} \mid \mathbf{w}, X).$
 
-For the denominator we need to calculate the probability of the data independent of any parameters - this ensures the shape of the posterior is solely due to the numerator and not the denominator, which is really just a normalising constant.
+For the denominator we need to calculate the probability of the data independent of any parameters - this ensures the shape of the posterior is solely due to the numerator and not the denominator, which is just a normalising constant.
 
-We don't actually know what the probability of the data independent of any parameters is and so the tactic used to calculate $p(\mathbf{y} \| X)$ is to take the numerator (which contains the model assumptions) and integrate out any parameters. We do this by noting that the denominator can be expressed as:
+We don't actually know what the probability of the data independent of any parameters is and so the tactic used to calculate $p(\mathbf{y} \mid X)$ is to take the numerator (which contains the model assumptions) and integrate out any parameters. We do this by noting that the denominator can be expressed as:
 
 <div class="math">
 \begin{align*}
-p(\mathbf{y} | X) = \int_{\mathbb{R}^{d}} p(\mathbf{y} | \mathbf{w}, X) \, p(\mathbf{w}) \, d\mathbf{w}
+p(\mathbf{y} \mid X) = \int_{\mathbb{R}^{d}} p(\mathbf{y} \mid \mathbf{w}, X) \, p(\mathbf{w}) \, d\mathbf{w}
 \end{align*}
 </div>
 
-Unfortunately this term $p(\mathbf{y} \| X)$ is usually not calculable in Bayesian analysis due to [the curse of dimensionality](https://en.wikipedia.org/wiki/Curse_of_dimensionality). However, for Bayesian linear regression under the assumptions we have made for the likelihood and prior we are able to calculate an analytic solution.
+Unfortunately this term $p(\mathbf{y} \mid X)$ is usually not calculable in Bayesian analysis due to [the curse of dimensionality](https://en.wikipedia.org/wiki/Curse_of_dimensionality). However, for Bayesian linear regression under the assumptions we have made for the likelihood and prior we are able to find an analytic solution.
 
 It is [shown](#post_blr) in the appendix that the posterior is:
 
 <div class="math">
 \begin{align*}
-p(\mathbf{w} | \mathbf{y}, X) = \mathcal{N}(\mathbf{w} | \boldsymbol{\mu}, \Sigma)
+p(\mathbf{w} \mid \mathbf{y}, X) = \mathcal{N}(\mathbf{w} \mid \boldsymbol{\mu}, \Sigma)
 \end{align*}
 </div>
 
-with
+where
 
 <a name="mu_sig_post"></a>
 
 <div class="math">
 \begin{align*}
-\boldsymbol{\mu} = (\lambda \sigma^{2} I + X^T X)^{-1} X^T \mathbf{y} \,\, , \,\, \Sigma = (\lambda I + \sigma^{-2} X^T X)^{-1}.
+\boldsymbol{\mu} &= (\lambda \sigma^{2} I + X^T X)^{-1} X^T \mathbf{y} \\
+\Sigma &= (\lambda I + \sigma^{-2} X^T X)^{-1}.
 \end{align*}
 </div>
 
-And so the posterior distribution is also a Gaussian distribution with dimensionality equal to the number of parameters in $\mathbf{w}$.
+And so the posterior distribution is also a Gaussian distribution with dimensionality equal to the number of parameters in $\mathbf{w}$. This is a direct result of the choice we made for the prior for $\mathbf{w}$ - by choosing a normal distribution we chose a <a class="reference external" href="https://en.wikipedia.org/wiki/Conjugate_prior">conjugate prior</a>.
 
 <blockquote class="tip">
-<strong>Note:</strong> we notice that $\boldsymbol{\mu} = \mathbf{w}_{MAP}.$
+<strong>Note:</strong> $\boldsymbol{\mu} = \mathbf{w}_{MAP}.$
 <br>
 <br>
-Thus Bayesian linear regression centres the posterior around the MAP solution from ridge regression except now we have a full probability distribution for the parameters, $p(\mathbf{w} | \mathbf{y}, X)$.
+Thus Bayesian linear regression centres the posterior around the MAP solution from ridge regression except now we have a full probability distribution for the parameters, $p(\mathbf{w} \mid \mathbf{y}, X)$.
 </blockquote>
 
 ##### Plotting Bayesian linear regression
 
 In Bayesian linear regression we return a full distribution for each parameter which is a Gaussian distribution. As such we can sample from this distribution and visualise the distribution of competing hypotheses for the best fit line. Each sample from the posterior is a slope and intercept term and we plot its line in light blue - we draw 100 samples. The OLS solution is shown in red (note this isn't the ridge regression solution but in this example will be very similar).
 
-Note, as the below fit was done with [scikit-learn](https://scikit-learn.org/stable/auto_examples/linear_model/plot_bayesian_ridge.html) there's a little more going on under the hood in terms of hyperparameter estimation, but this doesn't change the story - we still get 'many' solutions from a Bayesian linear regression model, not just a single explanation.
+Note, as the below fit was done with [scikit-learn](https://scikit-learn.org/stable/auto_examples/linear_model/plot_bayesian_ridge.html) there's a little more going on under the hood in terms of hyperparameter estimation, but this doesn't change the story - we still get *many* solutions from a Bayesian linear regression model, not just a single explanation.
 
 <hr class="with-margin">
 <p align="center">
@@ -193,7 +191,7 @@ This distribution is sometimes called the posterior predictive distribution (or 
 
 ##### Introduction
 
-Having learned a posterior distribution for the model's weights Bayesian linear regression allows us to also make probabilistic statements about new predictions. This means that for any new data point $(\mathbf{x}_0, y_0)$ we are able to calculate a full probability distribution for the predicted value of $\mathbf{x}_0$. This is done without reference to the unknown test value $y_0$ and we denote this distribution as $p(y_0 \| \mathbf{x}_0, \mathbf{w})$.
+Having learned a posterior distribution for the model's weights Bayesian linear regression allows us to also make probabilistic statements about new predictions. This means that for any new data point $(\mathbf{x}_0, y_0)$ we are able to calculate a full probability distribution for the predicted value of $\mathbf{x}_0$. This is done without reference to the unknown test value $y_0$ and we denote this distribution as $p(y_0 \mid \mathbf{x}_0, \mathbf{w})$.
 
 This deviates from what is done in, say, linear or ridge regression where we simply return a point prediction equal to $\mathbf{x}_0^T \mathbf{w}\_{LS}$ or $\mathbf{x}_0^T \mathbf{w}\_{RR}$.
 
@@ -201,37 +199,37 @@ It turns out that in the context of Bayesian linear regression we are able to ca
 
 ##### Posterior predictive distribution
 
-The starting point for understanding the posterior predictive distribution is to recall that we will have already performed some model fitting from data and already have the posterior distribution of the model's weights. That is, we don't need the original data set $(X, \mathbf{y})$ which the original model was fit on, just the posterior distribution $p(\mathbf{w} \| \mathbf{y}, X)$.
+To obtain the posterior predictive distribution for a given data-point we make a prediction for every value we have from the posterior distribution. That is, we don't need the original data set $(X, \mathbf{y})$ which the original model was fit on, just the posterior distribution $p(\mathbf{w} \mid \mathbf{y}, X)$.
 
 The posterior predictive distribution can be written as:
 
 <div class="math">
 \begin{alignat*}{1}
 
-p(y_{0} | \mathbf{x}_0, \mathbf{y}, X) &= \int_{\mathbb{R}^{d}} p(y_{0}, \mathbf{w} | \mathbf{x}_0, \mathbf{y}, X) \, d\mathbf{w}
+p(y_{0} \mid \mathbf{x}_0, \mathbf{y}, X) &= \int_{\mathbb{R}^{d}} p(y_{0}, \mathbf{w} \mid \mathbf{x}_0, \mathbf{y}, X) \, d\mathbf{w}
    \\[5pt]
-&= \int_{\mathbb{R}^{d}} p(y_{0} | \mathbf{w}, \mathbf{x}_0, \mathbf{y}, X) \, p(\mathbf{w} | \mathbf{x}_0, \mathbf{y}, X) \, d\mathbf{w} \\[5pt]
-&= \int_{\mathbb{R}^{d}} \underbrace{p(y_{0} | \mathbf{w}, \mathbf{x}_0)}_\text{likelihood} \,  \underbrace{p(\mathbf{w} | \mathbf{y}, X)}_\text{posterior} \, d\mathbf{w}. \hspace{1cm} &\text{(by cond. indep.)} 
+&= \int_{\mathbb{R}^{d}} p(y_{0} \mid \mathbf{w}, \mathbf{x}_0, \mathbf{y}, X) \, p(\mathbf{w} \mid \mathbf{x}_0, \mathbf{y}, X) \, d\mathbf{w} \\[5pt]
+&= \int_{\mathbb{R}^{d}} \underbrace{p(y_{0} \mid \mathbf{w}, \mathbf{x}_0)}_\text{likelihood} \,  \underbrace{p(\mathbf{w} \mid \mathbf{y}, X)}_\text{posterior} \, d\mathbf{w}. \hspace{1cm} &\text{(by cond. indep.)} 
 \end{alignat*}
 </div>
 
-Intuitively this is saying that we evaluate the likelihood for a new prediction $y_0$ given an observed $\mathbf{x}_0$ and some values for $\mathbf{w}$ and then weight this by the current belief we have for $\mathbf{w}$ given the original data we trained the model on, $(X, \mathbf{y})$. The best current belief we have about the model's parameters is precisely the posterior distribution $p(\mathbf{w} \| \mathbf{y}, X)$.
+Intuitively this is saying that we evaluate the likelihood for a new prediction $y_0$ given an observed $\mathbf{x}_0$ and some values for $\mathbf{w}$ and then weight this by the current belief we have for $\mathbf{w}$ given the original data we trained the model on, $(X, \mathbf{y})$. The best current belief we have about the model's parameters is precisely the posterior distribution $p(\mathbf{w} \mid \mathbf{y}, X)$.
 
 We then integrate over all possible values of $\mathbf{w}$. This integrating over all values of $\mathbf{w}$ is what allows us to obtain a probability distribution for the prediction - we are simultaneously considering all values that $\mathbf{w}$ could take from the posterior distribution and for each possible set of $\mathbf{w}$ values, we calculate the likelihood using them and then weight the likelihood by the probability of those values occurring.
 
 ##### Predictive equations
 
-In order to obtain the predictive equations for the posterior predictive distribution, $p(y_0 \| \mathbf{x}_0, \mathbf{w})$, we first recall the form of the likelihood and posterior from above$:
+In order to obtain the predictive equations for the posterior predictive distribution, $p(y_0 \mid \mathbf{x}_0, \mathbf{w})$, we first recall the form of the likelihood and posterior from above:
 
 
 <div class="math">
 \begin{align*}
-\underbrace{p\left(y_{0} | \mathbf{x}_0, \mathbf{w}\right) = \mathcal{N}\left(y_{0} | \mathbf{x}_0^{T} \mathbf{w}, \sigma^{2}\right)}_\text{likelihood}, \, \,
-\underbrace{p(\mathbf{w} | \mathbf{y}, X) = \mathcal{N}(\mathbf{w} | \boldsymbol{\mu}, \Sigma)}_\text{posterior}
+\underbrace{p\left(y_{0} \mid \mathbf{x}_0, \mathbf{w}\right) = \mathcal{N}\left(y_{0} \mid \mathbf{x}_0^{T} \mathbf{w}, \sigma^{2}\right)}_\text{likelihood}, \, \,
+\underbrace{p(\mathbf{w} \mid \mathbf{y}, X) = \mathcal{N}(\mathbf{w} \mid \boldsymbol{\mu}, \Sigma)}_\text{posterior}
 \end{align*}
 </div>
 
-where we know the values of $\boldsymbol{\mu}$ and $\Sigma)$ from [above](#mu_sig_post).
+where we know the values of $\boldsymbol{\mu}$ and $\Sigma$ from [above](#mu_sig_post).
 
 Given the above assumptions the posterior predictive distribution for a new test point $\mathbf{x}_0$ is also a Gaussian:
 
@@ -239,7 +237,7 @@ Given the above assumptions the posterior predictive distribution for a new test
 <div class="math">
 \begin{alignat*}{1}
 
-p(y_{0} | \mathbf{x}_0, \mathbf{y}, X) &=  \mathcal{N}(y_0 | \mu_0, \sigma_0^2)  \\[5pt]
+p(y_{0} \mid \mathbf{x}_0, \mathbf{y}, X) &=  \mathcal{N}(y_0 \mid \mu_0, \sigma_0^2)  \\[5pt]
 \mu_0 &= \mathbf{x}_0^{T} \boldsymbol{\mu} \\[5pt]
 \sigma_0^2 &= \sigma^2 + \mathbf{x}_0^T \Sigma \mathbf{x}_0. 
 \end{alignat*}
@@ -258,10 +256,7 @@ In the last two posts we have derived results based upon the assumption we made 
 \end{align*}
 </div>
 
-without talking about how to estimate $\sigma^2$. It's actually simple to do this as the solution to $\mathbf{w}_{ML}$ doesn't depend on $\sigma^{2}$ and recalling that the prediction we make from maximum likelihood is $X\mathbf{w}_{ML}$.
-<br>
-<br>
-We can thus calculate $\sigma^{2}$ as:
+without talking about how to estimate $\sigma^2$. In a fully Bayesian treatment if we didn't know it (we don't generally) then we would estimate it jointly with all other parameters but here we could just set (as $\mathbf{w}_{ML}$ doesn't depend on $\sigma^2$):
 
 <div class="math">
 \begin{align*}
@@ -278,7 +273,7 @@ which is essentially the sample variance calculated for the residuals.
 
 ##### Background
 
-We switch now to think again about the Bayesian posterior for the model parameters, $p(\mathbf{w} \| \mathbf{y}, X)$. A situation that often arises in practical applications is that a model is fitted to some initial existing data and then we have some freedom to choose which data-point, $\mathbf{x}_0$, to query next in order to obtain a label $y_0$. For example, it may be the case that we can choose which experiment to conduct next, where to drill for oil, which advert to run next etc...
+We switch now to think again about the Bayesian posterior for the model parameters, $p(\mathbf{w} \mid \mathbf{y}, X)$. A situation that often arises in practical applications is that a model is fitted to some initial existing data and then we have some freedom to choose which data-point, $\mathbf{x}_0$, to query next in order to obtain a label $y_0$. For example, it may be the case that we can choose which experiment to conduct next, where to drill for oil, which advert to run next etc...
 
 Given we have this choice, and that procuring a labelled data-point may be a costly procedure it would be nice if we had some rigorous way to decide which $\mathbf{x}_0$ to choose next and then use it to update the current posterior we have.
 
@@ -311,7 +306,7 @@ In order to sequentially learn the posterior distribution we need a way to seque
 
 <div class="math">
 \begin{align*}
-p(\mathbf{w} | \mathbf{y}, X) = \mathcal{N}(\mathbf{w} | \boldsymbol{\mu}, \Sigma)
+p(\mathbf{w} \mid \mathbf{y}, X) = \mathcal{N}(\mathbf{w} \mid \boldsymbol{\mu}, \Sigma)
 \end{align*}
 </div>
 
@@ -335,15 +330,15 @@ We are thus able to re-express the above definitions of $\boldsymbol{\mu}$ and $
 <div class="math">
 \begin{alignat*}{1}
 
-p(\mathbf{w} | y_0, \mathbf{x}_0, \mathbf{y}, X) &= \mathcal{N}(\mathbf{w} | \boldsymbol{\mu}, \Sigma) \\[5pt]
+p(\mathbf{w} \mid y_0, \mathbf{x}_0, \mathbf{y}, X) &= \mathcal{N}(\mathbf{w} \mid \boldsymbol{\mu}, \Sigma) \\[5pt]
 
-\boldsymbol{\mu} &= (\lambda \sigma^{2} I+(\overbrace{\mathbf{x}_0 \mathbf{x}_0^{T}}^\text{new data}+ \overbrace{\underbrace{\sum_{i=1}^{n} \mathbf{x}_i \mathbf{x}_i^{T}}_\text{$= \, X^T X$}}^\text{original data})^{-1}(\overbrace{\mathbf{x}_0 y_{0}}^\text{new data}+ \overbrace{\underbrace{\sum_{i=1}^{n} \mathbf{x}_i y_{i}}_\text{$= \, X^T \mathbf{y}$}}^\text{original data})) \\[5pt]
+\boldsymbol{\mu} &= \bigg(\lambda \sigma^{2} I + \big(\overbrace{\mathbf{x}_0 \mathbf{x}_0^{T}}^\text{new data}+ \overbrace{\underbrace{\sum_{i=1}^{n} \mathbf{x}_i \mathbf{x}_i^{T}}_\text{$= \, X^T X$}}^\text{original data} \big)^{-1} \big(\overbrace{\mathbf{x}_0 y_{0}}^\text{new data}+ \overbrace{\underbrace{\sum_{i=1}^{n} \mathbf{x}_i y_{i}}_\text{$= \, X^T \mathbf{y}$}}^\text{original data}\big) \bigg) \\[5pt]
 
-\Sigma &= (\lambda I+\sigma^{-2}(\overbrace{\mathbf{x}_0 \mathbf{x}_0^{T}}^\text{new data}+\overbrace{\underbrace{\sum_{i=1}^{n} \mathbf{x}_i \mathbf{x}_i^{T}}_\text{$= \, X^T X$}}^\text{original data}))^{-1}
+\Sigma &= \big(\lambda I+\sigma^{-2}(\overbrace{\mathbf{x}_0 \mathbf{x}_0^{T}}^\text{new data}+\overbrace{\underbrace{\sum_{i=1}^{n} \mathbf{x}_i \mathbf{x}_i^{T}}_\text{$= \, X^T X$}}^\text{original data}) \big)^{-1}
 \end{alignat*}
 </div>
 
-The above works because matrix multiplication can be written in terms of [outer products](#mmult_add) and can be computed additively. The reader is encouraged to convince themselves of the above before proceeding.
+The above works because matrix multiplication can be written in terms of [outer products](#mmult_add) and can be computed additively. 
 
 Now we have a way to update the posterior parameters in light of new data we turn to determining how choose which data-point to measure next.
 
@@ -353,10 +348,10 @@ Now we have a way to update the posterior parameters in light of new data we tur
 <hr class="small-margin">
 <strong>Algorithm: an active learning strategy (posterior entropy minimization)</strong>
 <hr class="small-margin">
-We fit a model to the original data $(\mathbf{y}, X)$ to get the posterior, $p(\mathbf{w} | \mathbf{y}, X)$. We then proceed as follows:
+We fit a model to the original data $(\mathbf{y}, X)$ to get the posterior, $p(\mathbf{w} \mid \mathbf{y}, X)$. We then proceed as follows:
 <br>
 <br>
-1. Calculate the posterior predictive distribution, $p(y_0 | \mathbf{x}_0, \mathbf{w})$, for every $\mathbf{x}_0$ we are considering measuring
+1. Calculate the posterior predictive distribution, $p(y_0 \mid \mathbf{x}_0, \mathbf{w})$, for every $\mathbf{x}_0$ we are considering measuring
 <br>
 2. Choose the $\mathbf{x}_0$ for which $\sigma_0^2$ is largest and measure $y_0$
 <br>
@@ -617,7 +612,8 @@ with
 
 <div class="math">
 \begin{align*}
-\boldsymbol{\mu} = (\lambda \sigma^{2} I + X^T X)^{-1} X^T \mathbf{y}, \,\,\,\, \Sigma = (\lambda I + \sigma^{-2} X^T X)^{-1} \tag{A5}
+\boldsymbol{\mu} &= (\lambda \sigma^{2} I + X^T X)^{-1} X^T \mathbf{y}, \\
+\Sigma &= (\lambda I + \sigma^{-2} X^T X)^{-1} \tag{A5}
 \end{align*}
 </div>
 
