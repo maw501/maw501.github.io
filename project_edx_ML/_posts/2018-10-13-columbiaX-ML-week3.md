@@ -67,15 +67,8 @@ Likelihood: $\mathbf{y} \sim \mathcal{N}\left(X \mathbf{w}, \sigma^{2} I\right)$
 Prior: $\mathbf{w} \sim \mathcal{N}\left(0, \lambda^{-1} I\right).$
 <br>
 <br>
-In
-<a class="reference external" href="/../project_edx_ml/2018/10/10/columbiaX-ML-week1and2">weeks 1 and 2</a>  we considered linear regression from both a maximum likelihood (ML) and MAP perspective and now we can now summarise the 3 approaches for $\mathbf{w}$:
-<br>
-<br>
-<strong>ML</strong>: point estimate using likelihood only, $p(\mathbf{y} | \mathbf{w}, X)$
-<br>
-<strong>MAP</strong>: point estimate using likelihood and prior, $p(\mathbf{y} | \mathbf{w}, X)\, p(\mathbf{w})$
-<br>
-<strong>Bayesian linear regression</strong>: full posterior distribution, $p(\mathbf{w} | \mathbf{y}, X)$
+
+It's worth stating at this point that Bayesian linear regression doesn't refer to a standard way of performing linear regression but rather about performing linear regression within the Bayesian framework. As such there are many different ways of presenting the material here and the analysis will differ depending on the modelling assumptions made, most notably on the choice of a prior for $\mathbf{w}$. Above, as with Ridge regression, $\lambda$ is a hyperparameter. 
 </blockquote>
 
 In order to calculate the posterior we need to calculate $p(\mathbf{y} \mid X)$ but what, exactly, is it?
@@ -94,7 +87,7 @@ p(\mathbf{y} \mid X) = \int_{\mathbb{R}^{d}} p(\mathbf{y} \mid \mathbf{w}, X) \,
 
 Unfortunately this term $p(\mathbf{y} \mid X)$ is usually not calculable in Bayesian analysis due to [the curse of dimensionality](https://en.wikipedia.org/wiki/Curse_of_dimensionality). However, for Bayesian linear regression under the assumptions we have made for the likelihood and prior we are able to find an analytic solution.
 
-It is [shown](#post_blr) in the appendix that the posterior is:
+It is [shown](#post_blr) in the appendix that the posterior is given by:
 
 <div class="math">
 \begin{align*}
@@ -124,7 +117,7 @@ Thus Bayesian linear regression centres the posterior around the MAP solution fr
 
 ##### Plotting Bayesian linear regression
 
-In Bayesian linear regression we return a full distribution for each parameter which is a Gaussian distribution. As such we can sample from this distribution and visualise the distribution of competing hypotheses for the best fit line. Each sample from the posterior is a slope and intercept term and we plot its line in light blue - we draw 100 samples. The OLS solution is shown in red (note this isn't the ridge regression solution but in this example will be very similar).
+In Bayesian linear regression we return a full distribution for each parameter which is a Gaussian distribution. As such we can sample from this distribution and visualise the distribution of competing hypotheses for the best fit line. Each sample from the posterior is a slope and intercept term and we plot its line in light blue - we draw 100 samples. The OLS solution is shown in red (note this isn't the ridge regression solution but in this example they will be very similar).
 
 Note, as the below fit was done with [scikit-learn](https://scikit-learn.org/stable/auto_examples/linear_model/plot_bayesian_ridge.html) there's a little more going on under the hood in terms of hyperparameter estimation, but this doesn't change the story - we still get *many* solutions from a Bayesian linear regression model, not just a single explanation.
 
@@ -195,7 +188,7 @@ Having learned a posterior distribution for the model's weights Bayesian linear 
 
 This deviates from what is done in, say, linear or ridge regression where we simply return a point prediction equal to $\mathbf{x}_0^T \mathbf{w}\_{LS}$ or $\mathbf{x}_0^T \mathbf{w}\_{RR}$.
 
-It turns out that in the context of Bayesian linear regression we are able to calculate the posterior predictive distribution exactly.
+It turns out that given the modelling assumptions we have made we are able to calculate the posterior predictive distribution exactly.
 
 ##### Posterior predictive distribution
 
@@ -219,19 +212,25 @@ We then integrate over all possible values of $\mathbf{w}$. This integrating ove
 
 ##### Predictive equations
 
-In order to obtain the predictive equations for the posterior predictive distribution, $p(y_0 \mid \mathbf{x}_0, \mathbf{w})$, we first recall the form of the likelihood and posterior from above:
-
+In order to obtain the predictive equations for the posterior predictive distribution, $p(y_0 \mid \mathbf{x}_0, \mathbf{w})$, we first recall the form of the likelihood as
 
 <div class="math">
 \begin{align*}
-\underbrace{p\left(y_{0} \mid \mathbf{x}_0, \mathbf{w}\right) = \mathcal{N}\left(y_{0} \mid \mathbf{x}_0^{T} \mathbf{w}, \sigma^{2}\right)}_\text{likelihood}, \, \,
-\underbrace{p(\mathbf{w} \mid \mathbf{y}, X) = \mathcal{N}(\mathbf{w} \mid \boldsymbol{\mu}, \Sigma)}_\text{posterior}
+p\left(y_{0} \mid \mathbf{x}_0, \mathbf{w}\right) = \mathcal{N}\left(y_{0} \mid \mathbf{x}_0^{T} \mathbf{w}, \sigma^{2}\right)
 \end{align*}
 </div>
 
-where we know the values of $\boldsymbol{\mu}$ and $\Sigma$ from [above](#mu_sig_post).
+and posterior
 
-Given the above assumptions the posterior predictive distribution for a new test point $\mathbf{x}_0$ is also a Gaussian:
+<div class="math">
+\begin{align*}
+p(\mathbf{w} \mid \mathbf{y}, X) = \mathcal{N}(\mathbf{w} \mid \boldsymbol{\mu}, \Sigma)
+\end{align*}
+</div>
+
+from above, where we know the values of $\boldsymbol{\mu}$ and $\Sigma$.
+
+Based on the above the posterior predictive distribution for a new test point $\mathbf{x}_0$ is also a Gaussian:
 
 <a name="pred_eqtns"></a>
 <div class="math">
@@ -243,7 +242,7 @@ p(y_{0} \mid \mathbf{x}_0, \mathbf{y}, X) &=  \mathcal{N}(y_0 \mid \mu_0, \sigma
 \end{alignat*}
 </div>
 
-We can see that the expected value of the prediction we make is the same as for the MAP solution (recall $\boldsymbol{\mu} = (\lambda \sigma^{2} I + X^T X)^{-1} X^T \mathbf{y}$) but now we are able to quantify the uncertainty in the prediction with $\sigma_0^2$.
+And we see that the expected value of the prediction we make is the same as for the MAP solution (recall $\boldsymbol{\mu} = (\lambda \sigma^{2} I + X^T X)^{-1} X^T \mathbf{y}$) but now we are able to quantify the uncertainty in the prediction with $\sigma_0^2$.
 
 <blockquote class="tip">
 <strong>Sidebar on $\sigma^2$</strong>
@@ -256,15 +255,10 @@ In the last two posts we have derived results based upon the assumption we made 
 \end{align*}
 </div>
 
-without talking about how to estimate $\sigma^2$. In a fully Bayesian treatment if we didn't know it (we don't generally) then we would estimate it jointly with all other parameters but here we could just set (as $\mathbf{w}_{ML}$ doesn't depend on $\sigma^2$):
-
-<div class="math">
-\begin{align*}
-\sigma^{2} = \frac{1}{n} \sum_{i=1}^{n}(y_i - \mathbf{x}_i \mathbf{w}_{ML})^2
-\end{align*}
-</div>
-
-which is essentially the sample variance calculated for the residuals.
+without talking about how to estimate $\sigma^2$. In a fully Bayesian treatment if we didn't know this observational noise (and we don't generally) then we would <a class="reference external" href="https://mc-stan.org/docs/2_18/stan-users-guide/linear-regression.html">estimate it jointly</a> with all other parameters. For reference, <a class="reference external" href="{{page.url}}#prml">PRML</a> assumes a known noise parameter in section 3.3 when considering Bayesian linear regression.
+<br>
+<br>
+However, in reality, we prefer to estimate all unknowns and use a tool like <a class="reference external" href="https://mc-stan.org">Stan</a> which allows us to use any reasonable priors we may desire.
 </blockquote>
 
 <a name="active"></a>
