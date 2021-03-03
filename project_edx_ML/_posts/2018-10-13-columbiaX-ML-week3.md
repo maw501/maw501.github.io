@@ -37,12 +37,12 @@ We then finish by discussing [sparse regression](#sparse) to address cases where
 <h4 class="header" id="blr">Bayesian linear regression</h4>
 
 <blockquote class="tip">
-<strong>Summary:</strong> Bayesian linear regression allows us to obtain a full probability distribution for the model parameters.
+<strong>Summary:</strong> Bayesian linear regression allows us to obtain a full probability distribution for the model parameters, the posterior distribution.
 </blockquote>
 
 ##### Motivation
 
-Bayesian inference is cool as it allows us to characterize uncertainty about the parameters $\mathbf{w}$ using Bayes' rule as well as providing a principled framework for explicitly incorporating knowledge via the prior.
+Bayesian inference allows us to characterize uncertainty in unknown parameters (here we are only treating $\mathbf{w}$ as unknown) using Bayes' rule as well as providing a principled framework for explicitly incorporating knowledge via the prior.
 
 This opens up a range of possibilities, for instance, we can now ask questions such as how different is a given parameter $w_i$ from 0 (i.e. is it significant or not?). This is a departure from the non-Bayesian setting where we had limited ways to answer such questions. This is a very practical and useful application of Bayesian regression and occurs commonly in many fields. For example, if our variables are factors in a medical trial and we wish to determine whether the factor under scrutiny is actually having an impact (before we spend money on it) it helps to know if the distribution of this parameter has a big variance vs. say, being tightly distributed and centred away from 0.
 
@@ -68,7 +68,7 @@ Prior: $\mathbf{w} \sim \mathcal{N}\left(0, \lambda^{-1} I\right).$
 <br>
 <br>
 
-It's worth stating at this point that Bayesian linear regression doesn't refer to a standard way of performing linear regression but rather about performing linear regression within the Bayesian framework. As such there are many different ways of presenting the material here and the analysis will differ depending on the modelling assumptions made, most notably on the choice of a prior for $\mathbf{w}$. Above, as with Ridge regression, $\lambda$ is a hyperparameter. 
+It's worth stating at this point that Bayesian linear regression doesn't refer to a standard way of performing linear regression but rather about performing linear regression within the Bayesian framework. As such there are many different ways of presenting the material here and the analysis will differ depending on the modelling assumptions made, most notably on the choice of a prior for $\mathbf{w}$. Above, as with Ridge regression, $\lambda$ is a hyperparameter and $\sigma$ is assumed known. 
 </blockquote>
 
 In order to calculate the posterior we need to calculate $p(\mathbf{y} \mid X)$ but what, exactly, is it?
@@ -77,7 +77,7 @@ Recall we have assumed a probabilistic model for the data which is the numerator
 
 For the denominator we need to calculate the probability of the data independent of any parameters - this ensures the shape of the posterior is solely due to the numerator and not the denominator, which is just a normalising constant.
 
-We don't actually know what the probability of the data independent of any parameters is and so the tactic used to calculate $p(\mathbf{y} \mid X)$ is to take the numerator (which contains the model assumptions) and integrate out any parameters. We do this by noting that the denominator can be expressed as:
+We don't actually know what the probability of the data independent of any parameters is and so to calculate it we take the numerator (which contains the model assumptions) and integrate out any parameters. We do this by noting that the denominator can be expressed as:
 
 <div class="math">
 \begin{align*}
@@ -85,7 +85,7 @@ p(\mathbf{y} \mid X) = \int_{\mathbb{R}^{d}} p(\mathbf{y} \mid \mathbf{w}, X) \,
 \end{align*}
 </div>
 
-Unfortunately this term $p(\mathbf{y} \mid X)$ is usually not calculable in Bayesian analysis due to [the curse of dimensionality](https://en.wikipedia.org/wiki/Curse_of_dimensionality). However, for Bayesian linear regression under the assumptions we have made for the likelihood and prior we are able to find an analytic solution.
+Unfortunately this term $p(\mathbf{y} \mid X)$ is usually not calculable in Bayesian analysis due to [the curse of dimensionality](https://en.wikipedia.org/wiki/Curse_of_dimensionality). However, in this example, under the assumptions we have made for the likelihood and prior we are able to find an analytic solution.
 
 It is [shown](#post_blr) in the appendix that the posterior is given by:
 
@@ -112,12 +112,12 @@ And so the posterior distribution is also a Gaussian distribution with dimension
 <strong>Note:</strong> $\boldsymbol{\mu} = \mathbf{w}_{MAP}.$
 <br>
 <br>
-Thus Bayesian linear regression centres the posterior around the MAP solution from ridge regression except now we have a full probability distribution for the parameters, $p(\mathbf{w} \mid \mathbf{y}, X)$.
+Thus the posterior centres around the MAP solution from ridge regression except now we have a full probability distribution for the parameters, $p(\mathbf{w} \mid \mathbf{y}, X)$.
 </blockquote>
 
 ##### Plotting Bayesian linear regression
 
-In Bayesian linear regression we return a full distribution for each parameter which is a Gaussian distribution. As such we can sample from this distribution and visualise the distribution of competing hypotheses for the best fit line. Each sample from the posterior is a slope and intercept term and we plot its line in light blue - we draw 100 samples. The OLS solution is shown in red (note this isn't the ridge regression solution but in this example they will be very similar).
+In a Bayesian setting we return a full distribution for each parameter which in this example is a Gaussian distribution. As such we can sample from this distribution and visualise the distribution of competing hypotheses for the best fit line. Each sample from the posterior is a slope and intercept term and we plot its line in light blue - we draw 100 samples. The OLS solution is shown in red (note this isn't the ridge regression solution but in this example they will be very similar).
 
 Note, as the below fit was done with [scikit-learn](https://scikit-learn.org/stable/auto_examples/linear_model/plot_bayesian_ridge.html) there's a little more going on under the hood in terms of hyperparameter estimation, but this doesn't change the story - we still get *many* solutions from a Bayesian linear regression model, not just a single explanation.
 
@@ -175,7 +175,7 @@ plt.show()
 <h4 class="header" id="pred_dist">Predicting new data</h4>
 
 <blockquote class="tip">
-<strong>Summary:</strong> the posterior predictive distribution for an unseen data-point allows us to get an estimate of the uncertainty associated with the prediction in the form of a full probability distribution.
+<strong>Summary:</strong> the posterior predictive distribution for an unseen data-point allows us to get an estimate of the uncertainty associated with the prediction in the form of a probability distribution.
 <br>
 <br>
 This distribution is sometimes called the posterior predictive distribution (or just predictive distribution) and is a powerful feature of Bayesian analysis as we will see later for
@@ -184,7 +184,7 @@ This distribution is sometimes called the posterior predictive distribution (or 
 
 ##### Introduction
 
-Having learned a posterior distribution for the model's weights Bayesian linear regression allows us to also make probabilistic statements about new predictions. This means that for any new data point $(\mathbf{x}_0, y_0)$ we are able to calculate a full probability distribution for the predicted value of $\mathbf{x}_0$. This is done without reference to the unknown test value $y_0$ and we denote this distribution as $p(y_0 \mid \mathbf{x}_0, \mathbf{w})$.
+Having learned a posterior distribution for the model's weights Bayesian linear regression allows us to also make probabilistic statements about new predictions. This means that for any new data point $(\mathbf{x}_0, y_0)$ we are able to calculate the distribution over the predicted values of $\mathbf{x}_0$. This is done without reference to the unknown test value $y_0$ and we denote this distribution as $p(y_0 \mid \mathbf{x}_0, \mathbf{w})$.
 
 This deviates from what is done in, say, linear or ridge regression where we simply return a point prediction equal to $\mathbf{x}_0^T \mathbf{w}\_{LS}$ or $\mathbf{x}_0^T \mathbf{w}\_{RR}$.
 
@@ -208,11 +208,11 @@ p(y_{0} \mid \mathbf{x}_0, \mathbf{y}, X) &= \int_{\mathbb{R}^{d}} p(y_{0}, \mat
 
 Intuitively this is saying that we evaluate the likelihood for a new prediction $y_0$ given an observed $\mathbf{x}_0$ and some values for $\mathbf{w}$ and then weight this by the current belief we have for $\mathbf{w}$ given the original data we trained the model on, $(X, \mathbf{y})$. The best current belief we have about the model's parameters is precisely the posterior distribution $p(\mathbf{w} \mid \mathbf{y}, X)$.
 
-We then integrate over all possible values of $\mathbf{w}$. This integrating over all values of $\mathbf{w}$ is what allows us to obtain a probability distribution for the prediction - we are simultaneously considering all values that $\mathbf{w}$ could take from the posterior distribution and for each possible set of $\mathbf{w}$ values, we calculate the likelihood using them and then weight the likelihood by the probability of those values occurring.
+We then integrate over all possible values of $\mathbf{w}$. This integrating over all values of $\mathbf{w}$ is what allows us to obtain a probability distribution for the prediction - we are simultaneously considering all values that $\mathbf{w}$ could take from the posterior distribution and for each possible set of $\mathbf{w}$ values, we calculate the likelihood and weight it by the probability of those parameter values occurring.
 
 ##### Predictive equations
 
-In order to obtain the predictive equations for the posterior predictive distribution, $p(y_0 \mid \mathbf{x}_0, \mathbf{w})$, we first recall the form of the likelihood as
+In order to obtain the predictive equations for the posterior predictive distribution, $p(y_0 \mid \mathbf{x}_0, \mathbf{w})$, we first recall, from above, the form of the likelihood as
 
 <div class="math">
 \begin{align*}
@@ -220,7 +220,7 @@ p\left(y_{0} \mid \mathbf{x}_0, \mathbf{w}\right) = \mathcal{N}\left(y_{0} \mid 
 \end{align*}
 </div>
 
-and posterior
+and posterior as
 
 <div class="math">
 \begin{align*}
@@ -228,7 +228,7 @@ p(\mathbf{w} \mid \mathbf{y}, X) = \mathcal{N}(\mathbf{w} \mid \boldsymbol{\mu},
 \end{align*}
 </div>
 
-from above, where we know the values of $\boldsymbol{\mu}$ and $\Sigma$.
+where we know the values of $\boldsymbol{\mu}$ and $\Sigma$.
 
 Based on the above the posterior predictive distribution for a new test point $\mathbf{x}_0$ is also a Gaussian:
 
@@ -255,10 +255,10 @@ In the last two posts we have derived results based upon the assumption we made 
 \end{align*}
 </div>
 
-without talking about how to estimate $\sigma^2$. In a fully Bayesian treatment if we didn't know this observational noise (and we don't generally) then we would <a class="reference external" href="https://mc-stan.org/docs/2_18/stan-users-guide/linear-regression.html">estimate it jointly</a> with all other parameters. For reference, <a class="reference external" href="{{page.url}}#prml">PRML</a> assumes a known noise parameter in section 3.3 when considering Bayesian linear regression.
+without talking about how to estimate $\sigma^2$ - we assumed it was known. For reference <a class="reference external" href="{{page.url}}#prml">PRML</a> assumes a known noise parameter in section 3.3 when considering Bayesian linear regression. 
 <br>
 <br>
-However, in reality, we prefer to estimate all unknowns and use a tool like <a class="reference external" href="https://mc-stan.org">Stan</a> which allows us to use any reasonable priors we may desire.
+In a fully Bayesian treatment if we didn't know this observational noise (and we don't generally) then we would <a class="reference external" href="https://mc-stan.org/docs/2_18/stan-users-guide/linear-regression.html">estimate it jointly</a> with all other parameters as we prefer to do for all unknowns. We can do this using a tool like <a class="reference external" href="https://mc-stan.org">Stan.</a> 
 </blockquote>
 
 <a name="active"></a>
@@ -267,7 +267,7 @@ However, in reality, we prefer to estimate all unknowns and use a tool like <a c
 
 ##### Background
 
-We switch now to think again about the Bayesian posterior for the model parameters, $p(\mathbf{w} \mid \mathbf{y}, X)$. A situation that often arises in practical applications is that a model is fitted to some initial existing data and then we have some freedom to choose which data-point, $\mathbf{x}_0$, to query next in order to obtain a label $y_0$. For example, it may be the case that we can choose which experiment to conduct next, where to drill for oil, which advert to run next etc...
+We switch now to think again about the Bayesian posterior for the model parameters, $p(\mathbf{w} \mid \mathbf{y}, X)$. A situation that often arises in practical applications is that a model is fitted to some initial existing data and then we have some freedom to choose which data-point, $\mathbf{x}_0$, to query next in order to obtain a label $y_0$. For example, it may be the case that we can choose which experiment to conduct next, where to drill for oil or which advertising campaign to run next.
 
 Given we have this choice, and that procuring a labelled data-point may be a costly procedure it would be nice if we had some rigorous way to decide which $\mathbf{x}_0$ to choose next and then use it to update the current posterior we have.
 
@@ -281,7 +281,7 @@ Active learning takes advantage of this feature of Bayesian analysis and for the
 <strong>Summary:</strong> active learning is where we have a choice as to which data-point to observe the output for next and we then use this output to sequentially update the model.
 <br>
 <br>
-<strong>Question:</strong> can we choose which data-point to measure next in order to update the model posterior intelligently?
+<strong>Question:</strong> can we choose which data-point to measure next in order to update the posterior intelligently?
 </blockquote>
 
 There are many algorithms which offer a solution to the question of which data-point to measure next. We will discuss one such algorithm which will also answer the question of what we mean by intelligently in the above box.
@@ -289,8 +289,8 @@ There are many algorithms which offer a solution to the question of which data-p
 We need to do two things:
 
 <div class="bullet"> 
-<ol> 1. Find a way to sequentially update the parameters of the posterior</ol>
-<ol> 2. Determine a strategy for choosing which data-point to measure next</ol>
+<ol> 1. Find a way to sequentially update the parameters of the posterior.</ol>
+<ol> 2. Determine a strategy for choosing which data-point to measure next.</ol>
 </div>
 
 We will do the above in the context of Bayesian linear regression.
@@ -308,15 +308,21 @@ with
 
 <div class="math">
 \begin{align*}
-\boldsymbol{\mu} = (\lambda \sigma^{2} I + \underbrace{X^T X}_\text{$(d \times n) \times (n \times d)$})^{-1} \underbrace{X^T \mathbf{y}}_\text{$(d \times n) \times (n \times 1)$} \,\, , \,\, \Sigma = (\lambda I + \sigma^{-2} \underbrace{X^T X}_\text{$(d \times n) \times (n \times d)$})^{-1}
+\boldsymbol{\mu} = (\lambda \sigma^{2} I + \underbrace{X^T X}_\text{$(d \times n) \times (n \times d)$})^{-1} \underbrace{X^T \mathbf{y}}_\text{$(d \times n) \times (n \times 1)$} 
+\end{align*}
+</div>
+and
+<div class="math">
+\begin{align*}
+\Sigma = (\lambda I + \sigma^{-2} \underbrace{X^T X}_\text{$(d \times n) \times (n \times d)$})^{-1}
 \end{align*}
 </div>
 
 where in the above we draw attention to the dimensions of the parameters $\boldsymbol{\mu}$ and $\Sigma$. This is to highlight that their final dimensionality does not involve $n$, the number of observations. This, and the fact that matrix multiplication can be written in terms of [outer products](#mmult_add) in an additive manner means we are able to decompose the parameter update into 2 steps:
 
 <div class="bullet"> 
-<ol> 1. Calculate the parameter estimates for $\boldsymbol{\mu}$ and $\Sigma$ with the original data</ol>
-<ol> 2. Update $\boldsymbol{\mu}$ and $\Sigma$ sequentially in an additive manner using the new data</ol>
+<ol> 1. Calculate the parameter estimates for $\boldsymbol{\mu}$ and $\Sigma$ with the original data.</ol>
+<ol> 2. Update $\boldsymbol{\mu}$ and $\Sigma$ sequentially in an additive manner using the new data.</ol>
 </div>
 
 We are thus able to re-express the above definitions of $\boldsymbol{\mu}$ and $\Sigma$ to split them into terms based on original data and terms based on new data. The parameter update equations are:
@@ -332,9 +338,7 @@ p(\mathbf{w} \mid y_0, \mathbf{x}_0, \mathbf{y}, X) &= \mathcal{N}(\mathbf{w} \m
 \end{alignat*}
 </div>
 
-The above works because matrix multiplication can be written in terms of [outer products](#mmult_add) and can be computed additively. 
-
-Now we have a way to update the posterior parameters in light of new data we turn to determining how choose which data-point to measure next.
+Now we have a way to update the posterior parameters in light of new data we turn to determining how to choose which data-point to measure next.
 
 ##### An active learning strategy
 
@@ -345,19 +349,19 @@ Now we have a way to update the posterior parameters in light of new data we tur
 We fit a model to the original data $(\mathbf{y}, X)$ to get the posterior, $p(\mathbf{w} \mid \mathbf{y}, X)$. We then proceed as follows:
 <br>
 <br>
-1. Calculate the posterior predictive distribution, $p(y_0 \mid \mathbf{x}_0, \mathbf{w})$, for every $\mathbf{x}_0$ we are considering measuring
+1. Calculate the posterior predictive distribution, $p(y_0 \mid \mathbf{x}_0, \mathbf{w})$, for every $\mathbf{x}_0$ we are considering measuring.
 <br>
-2. Choose the $\mathbf{x}_0$ for which $\sigma_0^2$ is largest and measure $y_0$
+2. Choose the $\mathbf{x}_0$ for which $\sigma_0^2$ is largest and measure $y_0.$
 <br>
-3. Update the posterior with the new data-point using the sequential posterior parameter update equations
+3. Update the posterior with the new data-point using the sequential posterior parameter update equations.
 <br>
-4. Return to step 1 using the updated posterior
+4. Return to step 1 using the updated posterior.
 <br>
 <br>
 Recall the posterior predictive equations from <a class="reference external" href="{{page.url}}#pred_eqtns">above</a>.
 </blockquote>
 
-Intuitively the above algorithm is choosing the point, $\mathbf{x}_0$, where we are most uncertain about the predicted value. This is a natural thing to want to do, if we already have data corresponding to a certain region of the input space we are interested in it perhaps doesn't make sense to keep querying the same region.
+Intuitively the above algorithm is choosing the point, $\mathbf{x}_0$, where we are most uncertain about the predicted value. This is a natural thing to want to do, if we already have data corresponding to a certain region of the input space we are interested in it maybe doesn't make sense to keep querying the same region.
 
 As an interesting note, it can be shown that the above strategy is minimizing the [entropy](https://en.wikipedia.org/wiki/Entropy_(information_theory)) of the posterior distribution in a greedy fashion.
 
@@ -395,7 +399,7 @@ where the goal is to minimize $\mathcal{L}$. $f$ is a function that is predictin
 
 We can compare a quadratic penalty term as for ridge regression to a linear one based on the absolute values of the weights as for lasso regression, which uses $\lambda \|\| \mathbf{w} \|\|$ as a penalty term.
 
-The below chart shows that for a given change in a weight entry $w_j$ the increase in penalty is much larger for the quadratic than linear penalty. This means that reducing a large entry $w_j$ in $\mathbf{w}$ will achieve a reduction in $\mathcal{L}$ that changes depending on the magnitude of $w_j$. This is not the case for the linear penalty whereby the reduction in $\mathcal{L}$ does not depend on the magnitude of $w_j$.
+The below chart shows that for a given change in a weight entry $w_j$ the increase in penalty is obviously much larger for the quadratic than linear penalty. This means that reducing a large entry $w_j$ in $\mathbf{w}$ will achieve a reduction in $\mathcal{L}$ that changes depending on the magnitude of $w_j$. This is not the case for the linear penalty whereby the reduction in $\mathcal{L}$ does not depend on the magnitude of $w_j$.
 
 Following the above we reason that quadratic penalties end up favouring solutions for which each entry of $\mathbf{w}$, $w_j$, is of a similar size. Any $w_j$ that gets too large is penalized heavily, even if it is of high predictive importance, and so a quadratic penalty encourages many small but non-zero entries in $\mathbf{w}$.
 
@@ -420,7 +424,7 @@ To get an intuition about how linear penalties encourage sparsity a common chart
 
 where we are using the idea of level sets - set of points in the domain of a function where the function is constant. Points where both the red and blue curves intersect are viable solutions to the optimization problem - it is worth spending time to understand these charts are they give strong intuition into the objective function.
 
-The geometric reasoning behind why linear penalties encourage sparsity is that due to the shape of the level sets for the linear penalty term, the points of intersection with the red level set terms are more likely to lie along an axis where any given $w_j$ may equal 0. This is due to the 'pointy' nature of the linear penalty level sets. This concept, applied to higher-dimensional $\mathbf{w}$, is an explanation as to how linear penalties encourage sparse solutions.
+The geometric reasoning behind why linear penalties encourage sparsity is that due to the shape of the level sets for the linear penalty term, the points of intersection with the red level set terms are more likely to lie along an axis where any given $w_j$ may equal 0. This is due to the *pointy* nature of the linear penalty level sets. This concept, applied to higher-dimensional $\mathbf{w}$, is an informal explanation as to how linear penalties encourage sparse solutions.
 
 <hr class="with-margin">
 <p align="center">
@@ -458,14 +462,14 @@ Depending on the value of $p$ we obtain different shapes for the level sets of t
 
 ##### Impact of $p$ on computational tractability
 
-We note the following facts (using a sum of squares loss) as we vary $p$:
+Using a sum of squares loss we note the following facts as we vary $p$:
 <div class="bullet"> 
-<li> $p < 1$: we can only find approximate solutions to the optimization problem using iterative algorithms </li>
-<li> $p \geq 1$, $p \neq 2$: convex optimization problem able to be solved exactly (includes lasso regression) </li>
-<li> $p=2$: closed form solution (ridge regression) </li>
+<li> $p < 1$: we can only find approximate solutions to the optimization problem using iterative algorithms.</li>
+<li> $p \geq 1$, $p \neq 2$: convex optimization problem able to be solved exactly (includes lasso regression).</li>
+<li> $p=2$: closed form solution (ridge regression).</li>
 </div>
 <br>
-The loss of convexity in the optimization problem for $p < 1$ can be seen be noting that in the above chart we lose 'line of sight' between all points in the level sets of the penalty term.
+The loss of convexity in the optimization problem for $p < 1$ can be seen be noting that in the above chart we lose *line of sight* between all points in the level sets of the penalty term.
 
 <a name="math_details_sec"></a>
 <hr class="with-margin">
@@ -539,7 +543,7 @@ edX, ColumbiaX, <a class="reference external" href="https://www.edx.org/course/m
 <a name="post_blr"></a>
 ##### Posterior for Bayesian linear regression
 
-Here we derive the posterior for Bayesian linear regression and show it is a Gaussian distribution.
+Here we derive the posterior for Bayesian linear regression and show it is a Gaussian distribution. Recall the choice of prior, $\mathbf{w} \sim \mathcal{N}\left(0, \lambda^{-1} I\right).$
 
 <blockquote class="tip">
 <strong>Target form for posterior</strong>
@@ -606,8 +610,15 @@ with
 
 <div class="math">
 \begin{align*}
-\boldsymbol{\mu} &= (\lambda \sigma^{2} I + X^T X)^{-1} X^T \mathbf{y}, \\
-\Sigma &= (\lambda I + \sigma^{-2} X^T X)^{-1} \tag{A5}
+\boldsymbol{\mu} = (\lambda \sigma^{2} I + X^T X)^{-1} X^T \mathbf{y}
+\end{align*}
+</div>
+
+and
+
+<div class="math">
+\begin{align*}
+\Sigma = (\lambda I + \sigma^{-2} X^T X)^{-1} \tag{A5}
 \end{align*}
 </div>
 
@@ -616,7 +627,7 @@ where we manipulate $\boldsymbol{\mu}$ from (A3) slightly to get the above form.
 <a name="ridge_obj"></a>
 ##### Different form for ridge regression objective term
 
-Simply expand:
+Simply expand
 
 <div class="math">
 \begin{align*}
@@ -624,7 +635,7 @@ Simply expand:
 \end{align*}
 </div>
 
-using:
+using
 
 <div class="math">
 \begin{align*}
