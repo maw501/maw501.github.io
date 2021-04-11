@@ -36,7 +36,7 @@ However, whilst the Bayes classifier itself is not of any practical use, it prov
 
 Both LDA and QDA have closed form solutions and so next we move to introduce general linear classifiers and the first such linear classifier we meet is the [perceptron](#perceptron) algorithm.
 
-The [appendix](#hyperplanes) provides some results and explanation of the geometry of hyperplanes for linear classifiers.
+The [appendix](#hyperplanes) provides some results and an explanation of the geometry of hyperplanes for linear classifiers.
 
 <a name="approaches"></a>
 <hr class="with-margin">
@@ -100,7 +100,7 @@ This is discussed further in the [appendix](#inference_decision).
 <h4 class="header" id="knn">k-nearest neighbors (k-NN)</h4>
 
 ##### Introduction
-The $k$-nearest neighbours classifier is one of the simplest and most intuitive places to start with classification algorithms. It is a non-parametric model meaning it doesn't make any assumptions about the underlying data distribution, except in assuming it cannot be defined by a finite set of parameters. It is also what is called a *lazy learning* method in that the generalization of the training data is deferred until the query for a test data-point is made. In this way there is no explicit training stage.  
+The $k$-nearest neighbours classifier is one of the simplest and most intuitive places to start with classification algorithms. It is a non-parametric model, which means it doesn't make any assumptions about the underlying data distribution - except in assuming it cannot be defined by a finite set of parameters. It is also what is called a *lazy learning* method in that the generalization of the training data is deferred until the query for a test data-point is made. In this way there is no explicit training stage.  
 
 ##### $k$-nearest neighbours algorithm
 
@@ -155,7 +155,7 @@ It might be expected that given enough training data $k$-NN can perform well, ev
 
 Further discussion of this phenemonem is provided in [ESL \[2.5\]](#esl).
 
-We now move onto discussing the theoretically best classifier, the Bayes classifier.
+Having introduced an intuitive and simple algorithm for classification, we now move onto discussing the theoretically best classifier: the Bayes classifier.
 
 <a name="bayes_class_app"></a>
 <hr class="with-margin">
@@ -206,11 +206,11 @@ We illustrate the above shortly with a concrete example.
 <strong>Note on terminology:</strong> by classifier we mean any function that takes in a particular assignment of $X$ (i.e. $X=x$ in the discrete case) and outputs a class label $y \in \mathcal{Y}$. Such a classifier could be any type of (potentially complicated) model. We will use the terms classifier and decision rule interchangeably in the discussion that follows.
 <br>
 <br>
-Note that the classifiers are deterministic and given the same input example $x$ will always output the same class prediction $y$.
+Note that whilst training a classifier may involve some randomness, inference from a classifier is deterministic and given the same input example $x$ will always output the same class prediction $y$.
 </blockquote>
 
 ##### Extension to plug-in classifiers
-In practice we don't know the true underlying data distribution, $\mathcal{P}$, and hence we don't know the prior, $p(Y=y)$, or the likelihood, $p(X=x \mid Y=y)$. Instead all we have is some training data which is drawn from $\mathcal{P}$.
+In practice we don't know the true underlying data distribution, $\mathcal{P}$, and hence we don't know the prior, $p(Y=y)$, or the likelihood, $p(X=x \mid Y=y)$. All we have instead is some training data which is drawn from $\mathcal{P}$.
 
 The approach used in practice is thus to use this data to approximate both the prior and the likelihood. Doing this is sometimes called using a plug-in classifier, as per the [generative classifier](#gen_classifier) discussed in the next section.
 
@@ -292,7 +292,7 @@ This is the idea behind the Bayes classifier and the decision based on this is s
 <em class="figure">Table 3: Decision using highest joint probability.</em>
 <hr class="small-margin">
 
-This gives an expected prediction error of $0.25$, and no other classifier can beat this Bayes classifier, although it isn't guaranteed to be unique. Of course, we don't usually ever know $\mathcal{P}$ and so we approximate the prior and likelihood in practice - this leads to sub-optimal classifiers.
+This gives an expected prediction error of $0.25$, and no other classifier can beat this Bayes classifier, although it isn't guaranteed to be unique. Of course, we don't usually ever know $\mathcal{P}$ and so we approximate the prior and likelihood in practice - this leads to sub-optimal classifiers in practice.
 
 <a name="whats_random"></a>
 <blockquote class="tip">
@@ -340,7 +340,7 @@ Per the justification provided by the [Bayes classifier](#bayes_class_app) we as
 
 <div class="math">
 \begin{align*}
-\arg \max_{y \in \mathcal{Y}} \underbrace{p(Y=y)}_{\text {class prior}} \, \underbrace{p(\mathbf{x} \mid Y=y).}_{\text { data likelihood } |=\mid \text {class}} \tag{0}
+\arg \max_{y \in \mathcal{Y}} \underbrace{p(Y=y)}_{\text {class prior}} \, \underbrace{p(\mathbf{x} \mid Y=y).}_{\text { data likelihood } \mid \text {class}} \tag{0}
 \end{align*}
 </div>
 
@@ -352,7 +352,7 @@ In this case we are not obtaining a full posterior but simply using the fact tha
 \end{align*}
 </div>
 
-and the above is valid as the denominator in [Bayes' rule](#bayes_rule_class) does not depend on the class lable, here $y$.
+and the above is valid as the denominator in [Bayes' rule](#bayes_rule_class) does not depend on the class label, here $y$.
 
 ##### Gaussian class conditional densities
 
@@ -360,7 +360,7 @@ and the above is valid as the denominator in [Bayes' rule](#bayes_rule_class) do
 <strong>TLDR:</strong> model the data from each class as a multivariate Gaussian distribution with parameters estimated from the data.
 </blockquote>
 
-We approximate the prior, $p(Y = y)$, and the likelihood, $p(\mathbf{x} \| Y=y)$ as:
+We approximate the prior, $p(Y = y)$, and the likelihood, $p(\mathbf{x} \mid Y=y)$ as:
 
 <div class="math">
 \begin{alignat*}{1}
@@ -406,7 +406,7 @@ We will return to the discussion of the above classifier in the next section on 
 <hr class="with-margin">
 <h4 class="header" id="naive_bayes">Naive Bayes classifier</h4>
 
-We very briefly mention the naive Bayes classifier now which makes the assumption that the covariates of $X$ are conditionally independent given $y$. In other words, there is no correlation between the features given the class. This allows us to write the class conditional densities as a product of one dimensional densities:
+We very briefly mention the naive Bayes classifier (NBC) now which makes the assumption that the covariates of $X$ are conditionally independent given $y$. In other words, there is no correlation between the features given the class. This allows us to write the class conditional densities as a product of one dimensional densities:
 
 <div class="math">
 \begin{align*}
@@ -482,7 +482,7 @@ This is called linear discriminant analysis (LDA) and it has a linear decision b
 
 ##### Extending to QDA
 
-Getting to QDA from LDA is by changing the assumption we make about $\Sigma$. If we now calculate a covariance per class for the likelihood, we have, $p(\mathbf{x} \| y) = \mathcal{N}\left(x \| \boldsymbol{\mu}\_y, \Sigma_{y} \right).$
+Getting to QDA from LDA is by changing the assumption we make about $\Sigma$. If we now calculate a covariance per class for the likelihood, we have, $p(\mathbf{x} \mid y) = \mathcal{N}\left(x \mid \boldsymbol{\mu}\_y, \Sigma_{y} \right).$
 
 By similar analysis as for LDA, working out the log odds from equation (4) gives:
 
@@ -553,7 +553,7 @@ Learning $w_0$ and $\mathbf{w}$ amounts to learning a [hyperplane](https://en.wi
 
 The perceptron algorithm solves the binary classification problem by learning a hyperplane that separates the data and in order to do so it requires that the classes in the data be [linearly separable](https://en.wikipedia.org/wiki/Linear_separability). The loss function for the perceptron cannot be solved analytically and so gradient descent is used instead to learn $w_0$ and $\mathbf{w}$.
 
-The perceptron is perhaps more (famously and) recently known as a core building block of modern neural networks.
+The perceptron is perhaps more recently (and famously) known as a core building block of modern neural networks.
 
 <blockquote class="tip">
 <strong>A point on notation:</strong> it is notationally simpler to absorb $w_0$ into the vector $\mathbf{w}$ by assuming we will add a column of 1s to the data matrix $X$. For the perceptron it is also more convenient to assume $y \in \{-1,1\}$ rather than  $y \in \{0, 1\}$ as we have previously done.
@@ -692,7 +692,7 @@ If we simply wish to assign an instance to a class based on the highest posterio
 \end{align*}
 </div>
 
-###### Inference vs. decision making
+##### Inference vs. decision making
 
 We aren't bound to assign an instance to the class with the highest posterior probability and we now draw a distinction. It is more precise definitionally to call the inference stage the estimation of posterior probabilities and we could, in fact, after modelling the posterior probabilities, choose to implement a different decision rule to decide how to assign an observation to a class. This is the realm of decision theory and we only briefly mention here to highlight the difference between inference and decision making.
 
@@ -728,7 +728,7 @@ y(\mathbf{x}) = \mathbf{x}^{T} \mathbf{w}+w_{0}  \tag{A3}
 and it pays to not confuse $y$ with $f$, $f$ is just the sign of $y$.
 </blockquote>
 
-Given we assign a point to one class if $y(\mathbf{x}) \geq 0$ and the other class if $y(\mathbf{x}) \leq 0$ then $y(\mathbf{x}) = 0$ defines the decision boundary which in the 2-dimensional features space is a line.
+Given we assign a point to one class if $y(\mathbf{x}) \geq 0$ and the other class if $y(\mathbf{x}) \leq 0$ then $y(\mathbf{x}) = 0$ defines the decision boundary which in the 2-dimensional feature space is a line.
 
 To see this, consider:
 
@@ -741,7 +741,7 @@ To see this, consider:
 
 which is the equation for a line for some arbitrary $\mathbf{w}$ and $w_{0}$. Thus as we vary $\mathbf{w}$ and $w_{0}$ we move the line around in the 2-dimensional feature space with $\mathbf{w}$ controlling its orientation and $w_0$ the displacement from the origin.
 
-It's crucial to note that $\mathbf{w}$ is perpendicular to the hyperplane defined by $y(\mathbf{x}) = \mathbf{x}^T \mathbf{w}+w_0 = 0$. To see this consider any 2 points, $\mathbf{x}_A$ and $\mathbf{x}_B$, both of which lie on the decision boundary. Because $y(\mathbf{x}_A) = y(\mathbf{x}_A) = 0$, we have $\mathbf{w}^T (\mathbf{x}_A - \mathbf{x}_B) = 0$ and hence the vector $\mathbf{w}$ is orthogonal to every vector lying on the decision surface.
+It's crucial to note that $\mathbf{w}$ is perpendicular to the hyperplane defined by $y(\mathbf{x}) = \mathbf{x}^T \mathbf{w}+w_0 = 0$. To see this consider any 2 points, $\mathbf{x}_A$ and $\mathbf{x}_B$, both of which lie on the decision boundary. Because $y(\mathbf{x}_A) = y(\mathbf{x}_B) = 0$, we have $\mathbf{w}^T (\mathbf{x}_A - \mathbf{x}_B) = 0$ and hence the vector $\mathbf{w}$ is orthogonal to every vector lying on the decision surface.
 
 An illustration of the geometry of the problem is given below.
 
