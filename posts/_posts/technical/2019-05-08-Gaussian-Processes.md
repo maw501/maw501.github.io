@@ -100,7 +100,7 @@ and by the assumption we make for GPs (see [below](#gp_defn)) we assume the outp
 
 <div class="math">
 \begin{align*}
-p(\mathbf{y} | \Sigma) \propto \exp \left(-\frac{1}{2} \mathbf{y}^{\top} \Sigma^{-1} \mathbf{y}\right)
+p(\mathbf{y} \mid \Sigma) \propto \exp \left(-\frac{1}{2} \mathbf{y}^{\top} \Sigma^{-1} \mathbf{y}\right)
 \end{align*}
 </div>
 
@@ -140,13 +140,13 @@ Nevertheless, when $d=1$ this way of visualizing helps us plot multi-dimensional
 </blockquote>
 
 ##### Posterior predictive
-Before we start with the equations for GPs we draw a link to the Bayesian approach which involves inferring the posterior distribution of the parameters of some model given data, i.e. $p(\theta \| \mathcal{D})$. GPs allow us instead to model $p(f \| \mathcal{D})$ and we then use this modelled function to predict on new data, $X_{+}$:
+Before we start with the equations for GPs we draw a link to the Bayesian approach which involves inferring the posterior distribution of the parameters of some model given data, i.e. $p(\theta \mid \mathcal{D})$. GPs allow us instead to model $p(f \mid \mathcal{D})$ and we then use this modelled function to predict on new data, $X_{+}$:
 
 <div class="math">
 \begin{align*}
 
-\underbrace{p\left(\mathbf{y_{+}} | X_{+}, X, \mathbf{y}\right)}_\text{posterior predictive} &= \int \underbrace{p\left(\mathbf{y_{+}} | f, X_{+}\right)}_\text{likelihood} \, \underbrace{p(f | X, \mathbf{y})}_\text{posterior} \, df \tag{1} \\[5pt]
-&= \int p\left(\mathbf{y_{+}} , f| X, X_{+}, \mathbf{y}\right) \, df
+\underbrace{p\left(\mathbf{y_{+}} \mid X_{+}, X, \mathbf{y}\right)}_\text{posterior predictive} &= \int \underbrace{p\left(\mathbf{y_{+}} \mid f, X_{+}\right)}_\text{likelihood} \, \underbrace{p(f \mid X, \mathbf{y})}_\text{posterior} \, df \tag{1} \\[5pt]
+&= \int p\left(\mathbf{y_{+}} , f \mid X, X_{+}, \mathbf{y}\right) \, df
 
 \end{align*}
 </div>
@@ -235,9 +235,9 @@ Instead we condition on the observed training data, $\mathbf{f}$, to obtain the 
 <div class="math">
 \begin{align*}
 
-p(f_{+} | X_{+}, X, \mathbf{f}) &= \mathcal{N}\left(f_{+} | \mu_{+}, \Sigma_{+}\right) \tag{3} \\[5pt]
-\underbrace{\mathbf{\mu}_{f_{+} | \mathbf{f}}}_\text{predictive mean} &= \underbrace{\mu\left(\mathbf{x_{+}}\right) + K_{+}^{T} K^{-1}(\mathbf{f} - \mu(X))}_\text{linear in $\mathbf{f}$} \tag{4} \\[5pt]
-\underbrace{\Sigma_{f_{+} | \mathbf{f}}}_\text{predictive uncertainty} &= \underbrace{K_{\\++}}_\text{prior uncertainty} - \overbrace{\underbrace{K_{+}^{T} K^{-1} K_{+}}_\text{reduction in uncertainty}}^\text{$\geq \, 0$} \tag{5}
+p(f_{+} \mid X_{+}, X, \mathbf{f}) &= \mathcal{N}\left(f_{+} \mid \mu_{+}, \Sigma_{+}\right) \tag{3} \\[5pt]
+\underbrace{\mathbf{\mu}_{f_{+} \mid \mathbf{f}}}_\text{predictive mean} &= \underbrace{\mu\left(\mathbf{x_{+}}\right) + K_{+}^{T} K^{-1}(\mathbf{f} - \mu(X))}_\text{linear in $\mathbf{f}$} \tag{4} \\[5pt]
+\underbrace{\Sigma_{f_{+} \mid \mathbf{f}}}_\text{predictive uncertainty} &= \underbrace{K_{\\++}}_\text{prior uncertainty} - \overbrace{\underbrace{K_{+}^{T} K^{-1} K_{+}}_\text{reduction in uncertainty}}^\text{$\geq \, 0$} \tag{5}
 \end{align*}
 </div>
 </div> 
@@ -256,7 +256,7 @@ Equation (4) above for the predictive mean was given as:
 
 <div class="math">
 \begin{align*}
-\mathbf{\mu}_{f_{+} | \mathbf{f}} &= \color{#e5c07b}{\mu\left(\mathbf{x_{+}}\right)} + \color{#e06c75}{K_{+}^{T}} \color{#98c379}{K^{-1}}\color{#c678dd}{(\mathbf{f} - \mu(X)) }
+\mathbf{\mu}_{f_{+} \mid \mathbf{f}} &= \color{#e5c07b}{\mu\left(\mathbf{x_{+}}\right)} + \color{#e06c75}{K_{+}^{T}} \color{#98c379}{K^{-1}}\color{#c678dd}{(\mathbf{f} - \mu(X)) }
 \end{align*}
 </div>
 
@@ -270,7 +270,7 @@ which can be intepreted as
 Similarly for equation (5) and the predictive variance:
 <div class="math">
 \begin{align*}
-\Sigma_{f_{+} | \mathbf{f}} &= \color{#e5c07b}{K_{\\++}}- \color{#e06c75}{K_{+}^{T}} \color{#98c379}{K^{-1}} \color{#e06c75}{K_{+}}
+\Sigma_{f_{+} \mid \mathbf{f}} &= \color{#e5c07b}{K_{\\++}}- \color{#e06c75}{K_{+}^{T}} \color{#98c379}{K^{-1}} \color{#e06c75}{K_{+}}
 \end{align*}
 </div>
 can be interpreted as
@@ -377,9 +377,9 @@ As in the noise free case we use the marginalization property of multivariate Ga
 <div class="math">
 \begin{align*}
 
-p(\mathbf{f_{+}} | X_{+}, X, \mathbf{y}) &= \mathcal{N}\left(\mathbf{f_{+}} | \mathbf{\mu_{+}}, \Sigma_{+}\right) \tag{8} \\[5pt]
-\boldsymbol{\mu}_{\mathbf{f}_{+} | \mathbf{f}} &= K_{+}^{T} (K + \sigma_y^2 I)^{-1}\mathbf{y} \tag{9} \\[5pt]
-\Sigma_{\mathbf{f_{+}} | \mathbf{f}} &= K_{\\++} - K_{+}^{T} (K + \sigma_y^2 I)^{-1} K_{+} \tag{10}
+p(\mathbf{f_{+}} \mid X_{+}, X, \mathbf{y}) &= \mathcal{N}\left(\mathbf{f_{+}} \mid \mathbf{\mu_{+}}, \Sigma_{+}\right) \tag{8} \\[5pt]
+\boldsymbol{\mu}_{\mathbf{f}_{+} \mid \mathbf{f}} &= K_{+}^{T} (K + \sigma_y^2 I)^{-1}\mathbf{y} \tag{9} \\[5pt]
+\Sigma_{\mathbf{f_{+}} \mid \mathbf{f}} &= K_{\\++} - K_{+}^{T} (K + \sigma_y^2 I)^{-1} K_{+} \tag{10}
 \end{align*}
 </div>
 
@@ -516,7 +516,7 @@ It is also the case that:
 
 <div class="math">
 \begin{align*}
-X | Y \sim \mathcal{N}\left(\boldsymbol{\mu}_{X}+\Sigma_{X Y} \Sigma_{YY}^{-1}\left(Y - \boldsymbol{\mu}_{Y}\right), \Sigma_{X X}-\Sigma_{X Y} \Sigma_{YY}^{-1} \Sigma_{Y X}\right) 
+X \mid Y \sim \mathcal{N}\left(\boldsymbol{\mu}_{X}+\Sigma_{X Y} \Sigma_{YY}^{-1}\left(Y - \boldsymbol{\mu}_{Y}\right), \Sigma_{X X}-\Sigma_{X Y} \Sigma_{YY}^{-1} \Sigma_{Y X}\right) 
 \end{align*}
 </div>
 
@@ -615,7 +615,7 @@ Even if we set the mean function to 0 in the prior the predicted mean for a test
 
 <div class="math">
 \begin{align*}
-\mu_{f_{+} | \mathbf{f}} &= \mu\left(x_{+}\right) + K_{+}^{T} K^{-1}(\mathbf{f} - \mu(X)) \\[5pt]  
+\mu_{f_{+} \mid \mathbf{f}} &= \mu\left(x_{+}\right) + K_{+}^{T} K^{-1}(\mathbf{f} - \mu(X)) \\[5pt]  
 &= K_{+}^{T} K^{-1}\mathbf{f}
 \end{align*}
 </div>
@@ -637,7 +637,7 @@ In order to perform empirical Bayes for GP regression we maximize the marginal l
 
 <div class="math">
 \begin{align*}
-p(\mathbf{y} | X)=\int p(\mathbf{y} | \mathbf{f}, X) \, p(\mathbf{f} | X) \, d \mathbf{f} \tag{11}
+p(\mathbf{y} \mid X)=\int p(\mathbf{y} \mid \mathbf{f}, X) \, p(\mathbf{f} \mid X) \, d \mathbf{f} \tag{11}
 \end{align*}
 </div>
 
@@ -645,14 +645,14 @@ The term marginal likelihood is used to refer to the marginalization over the fu
 
 <div class="math">
 \begin{align*}
-p(\mathbf{f} | X) &= \mathcal{N}(0, K(X, X)) \\[5pt]  
+p(\mathbf{f} \mid X) &= \mathcal{N}(0, K(X, X)) \\[5pt]  
 
 \end{align*}
 </div>
 and so
 <div class="math">
 \begin{align*}
-\log p(\mathbf{f} | X) &=-\frac{1}{2} \mathbf{f}^{\top} K^{-1} \mathbf{f}-\frac{1}{2} \log |K|-\frac{n}{2} \log 2 \pi \tag{12}
+\log p(\mathbf{f} \mid X) &=-\frac{1}{2} \mathbf{f}^{\top} K^{-1} \mathbf{f}-\frac{1}{2} \log |K|-\frac{n}{2} \log 2 \pi \tag{12}
 \end{align*}
 </div>
 
@@ -660,7 +660,7 @@ The likelihood is also Gaussian:
 
 <div class="math">
 \begin{align*}
-p(\mathbf{y} | \mathbf{f}, X) &= \mathcal{N}(\mathbf{f}, \sigma_y^2 I) \\[5pt]  
+p(\mathbf{y} \mid \mathbf{f}, X) &= \mathcal{N}(\mathbf{f}, \sigma_y^2 I) \\[5pt]  
 \end{align*}
 </div>
 
@@ -668,7 +668,7 @@ Given the above it is possible to perform the integration of $(11)$ by using the
 
 <div class="math">
 \begin{align*}
-\log p(\mathbf{y} | X)=
+\log p(\mathbf{y} \mid X)=
 \underbrace{-\frac{1}{2} \mathbf{y}^{\top}\left(K+\sigma_{n}^{2} I\right)^{-1} \mathbf{y}}_\text{data fit term} -
 \underbrace{\frac{1}{2} \log \left|K+\sigma_{n}^{2} I\right|}_\text{complexity penalty} -
 \underbrace{\frac{n}{2} \log 2 \pi }_\text{normalization constant} \tag{13}
