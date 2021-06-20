@@ -28,7 +28,7 @@ We discuss logistic regression, a discriminative linear classification model who
 <hr class="with-margin">
 <h4 class="header" id="intro">Overview</h4>
 
-We start by introducing [logistic regression](#log_reg), motivated by the previous work we have done on linear classifiers and hyperplanes. This is then extended into a Bayesian setting to give [Bayesian logistic regression](#bayes_log_reg). Calculating the posterior for Bayesian logistic regression with a $l_2$ prior on the weight vector is analytically intractable and so an approximation is used. This approximation uses a Gaussian distribution centred at the MAP estimate for the posterior and is based on [Laplace's method](https://en.wikipedia.org/wiki/Laplace%27s_method). Whilst this calculation is not of central interest for machine learning we spend time in the [appendix](#laplace_approx) extending this calculation by breaking it down into easier to follow steps.
+We start by introducing [logistic regression](#log_reg), motivated by the previous work we have done on linear classifiers and hyperplanes. This is then extended into a Bayesian setting to give [Bayesian logistic regression](#bayes_log_reg). Calculating the posterior for Bayesian logistic regression with a $l_2$ prior on the weight vector is analytically intractable and so an approximation is used. This approximation uses a Gaussian distribution centred at the MAP estimate for the posterior and is based on [Laplace's method](https://en.wikipedia.org/wiki/Laplace%27s_method). Whilst this calculation is not of central interest for machine learning we spend time in the [appendix](#laplace_approx) breaking it down into easy to follow steps.
 
 We then move to talking briefly about [feature expansions and kernels](#kernels) and it is here we meet the major deviation from the content as presented in the lectures. Gaussian processes are omitted entirely and instead the reader is referred to a more comprehensive (and hopefully accessible) treatment in a [separate post](/../posts/2019/05/08/Gaussian-Processes) I have written. This is also the case for the [kernel trick](/../posts/2018/10/19/The-kernel-trick).
 
@@ -44,13 +44,13 @@ Logistic regression, despite its name, is an algorithm that can be used for bina
 
 <div class="math">
 \begin{align*}
-f(\mathbf{x})=\operatorname{sign}\left(w_{0}+\mathbf{x}^{T} \mathbf{w}\right).
+f(\mathbf{x})=\operatorname{sign}\left(w_{0}+\mathbf{x}^{T} \mathbf{w}\right)
 \end{align*}
 </div>
 
-Where we recall that $\mathbf{x}^{T} \mathbf{w}+w_{0} = 0$ defines the equation of the hyperplane.
+and recall that $\mathbf{x}^{T} \mathbf{w}+w_{0} = 0$ defines the equation of the hyperplane.
 
-Logistic regression combines the idea of a hyperplane with a probabilistic estimate of the classification for each example. It does this in a discriminative manner, directly attempting to model $p(y \| \mathbf{x})$ for every example. This is in contrast with the LDA and QDA models we saw which made explicit assumptions about the data in order to try to model $p(y)$ and $p(\mathbf{x} \| y)$.
+Logistic regression combines the idea of a hyperplane with a probabilistic estimate of the classification for each example. It does this in a discriminative manner, directly attempting to model $p(y \mid \mathbf{x})$ for every example. This is in contrast with the LDA and QDA models we saw which made explicit assumptions about the data in order to try to model $p(y)$ and $p(\mathbf{x} \mid y)$.
 
 In the next section we show how we get to logistic regression from thinking about the log odds interpretation we used for LDA and QDA.
 
@@ -60,14 +60,14 @@ we saw how for binary classification with LDA we declared an example to be in a 
 
 <div class="math">
 \begin{alignat*}{1}
-\frac{p(\mathbf{x} | y=1) p(y=1)}{p(\mathbf{x} | y=-1) p(y=-1)} &> 1 \iff \\[5pt]
-\underbrace{\ln \frac{p(\mathbf{x} | y=1) p(y=1)}{p(\mathbf{x} | y=-1) p(y=-1)}}_\text{log odds} &> 0 \tag{R1}
+\frac{p(\mathbf{x} \mid y=1) p(y=1)}{p(\mathbf{x} \mid  y=-1) p(y=-1)} &> 1 \iff \\[5pt]
+\underbrace{\ln \frac{p(\mathbf{x} \mid  y=1) p(y=1)}{p(\mathbf{x} \mid  y=-1) p(y=-1)}}_\text{log odds} &> 0 \tag{R1}
 \end{alignat*}
 </div>
 
 where we are making a notational switch to have $y \in \{-1, 1 \}$ now rather than $y \in \{0, 1 \}$.
 
-For logistic regression the goal is now to directly model $p(y | \mathbf{x})$ rather than use a generative model to model $p(y)$ and $p(\mathbf{x} | y)$ which we did for LDA and QDA.
+For logistic regression the goal is now to directly model $p(y \mid \mathbf{x})$ rather than use a generative model to model $p(y)$ and $p(\mathbf{x} \mid y)$ which we did for LDA and QDA.
 <br>
 <br>
 We also
@@ -85,15 +85,15 @@ where we had analytic expressions for $w_0$ and $\mathbf{w}$.
 
 ##### Logistic link function
 
-For LDA and QDA we modelled $p(y)$ and $p(\mathbf{x} \| y)$ and then computed the log odds to make a decision where we had analytic expressions for the parameters $w_0$ and $\mathbf{w}$.
+For LDA and QDA we modelled $p(y)$ and $p(\mathbf{x} \mid y)$ and then computed the log odds to make a decision where we had analytic expressions for the parameters $w_0$ and $\mathbf{w}$.
 
-We now relax these assumptions and try to model $p(y \| \mathbf{x})$ directly by learning values for $w_0$ and $\mathbf{w}$.
+We now relax these assumptions and try to model $p(y \mid \mathbf{x})$ directly by learning values for $w_0$ and $\mathbf{w}$.
 
 We will still work with the set-up of log odds and a hyperplane decision:
 
 <div class="math">
 \begin{alignat*}{1}
-\ln \frac{p(y=+1 | \mathbf{x})}{p(y=-1 | \mathbf{x})} &= \mathbf{x}^{T} \mathbf{w}+w_{0} \\[5pt] \tag{A0}
+\ln \frac{p(y=+1 \mid \mathbf{x})}{p(y=-1 \mid \mathbf{x})} &= \mathbf{x}^{T} \mathbf{w}+w_{0} \\[5pt] \tag{A0}
 \end{alignat*}
 </div>
 
@@ -103,9 +103,9 @@ For binary classification we can now show how the [sigmoid function](https://en.
 
 <div class="math">
 \begin{alignat*}{1}
-p(y=+1 | \mathbf{x}) &= 1 - (y=-1 | \mathbf{x}) \\[5pt]
-\frac{p(y=+1 | \mathbf{x})}{1-p(y=+1 | \mathbf{x})} &= \exp \left\{\mathbf{x}^{T} \mathbf{w}+w_{0} \right\} &\text{exponentiating eqtn. (0)} \\[5pt]
-\Rightarrow p(y=+1 | \mathbf{x}) &= \frac{\exp \left\{\mathbf{x}^{T} \mathbf{w}+w_{0}\right\}}{1+\exp \left\{\mathbf{x}^{T} \mathbf{w}+w_{0}\right\}} \hspace{1cm} &\text{rearranging} \\[5pt]
+p(y=+1 \mid \mathbf{x}) &= 1 - (y=-1 \mid \mathbf{x}) \\[5pt]
+\frac{p(y=+1 \mid \mathbf{x})}{1-p(y=+1 \mid \mathbf{x})} &= \exp \left\{\mathbf{x}^{T} \mathbf{w}+w_{0} \right\} &\text{exponentiating eqtn. (\text{A}0)} \\[5pt]
+\Rightarrow p(y=+1 \mid \mathbf{x}) &= \frac{\exp \left\{\mathbf{x}^{T} \mathbf{w}+w_{0}\right\}}{1+\exp \left\{\mathbf{x}^{T} \mathbf{w}+w_{0}\right\}} \hspace{1cm} &\text{rearranging} \\[5pt]
 &=\sigma\left(\mathbf{x}^{T} \mathbf{w}+w_{0}\right) \tag{1}
 \end{alignat*}
 </div>
@@ -115,7 +115,7 @@ where we call $\sigma$ the sigmoid function and $\mathbf{x}^{T} \mathbf{w}+w_{0}
 <blockquote class="comment">
 <strong>Comment</strong>
 <hr class="small-margin">
-Whilst it may seem simple to postulate logistic regression in the above form (i.e. a linear model with some activation pushing the response into the range $[0,1]$ to get a probabilistic interpretation) it's hopefully pleasing to see the background tying in hyperplanes, log odds, LDA and QDA. We will also tie in the perceptron a little closer when we show the algorithm for logistic regression.
+Whilst it may seem simple to postulate logistic regression in the above form (i.e. a linear model with some activation pushing the response into the range $[0,1]$ to get a "probability") it's hopefully pleasing to see the background which links hyperplanes, log odds, LDA and QDA. We will also tie in the perceptron a little closer when we show the algorithm for logistic regression.
 </blockquote>
 
 ##### Logistic regression likelihood
@@ -127,13 +127,13 @@ Using a [change of notation](#logreg_notation) we can write this joint data like
 <div class="math">
 \begin{alignat*}{1}
 
-p\left(y_{1}, \ldots, y_{n} | \mathbf{x}_1, \ldots, \mathbf{x}_n, \mathbf{w}\right)
+p\left(y_{1}, \ldots, y_{n} \mid \mathbf{x}_1, \ldots, \mathbf{x}_n, \mathbf{w}\right)
 
 &= \prod_{i=1}^{n} \sigma_{i}\left(y_{i} \cdot \mathbf{w}\right)
 \end{alignat*}
 </div>
 
-where the goal is to find the optimal weight vector $\mathbf{w}\_{ML}$ that maximizes this term. In other words, to get the maximum likelihood solution we need to solve:
+where the goal is to find the optimal weight vector $\mathbf{w}\_{ML}$ that maximizes this term. In other words, to get the maximum of the log-likelihood we need to solve:
 
 <div class="math">
 \begin{alignat*}{1}
@@ -190,7 +190,7 @@ It is this probability weighting that actually causes an issue with plain logist
 <h4 class="header" id="bayes_log_reg">Bayesian logistic regression</h4>
 
 <blockquote class="tip">
-<strong>TLDR:</strong> Bayesian logistic regression regularizes the weights by placing a Gaussian prior over them. The posterior is analytically intractable and so a Gaussian approximation to the posterior centred at $\mathbf{w}_{MAP}$ is calculated instead.
+<strong>TLDR:</strong> Bayesian logistic regression regularizes the weights by placing a prior over them. The posterior is analytically intractable and so a Gaussian approximation to the posterior centred at $\mathbf{w}_{MAP}$ is calculated instead.
 </blockquote>
 
 ##### Introduction
@@ -228,11 +228,11 @@ The objective function for logistic regression now becomes:
 \end{align*}
 </div>
 
-where the maximization problem is now seeking the [MAP estimate](https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation) for the weights.
+where the maximization problem is now seeking the [MAP estimate](https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation) for the weights which we'll use to approximate the posterior. 
 
 Unfortunately when doing this there is no analytic expression for the posterior $p(\mathbf{w} \mid X, \mathbf{y})$ and instead we approximate the posterior using a technique called [Laplace approximation](#laplace_approx). Nearly all the heavy lifting for Bayesian logistic regression is when presenting the Laplace approximation and we have moved the details of this to the appendix.
 
-One point to note about the Laplace approximation for Bayesian logistic regression is that we still need to find $\mathbf{w}\_{MAP}$ via. optimization. Once we have $\mathbf{w}z\_{MAP}$, the posterior is determined analytically.
+One point to note about the Laplace approximation for Bayesian logistic regression is that we still need to find $\mathbf{w}\_{MAP}$ via. optimization. Once we have $\mathbf{w}\_{MAP}$, the posterior is determined analytically.
 
 If you don't want the details the summary of Laplace approximation is [here](#laplace_summary).
 
@@ -251,9 +251,9 @@ Computing the similarity between data-points based on a fixed non-linear feature
 
 Feature expansions are a simple idea which every data scientist should be familiar with.
 
-Feature or basis expansions involve taking a transformation, $\phi(\mathbf{x})$, of the features of the dataset usually in order to capture non-linear behaviour or interactions between features. The general idea is for a point $\mathbf{x} \in \mathbb{R}^d$ we map it to a higher dimensional space $\phi(\mathbf{x}) \in \mathbb{R}^D$ where $D > d$. Such transformations can be as simple as the squaring of each of the original columns and interaction terms. We can then fit a linear model to the enhanced set of features.
+Feature or basis expansions involve taking a transformation, $\phi(\mathbf{x})$, of the features of the dataset usually in order to capture non-linear behaviour or interactions between features. The general idea is for a point $\mathbf{x} \in \mathbb{R}^d$ we map it to a higher dimensional space $\phi(\mathbf{x}) \in \mathbb{R}^D$ where $D > d$. Such transformations can be as simple as the squaring of each of the original columns and interaction terms. We can then fit a linear model with the new set of features.
 
-The key motivation for performing such transformations is that after applying the transformation the data can often be linearly separable in the newly enhanced feature space.
+The key motivation for performing such transformations is that after applying the transformation the data can often be linearly separable in the newly enriched feature space.
 
 However it's usually not obvious which type of feature expansion to perform. The manual approach to this is often called feature engineering and usually requires domain knowledge or in-depth exploratory data analysis.
 
@@ -270,7 +270,7 @@ A kernel $\kappa(\cdot, \cdot) : \mathbb{R}^d \times \mathbb{R}^d \rightarrow \m
 <a class="reference external" href="https://en.wikipedia.org/wiki/Definiteness_of_a_matrix">positive semi-definite</a>.
 <br>
 <br>
-Note: $\kappa(\cdot, \cdot)$ is used to denote the function taking 2 inputs.
+Note: $\kappa(\cdot, \cdot)$ is used to denote the function taking 2 input data-points.
 <br>
 <br>
 Intuitively, this means $K$ satisfies the properties of a covariance matrix, though note that in general positive semi-definite matrices can have negative entries.
@@ -284,7 +284,7 @@ Based on [Mercer's theorem](#mercer) if $\kappa$ satisfies the above definition 
 \end{align*}
 </div>
 
-In words the above is saying that there are certain functions, $\kappa$ that are the equivalent to computing the dot product between data-points in some feature space $\phi : \mathbb{R}^d \rightarrow \mathbb{R}^D$. The reason this is interesting and of use is that computing $K$ using $\kappa$ is often much more efficient than using $\phi$ due to what is commonly referred to as the kernel trick. Given the importance and amount of times this crops up I have written a [separate post](/../posts/2018/10/19/The-kernel-trick) on it.
+In words the above is saying that there are certain functions, $\kappa$, that are the equivalent to computing the dot product between data-points in some feature space $\phi : \mathbb{R}^d \rightarrow \mathbb{R}^D$. The reason this is interesting and of use is that computing $K$ using $\kappa$ is often much more efficient than using $\phi$ due to what is commonly referred to as the kernel trick. Given the importance and amount of times this crops up I have written a [separate post](/../posts/2018/10/19/The-kernel-trick) on it.
 
 Kernels are useful as many machine learning algorithms rely on the computation of the dot product between data-points. Thus if an algorithm is formulated such that data-points $\mathbf{x}$ occur only in the form of dot products then we can replace this dot product with some choice of kernel, which is the same as having used a transformation $\phi(\mathbf{x})$.
 
@@ -305,7 +305,7 @@ y_{\star} = \underbrace{\mathbf{k}_{\star}^T}_\text{$1 \times n$}\underbrace{(K 
 \end{align*}
 </div>
 
-where $\mathbf{k}\_{\star} = \kappa(\mathbf{x}\_{\star}, X)$ is the vector with the kernel function computed for a single test point against all the training data and $K_\{i j} = \kappa\left(\mathbf{x}_i, \mathbf{x}_j\right)$ is an $n \times n$ matrix with the kernel function evaluated for all the training data.
+where $\mathbf{k}\_{\star} = \kappa(\mathbf{x}\_{\star}, X)$ is the vector with the kernel function computed for a single test point against all the training data and $K$ is an $n \times n$ matrix with the kernel function evaluated for all the training data.
 
 The important thing to note is that the prediction at $\mathbf{x}\_{\star}$ is a linear combination of the target values from the training set.
 
@@ -387,7 +387,7 @@ For the case where $y_i=1$:
 <div class="math">
 \begin{alignat*}{1}
 
-p\left(y = 1 | \mathbf{x} \right) &= \sigma_{i}(\mathbf{w}) \\[5pt]
+p\left(y = 1 \mid \mathbf{x} \right) &= \sigma_{i}(\mathbf{w}) \\[5pt]
 &= \left( \frac{\exp\{\mathbf{x}_i^T \mathbf{w}\}} {1+\exp\{\mathbf{x}_i^T \mathbf{w}\}} \right) \\[5pt]
 
 &= \left( \frac{\exp\{y_i \mathbf{x}_i^T \mathbf{w}\}} {1+\exp\{y_i \mathbf{x}_i^T \mathbf{w}\}} \right) \\[5pt]
@@ -401,7 +401,7 @@ For the case where $y_i=-1$:
 <div class="math">
 \begin{alignat*}{1}
 
-p\left(y = -1 | \mathbf{x} \right) &= 1 - \sigma_{i}(\mathbf{w}) \\[5pt]
+p\left(y = -1 \mid \mathbf{x} \right) &= 1 - \sigma_{i}(\mathbf{w}) \\[5pt]
 &= \left( 1 -  \frac{\exp\{\mathbf{x}_i^T \mathbf{w}\}} {1+\exp\{\mathbf{x}_i^T \mathbf{w}\}} \right) \\[5pt]
 
 &= \left(\frac{1}  {1+ \exp\{\mathbf{x}_i^T \mathbf{w}\}} \right) \\[5pt]
@@ -459,11 +459,11 @@ Note that we can similarly show that:
 <a name="laplace_approx"></a>
 ##### Laplace approximation
 <blockquote class="tip">
-<strong>TLDR:</strong> we can't calculate the posterior distribution, $p(\mathbf{w} | X, \mathbf{y})$, for Bayesian logistic regression with an $l_2$ prior analytically so we approximate it with a Gaussian distribution with mean vector centred at the MAP solution for $\mathbf{w}$.
+<strong>TLDR:</strong> we can't calculate the posterior distribution, $p(\mathbf{w} \mid X, \mathbf{y})$, for Bayesian logistic regression with an $l_2$ prior analytically so we approximate it with a Gaussian distribution with mean vector centred at the MAP solution for $\mathbf{w}$.
 </blockquote>
 
 ###### Summary
-Laplace approximation is a way of approximating the posterior distribution $p(\mathbf{w} \| X, \mathbf{y})$ analytically by finding a Gaussian approximation to the posterior distribution. The method aims specifically at problems in which the posterior distribution is uni-modal.
+Laplace approximation is a way of approximating the posterior distribution $p(\mathbf{w} \mid X, \mathbf{y})$ analytically by finding a Gaussian approximation to the posterior distribution. The method aims specifically at problems in which the posterior distribution is uni-modal.
 
 The derivation of the below is pretty involved and a summary is provided below. We will endeavour to explain all steps as we walk through the derivation in more detail.
 
@@ -476,13 +476,13 @@ Given labeled data $(\mathbf{x}_1, y_1), ..., (\mathbf{x}_n, y_n) $ and the mode
 
 <div class="math">
 \begin{align*}
-\color{#e06c75}{p\left(y_{i} | \mathbf{x}_i, \mathbf{w} \right)=\sigma\left(y_i \mathbf{x}_i^T \mathbf{w}\right)}, \quad
+\color{#e06c75}{p\left(y_{i} \mid \mathbf{x}_i, \mathbf{w} \right)=\sigma\left(y_i \mathbf{x}_i^T \mathbf{w}\right)}, \quad
 \color{#61afef}{\mathbf{w} \sim \mathcal{N}\left(0, \lambda^{-1} I\right)}, \quad
 \color{#98c379}{\sigma\left(y_i \mathbf{x}_i^T \mathbf{w}\right)=\frac{\exp\left\{y_{i} \mathbf{x}_i^T  \mathbf{w}\right\}}{1+\exp\left\{y_{i} \mathbf{x}_i^T  \mathbf{w}\right\}}}
 \end{align*}
 </div>
 
-where the above is defining <span style="color:#e06c75">the likelihood</span>, <span style="color:#61afef">the prior</span> and <span style="color:#98c379">the definition of sigmoid</span>.
+where the above is defining <span style="color:#e06c75">the likelihood</span>, <span style="color:#61afef">the prior</span> and <span style="color:#98c379">the definition of the sigmoid function</span>.
 <br>
 <br>
 <strong>Step 1:</strong> find the MAP solution for the weights by solving the optimization problem given by the objective function of logistic regression:
@@ -511,7 +511,7 @@ where details of how we arrive at the above expression are given below.
 
 <div class="math">
 \begin{align*}
-p(\mathbf{w} | X, \mathbf{y})=\mathcal{N}\left(\mathbf{w}_{MAP}, \Sigma\right)
+p(\mathbf{w} \mid X, \mathbf{y})=\mathcal{N}\left(\mathbf{w}_{MAP}, \Sigma\right)
 \end{align*}
 </div>
 
@@ -531,7 +531,7 @@ Before starting we give some things to watch out for as we proceed.
 
 <div class="math">
 \begin{align*}
-p(\mathbf{w} | \mathbf{y}, X) = \frac{p(\mathbf{y}, \mathbf{w} | X)}{\int p(\mathbf{y}, \mathbf{w} | X) \, d\mathbf{w}}.
+p(\mathbf{w} \mid \mathbf{y}, X) = \frac{p(\mathbf{y}, \mathbf{w} \mid X)}{\int p(\mathbf{y}, \mathbf{w} \mid X) \, d\mathbf{w}}.
 \end{align*}
 </div>
 </li>
@@ -571,7 +571,7 @@ The goal is to approximate the posterior with a Gaussian distribution:
 
 <div class="math">
 \begin{align*}
-p(\mathbf{w} | X, \mathbf{y}) \approx \mathcal{N}(\mu, \Sigma)
+p(\mathbf{w} \mid X, \mathbf{y}) \approx \mathcal{N}(\mu, \Sigma)
 \end{align*}
 </div>
 
@@ -581,9 +581,9 @@ By Bayes' rule and rewriting the joint distribution to get it into a form for La
 
 <div class="math">
 \begin{alignat*}{1}
-p(\mathbf{w} | X, \mathbf{y})
-&= \frac{p(\mathbf{y}, \mathbf{w} | X)}{\int p(\mathbf{y}, \mathbf{w} | X) d\mathbf{w} } \\[5pt]
-&= \frac{\exp\{\ln p(\mathbf{y}, \mathbf{w} | X)\}}{\int \exp\{\ln p(\mathbf{y}, \mathbf{w} | X)\} d\mathbf{w} }.
+p(\mathbf{w} \mid X, \mathbf{y})
+&= \frac{p(\mathbf{y}, \mathbf{w} \mid X)}{\int p(\mathbf{y}, \mathbf{w} \mid X) d\mathbf{w} } \\[5pt]
+&= \frac{\exp\{\ln p(\mathbf{y}, \mathbf{w} \mid X)\}}{\int \exp\{\ln p(\mathbf{y}, \mathbf{w} \mid X)\} d\mathbf{w} }.
 \end{alignat*}
 </div>
 
@@ -593,7 +593,7 @@ For Laplace's method we define a function $f$ equal to the log of the joint like
 
 <div class="math">
 \begin{align*}
-f(\mathbf{w})=\ln p(\mathbf{y}, \mathbf{w} | X)
+f(\mathbf{w})=\ln p(\mathbf{y}, \mathbf{w} \mid X)
 \end{align*}
 </div>
 
@@ -607,11 +607,11 @@ We will give the steps first then explain them afterwards:
 
 <div class="math">
 \begin{alignat*}{1}
-p(\mathbf{w} | X, \mathbf{y}) &=\frac{\exp\left\{f(\mathbf{w})\right\}}{\int \exp\left\{f(\mathbf{w})\right\} \, d\mathbf{w}} \tag{L0} \\[5pt]
+p(\mathbf{w} \mid X, \mathbf{y}) &=\frac{\exp\left\{f(\mathbf{w})\right\}}{\int \exp\left\{f(\mathbf{w})\right\} \, d\mathbf{w}} \tag{L0} \\[5pt]
 & \approx \frac{\exp\left\{f(z)+(\mathbf{w}-z)^{T} \nabla f(z)+\frac{1}{2}(\mathbf{w}-z)^{T}\left(\nabla^{2} f(z)\right)(\mathbf{w}-z)\right\}} {\int \exp\left\{f(z)+(\mathbf{w}-z)^{T} \nabla f(z)+\frac{1}{2}(\mathbf{w}-z)^{T}\left(\nabla^{2} f(z)\right)(\mathbf{w}-z)\right\} \, d\mathbf{w}} \tag{L1}\\[5pt]
 
-& \approx \frac{\exp\left\{-\frac{1}{2}\left(\mathbf{w}-\mathbf{w}_{MAP}\right)^{T}\left(-\nabla^{2} \ln p\left(\mathbf{y}, \mathbf{w}_{MAP}|X\right)\right)\left(\mathbf{w}-\mathbf{w}_{MAP}\right) \right\}  }{\int
-\exp\left\{-\frac{1}{2}\left(\mathbf{w}-\mathbf{w}_{MAP}\right)^{T}\left(-\nabla^{2} \ln p\left(\mathbf{y}, \mathbf{w}_{MAP}|X \right)\right)\left(\mathbf{w}-\mathbf{w}_{MAP}\right) \right\} \, d\mathbf{w}}. \tag{L2}
+& \approx \frac{\exp\left\{-\frac{1}{2}\left(\mathbf{w}-\mathbf{w}_{MAP}\right)^{T}\left(-\nabla^{2} \ln p\left(\mathbf{y}, \mathbf{w}_{MAP}\mid X\right)\right)\left(\mathbf{w}-\mathbf{w}_{MAP}\right) \right\}  }{\int
+\exp\left\{-\frac{1}{2}\left(\mathbf{w}-\mathbf{w}_{MAP}\right)^{T}\left(-\nabla^{2} \ln p\left(\mathbf{y}, \mathbf{w}_{MAP}\mid X \right)\right)\left(\mathbf{w}-\mathbf{w}_{MAP}\right) \right\} \, d\mathbf{w}}. \tag{L2}
 
 \end{alignat*}
 </div>
@@ -623,7 +623,7 @@ p(\mathbf{w} | X, \mathbf{y}) &=\frac{\exp\left\{f(\mathbf{w})\right\}}{\int \ex
 <li> $\text{(L1)}$ to $\text{(L2)}$: this uses 2 observations:</li>
   <ul>
   <li> $f(z)$ does not depend on $\mathbf{w}$ and so can be viewed as a constant in both the numerator and denominator which cancels out. </li>
-  <li> $\nabla f(z) = 0$ when evaluated at $z = \mathbf{w}\_{MAP}$ by definition of $\mathbf{w}\_{MAP}$ being a maximum. </li>
+  <li> $\nabla f(z) = 0$ when evaluated at $z = \mathbf{w}_{MAP}$ by definition of $\mathbf{w}_{MAP}$ being a maximum. </li>
   </ul>
 </div>
 <br>
@@ -639,7 +639,7 @@ which we can rewrite slightly by setting $z = \mathbf{w}\_{MAP}$, using the defi
 
 <div class="math">
 \begin{align*}
--\frac{1}{2}\left(\mathbf{w}-\mathbf{w}_{MAP}\right)^{T}\left(-\nabla^{2} \ln p\left(\mathbf{y}, \mathbf{w}_{MAP}|X\right)\right)\left(\mathbf{w}-\mathbf{w}_{MAP}\right)
+-\frac{1}{2}\left(\mathbf{w}-\mathbf{w}_{MAP}\right)^{T}\left(-\nabla^{2} \ln p\left(\mathbf{y}, \mathbf{w}_{MAP}\mid X \right)\right)\left(\mathbf{w}-\mathbf{w}_{MAP}\right)
 \end{align*}
 </div>
 
@@ -648,15 +648,15 @@ Looking at $\text{(L2)}$ we see this is in the form of a multivariate Gaussian w
 
 <div class="math">
 \begin{align*}
-\mu=\mathbf{w}_{MAP}, \quad \Sigma=\left(-\nabla^{2} \ln p\left(\mathbf{y}, \mathbf{w}_{MAP} | X\right)\right)^{-1}
+\mu=\mathbf{w}_{MAP}, \quad \Sigma=\left(-\nabla^{2} \ln p\left(\mathbf{y}, \mathbf{w}_{MAP} \mid X\right)\right)^{-1}
 \end{align*}
 </div>
 
-where we still need to be able to calculate the derivative in $\Sigma$. This derivative is the second derivative (Hessian) of the log joint likelihood (details given below [here](#deriv_log_like)) and results in:
+where we still need to be able to calculate the derivative in $\Sigma$. This derivative is the second derivative (Hessian) of the joint log-likelihood (details given below [here](#deriv_log_like)) and results in:
 
 <div class="math">
 \begin{align*}
-\nabla^{2} \ln p\left(\mathbf{y}, \mathbf{w}_{MAP} | X \right)=-\lambda I-\sum_{i=1}^{n} \sigma\left(y_{i} \cdot  \mathbf{w}_{MAP}\right)\left(1-\sigma\left(y_{i} \cdot \mathbf{w}_{MAP}\right)\right) \mathbf{x}_i \mathbf{x}_i^T
+\nabla^{2} \ln p\left(\mathbf{y}, \mathbf{w}_{MAP} \mid X \right)=-\lambda I-\sum_{i=1}^{n} \sigma\left(y_{i} \cdot  \mathbf{w}_{MAP}\right)\left(1-\sigma\left(y_{i} \cdot \mathbf{w}_{MAP}\right)\right) \mathbf{x}_i \mathbf{x}_i^T
 \end{align*}
 </div>
 
@@ -664,7 +664,7 @@ which means we now we have expressions for both $\mu$ and $\Sigma$ in the Gaussi
 
 <div class="math">
 \begin{align*}
-p(\mathbf{w} | X, \mathbf{y}) \approx \mathcal{N}(\mu, \Sigma)
+p(\mathbf{w} \mid X, \mathbf{y}) \approx \mathcal{N}(\mu, \Sigma)
 \end{align*}
 </div>
 
@@ -676,7 +676,7 @@ To compute $\Sigma$ we need to calculate:
 
 <div class="math">
 \begin{align*}
-\nabla_{\mathbf{w}}^2 \ln p\left(\mathbf{y}, \mathbf{w} | X \right)
+\nabla_{\mathbf{w}}^2 \ln p\left(\mathbf{y}, \mathbf{w} \mid X \right)
 \end{align*}
 </div>
 
@@ -687,8 +687,8 @@ We provide the breakdown of this calculation for reference:
 <div class="math">
 \begin{alignat*}{1}
 
-\nabla_{\mathbf{w}}^2 \ln p\left(\mathbf{y}, \mathbf{w} | X\right)
-&= \nabla_{\mathbf{w}}^2 \ln \Big\{ \overbrace{p(\mathbf{w})}^\text{prior} \,  \overbrace{\underbrace{\prod_{i=1}^{n} \sigma_{i} \left(y_{i} \cdot \mathbf{w}\right)}_\text{$p(\mathbf{y} | \mathbf{w}, X )$}}^\text{likelihood} \Big\} \\[5pt]
+\nabla_{\mathbf{w}}^2 \ln p\left(\mathbf{y}, \mathbf{w} \mid X\right)
+&= \nabla_{\mathbf{w}}^2 \ln \Big\{ \overbrace{p(\mathbf{w})}^\text{prior} \,  \overbrace{\underbrace{\prod_{i=1}^{n} \sigma_{i} \left(y_{i} \cdot \mathbf{w}\right)}_\text{$p(\mathbf{y} \mid \mathbf{w}, X )$}}^\text{likelihood} \Big\} \\[5pt]
 &= \nabla_{\mathbf{w}}^2 \ln \Big\{ A \exp\{ \frac{-\mathbf{w}^2 \lambda I}{2} \} \prod_{i=1}^{n} \sigma_{i} \left(y_{i} \cdot \mathbf{w}\right) \Big\} \hspace{1cm} &\text{defn. of prior} \\[5pt]
 &= \nabla_{\mathbf{w}}^2 \left[ \ln  A + \frac{-\mathbf{w}^2 \lambda I}{2} + \sum_{i=1}^{n} \ln \sigma_{i} \left(y_{i} \cdot \mathbf{w}\right) \right] &\text{rule of logs}  \\[5pt]
 &= -\lambda I - \nabla_{\mathbf{w}}^2 \left[ \sum_{i=1}^{n} \ln \sigma_{i} \left(y_{i} \cdot \mathbf{w}\right) \right] &\text{differentiate w.r.t. $\mathbf{w}$} \\[5pt]
