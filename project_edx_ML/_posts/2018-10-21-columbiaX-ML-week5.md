@@ -104,7 +104,7 @@ For binary classification we can now show how the [sigmoid function](https://en.
 <div class="math">
 \begin{alignat*}{1}
 p(y=+1 \mid \mathbf{x}) &= 1 - (y=-1 \mid \mathbf{x}) \\[5pt]
-\frac{p(y=+1 \mid \mathbf{x})}{1-p(y=+1 \mid \mathbf{x})} &= \exp \left\{\mathbf{x}^{T} \mathbf{w}+w_{0} \right\} &\text{exponentiating eqtn. (\text{A}0)} \\[5pt]
+\frac{p(y=+1 \mid \mathbf{x})}{1-p(y=+1 \mid \mathbf{x})} &= \exp \left\{\mathbf{x}^{T} \mathbf{w}+w_{0} \right\} &\text{exponentiating eqtn. (A0)} \\[5pt]
 \Rightarrow p(y=+1 \mid \mathbf{x}) &= \frac{\exp \left\{\mathbf{x}^{T} \mathbf{w}+w_{0}\right\}}{1+\exp \left\{\mathbf{x}^{T} \mathbf{w}+w_{0}\right\}} \hspace{1cm} &\text{rearranging} \\[5pt]
 &=\sigma\left(\mathbf{x}^{T} \mathbf{w}+w_{0}\right) \tag{1}
 \end{alignat*}
