@@ -565,7 +565,7 @@ Note that the product of two Gaussian random variables (not densities) is not ne
 <h4 class="header" id="further">References</h4>
 
 In order to get a grip on the basics of GPs I read many sources, most listed below.
-<a class="reference external" href="http://cs229.stanford.edu/section/more_on_gaussians.pdf">here</a>.
+
 ###### Books and papers
 <div class="bullet"> 
 <li> Rasmussen and Williams, <a class="reference external" href="http://www.gaussianprocess.org/gpml/chapters/RW.pdf">Gaussian Processes for Machine Learning</a>.
