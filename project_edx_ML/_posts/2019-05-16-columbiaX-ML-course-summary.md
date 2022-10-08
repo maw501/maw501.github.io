@@ -138,7 +138,7 @@ Lecture 24: In this final lecture we discuss model selection. We have made many 
 
 In general, capital letters are matrices, bold font represents vectors and lower-case letters are scalars. Functions are generally italicised though should be clear from the context.
 
-We will strive to introduce new notation appropriately as it arises ease understanding.
+We will strive to introduce new notation appropriately as it arises to ease understanding.
 
 <hr class="with-margin">
 <h4 class="header" id="references">References</h4>
