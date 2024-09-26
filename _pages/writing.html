@@ -1,0 +1,44 @@
+---
+layout: page
+category: writing
+permalink: /writing/
+---
+<!--
+col-X
+numbers must add up to 12 (or less if not using full width)
+-->
+<div class="container">
+{% for post in site.categories.writing %}
+{% if post.foreign_url == null %}
+<p align="center"> Posts which I will (aim to) continually update as my thinking evolves.</p>
+<div class="card post post-link" href="{{ post.url }}">
+{% else %}
+<div class="card post post-link" href="{{ post.foreign_url }}" foreign=true>
+{% endif %}
+    <div class="card-block">
+        <div class="row">
+            <div class="col-4">
+                <img class="img-fluid" width=250 src="../assets/img/{{ post.image }}">
+            </div>
+            <div class="col-8">
+                <h4 class="header">{{ post.title }}</h4>
+                <hr/>
+                <article class="text main">
+                    {{ post.excerpt }}
+                </article>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer text-muted" style="background: #454c59">
+        <div class="timestamp">
+            First published: {{ post.date | date_to_long_string }}
+        </div>
+        {% if post.github_repo != null %}
+        <div class="timestamp_code">
+          <a href="{{ post.github_repo }}" style="color:#272ded" >GitHub</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+</div>
